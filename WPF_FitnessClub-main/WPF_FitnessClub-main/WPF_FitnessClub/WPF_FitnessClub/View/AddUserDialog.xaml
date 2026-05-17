@@ -1,0 +1,96 @@
+<Window x:Class="WPF_FitnessClub.View.AddUserDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_FitnessClub.View"
+        xmlns:models="clr-namespace:WPF_FitnessClub.Models"
+        mc:Ignorable="d"
+        Title="{DynamicResource AddUserTitle}" 
+        Height="500" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Style="{StaticResource WindowStyle}">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/WindowStyles.xaml"/>
+                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/Styles/TextStyles.xaml"/>
+                <ResourceDictionary Source="/Styles/ComboBoxStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" 
+                   Text="{DynamicResource AddUserTitle}" 
+                   FontSize="18" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,15" 
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource HeaderTextBlockStyle}"/>
+        
+        <!-- Форма с полями -->
+        <StackPanel Grid.Row="1" Margin="0,10">
+            <TextBlock Text="{DynamicResource AddUserFullName}" Margin="0,5"
+                       Style="{StaticResource CustomTextBlockStyle}"/>
+            <TextBox x:Name="FullNameTextBox" Margin="0,5" MaxLength="30"
+                     Style="{StaticResource CustomTextBoxStyle}"/>
+            
+            <TextBlock Text="{DynamicResource AddUserEmail}" Margin="0,5"
+                       Style="{StaticResource CustomTextBlockStyle}"/>
+            <TextBox x:Name="EmailTextBox" Margin="0,5" MaxLength="30"
+                     Style="{StaticResource CustomTextBoxStyle}"/>
+            
+            <TextBlock Text="{DynamicResource AddUserLogin}" Margin="0,5"
+                       Style="{StaticResource CustomTextBlockStyle}"/>
+            <TextBox x:Name="LoginTextBox" Margin="0,5" MaxLength="30"
+                     Style="{StaticResource CustomTextBoxStyle}"/>
+            
+            <TextBlock Text="{DynamicResource AddUserPassword}" Margin="0,5"
+                       Style="{StaticResource CustomTextBlockStyle}"/>
+            <PasswordBox x:Name="PasswordBox" Margin="0,5" Height="30" 
+                         PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                         Style="{StaticResource CustomPasswordBoxStyle}"/>
+            
+            <TextBlock Text="{DynamicResource AddUserRole}" Margin="0,5"
+                       Style="{StaticResource CustomTextBlockStyle}"/>
+            <ComboBox x:Name="RoleComboBox" Margin="0,5" 
+                      Style="{StaticResource CustomComboBoxStyle}">
+                <ComboBoxItem Content="{DynamicResource ClientRole}" Tag="1" IsSelected="True"/>
+                <ComboBoxItem Content="{DynamicResource CoachRole}" Tag="2"/>
+                <ComboBoxItem Content="{DynamicResource AdminRole}" Tag="3"/>
+            </ComboBox>
+            
+            <CheckBox x:Name="IsBlockedCheckBox" Content="{DynamicResource AddUserBlocked}" Margin="0,10"/>
+        </StackPanel>
+        
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,15,0,0">
+            <Button Content="{DynamicResource AddUserAddButton}" 
+                    Width="100" 
+                    Margin="0,0,10,0" 
+                    Padding="5" 
+                    Click="AddButton_Click"
+                    Style="{StaticResource DefaultButtonStyle}"/>
+            <Button Content="{DynamicResource AddUserCancelButton}" 
+                    Width="100" 
+                    Padding="5" 
+                    IsCancel="True" 
+                    Click="CancelButton_Click"
+                    Style="{StaticResource DefaultButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window> 

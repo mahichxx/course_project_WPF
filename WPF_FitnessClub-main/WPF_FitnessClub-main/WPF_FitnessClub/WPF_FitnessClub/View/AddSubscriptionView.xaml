@@ -1,0 +1,199 @@
+﻿<UserControl x:Class="WPF_FitnessClub.View.AddSubscriptionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:WPF_FitnessClub.View"
+             mc:Ignorable="d"
+             MinWidth="600px"
+             MinHeight="650px"
+             Width="600"
+             Height="650"
+             Unloaded="UserControl_Unloaded">
+    
+    <UserControl.Resources>
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="10" ShadowDepth="2" Direction="270" Color="#22000000" Opacity="0.3"/>
+        <Style x:Key="ModernCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+        </Style>
+        <Style x:Key="ModernButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+            <Setter Property="Margin" Value="5,5,5,5"/>
+            <Setter Property="Padding" Value="15,7"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="1" Direction="270" Color="#22000000" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect BlurRadius="7" ShadowDepth="2" Direction="270" Color="#22000000" Opacity="0.5"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style x:Key="ModernTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource CustomTextBlockStyle}">
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <Border Background="{DynamicResource WindowBackgroundBrush}" Padding="15">
+        <Grid Style="{StaticResource ResponsiveGridStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{DynamicResource AddSubscriptionTitle}" 
+                      Style="{StaticResource HeaderTextBlockStyle}" 
+                      FontSize="22"
+                      HorizontalAlignment="Center"
+                      Margin="20,15,20,20"/>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,10">
+                <StackPanel>
+                    <!-- Основная информация -->
+                    <Border Style="{StaticResource ModernCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource SubscriptionInfo}" 
+                                       Style="{StaticResource SectionHeaderStyle}"/>
+
+                            <TextBlock Text="{DynamicResource SubscriptionName}" 
+                                       Style="{StaticResource ModernTextBlockStyle}"/>
+                            <TextBox x:Name="InputName" 
+                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="30"
+                                     Style="{StaticResource CustomTextBoxStyle}"/>
+
+                            <TextBlock Text="{DynamicResource Price}" 
+                                      Style="{StaticResource ModernTextBlockStyle}" 
+                                      Margin="0,10,0,5"/>
+                            <TextBox x:Name="InputPrice"
+                                     Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="30"
+                                     Style="{StaticResource CustomTextBoxStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Характеристики абонемента -->
+                    <Border Style="{StaticResource ModernCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource SubscriptionDetails}" 
+                                       Style="{StaticResource SectionHeaderStyle}"/>
+
+                            <Grid Margin="0,5,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel Margin="0,0,5,0">
+                                    <TextBlock Text="{DynamicResource Type}" 
+                                              Style="{StaticResource ModernTextBlockStyle}"/>
+                                    <ComboBox x:Name="ChooseType" 
+                                              Style="{StaticResource CustomComboBoxStyle}"
+                                              SelectedValuePath="Content"
+                                              SelectedValue="{Binding SubscriptionType, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBoxItem Content="{DynamicResource Unlimited}"/>
+                                        <ComboBoxItem Content="{DynamicResource Standard}"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <TextBlock Text="{DynamicResource Duration}" 
+                                              Style="{StaticResource ModernTextBlockStyle}"/>
+                                    <ComboBox x:Name="ChooseDuration"                
+                                              Style="{DynamicResource CustomComboBoxStyle}"
+                                              SelectedValuePath="Content"
+                                              SelectedValue="{Binding Duration, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBoxItem Content="{DynamicResource OneMonth}"/>
+                                        <ComboBoxItem Content="{DynamicResource ThreeMonths}"/>
+                                        <ComboBoxItem Content="{DynamicResource SixMonths}"/>
+                                        <ComboBoxItem Content="{DynamicResource OneYear}"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Описание абонемента -->
+                    <Border Style="{StaticResource ModernCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource Description}" 
+                                       Style="{StaticResource SectionHeaderStyle}"/>
+
+                            <TextBlock Text="{DynamicResource SubscriptionDescription}" 
+                                      Style="{StaticResource ModernTextBlockStyle}"/>
+                            <TextBox x:Name="InputDescription"
+                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource CustomTextBoxStyle}" 
+                                     Height="100" 
+                                     MaxLength="500"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Изображение абонемента -->
+                    <Border Style="{StaticResource ModernCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource SubscriptionImage}" 
+                                       Style="{StaticResource SectionHeaderStyle}"/>
+
+                            <Grid Margin="0,5,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0"
+                                         Margin="0,0,10,0"
+                                         Text="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}" 
+                                         MaxLength="255"
+                                         Style="{DynamicResource CustomTextBoxStyle}" />
+
+                                <Button x:Name="ChoosePhoto"
+                                        Content="{DynamicResource SelectImage}"
+                                        Command="{Binding SelectImageCommand}"
+                                        Style="{StaticResource ModernButtonStyle}" 
+                                        Grid.Column="1"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Border Grid.Row="2" 
+                    Style="{StaticResource ModernCardStyle}" 
+                    Background="{DynamicResource SecondaryBackgroundBrush}"
+                    Margin="0">
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Right">
+                    <Button x:Name="SaveButton" 
+                            Content="{DynamicResource SaveButton}" 
+                            Command="{Binding SaveCommand}"
+                            Style="{StaticResource ModernButtonStyle}"/>
+                    <Button x:Name="CancelButton" 
+                            Content="{DynamicResource CancelButton}" 
+                            Command="{Binding CancelCommand}"
+                            Style="{StaticResource ModernButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,50 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WPF_FitnessClub">
+
+    <!-- Стиль для RadioButton -->
+    <Style x:Key="CustomRadioButtonStyle" TargetType="RadioButton">
+        <Setter Property="Margin" Value="5,0"/>
+        <Setter Property="Padding" Value="5,0"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Ellipse x:Name="RadioOuter"
+                               Width="18"
+                               Height="18"
+                               Stroke="{DynamicResource PrimaryRedBrush}"
+                               StrokeThickness="2"
+                               Fill="Transparent"/>
+                        <Ellipse x:Name="RadioInner"
+                               Width="10"
+                               Height="10"
+                               Fill="{DynamicResource PrimaryRedBrush}"
+                               Opacity="0"/>
+                        <ContentPresenter Grid.Column="1"
+                                      Margin="5,0,0,0"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"
+                                      TextElement.Foreground="{DynamicResource TextBrush}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="RadioInner" Property="Opacity" Value="1"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="RadioOuter" Property="Stroke" Value="{DynamicResource DarkRedBrush}"/>
+                            <Setter TargetName="RadioInner" Property="Fill" Value="{DynamicResource DarkRedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary> 

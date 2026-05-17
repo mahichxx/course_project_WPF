@@ -1,0 +1,110 @@
+<Window x:Class="WPF_FitnessClub.View.SubscribeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_FitnessClub.View"
+        mc:Ignorable="d"
+        Title="{DynamicResource SubscribeDialogTitle}" 
+        Height="400" Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Style="{StaticResource WindowStyle}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/WindowStyles.xaml"/>
+                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/Styles/TextStyles.xaml"/>
+                <ResourceDictionary Source="/Styles/PanelStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" 
+                   Text="{DynamicResource SubscribeDialogHeader}" 
+                   FontSize="18" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,20"
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource HeaderTextBlockStyle}" />
+        
+        <TextBlock Grid.Row="1" 
+                   Text="{DynamicResource SubscribeDialogCheckData}" 
+                   Margin="0,0,0,10"
+                   Style="{StaticResource CustomTextBlockStyle}" />
+        
+        <StackPanel Grid.Row="2" Margin="0,0,0,10">
+            <TextBlock Text="{DynamicResource SubscribeDialogFullName}" 
+                       Margin="0,0,0,5"
+                       Style="{StaticResource CustomTextBlockStyle}" />
+            <TextBox x:Name="FullNameTextBox" 
+                     Text="{Binding FullName}" 
+                     Padding="5"
+                     MaxLength="30"
+                     IsReadOnly="{Binding HasUserData}" 
+                     Style="{StaticResource CustomTextBoxStyle}"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="3" Margin="0,0,0,10">
+            <TextBlock Text="{DynamicResource SubscribeDialogEmail}" 
+                       Margin="0,0,0,5"
+                       Style="{StaticResource CustomTextBlockStyle}" />
+            <TextBox x:Name="EmailTextBox" 
+                     Text="{Binding Email}" 
+                     Padding="5"
+                     MaxLength="30"
+                     IsReadOnly="{Binding HasUserData}" 
+                     Style="{StaticResource CustomTextBoxStyle}" />
+        </StackPanel>
+        
+        <StackPanel Grid.Row="4">
+            <TextBlock Text="{DynamicResource SubscribeDialogSelectedSubscription}" 
+                       Margin="0,0,0,5"
+                       Style="{StaticResource CustomTextBlockStyle}" />
+            <TextBlock Text="{Binding SubscriptionName}" 
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"
+                       Style="{StaticResource CustomTextBlockStyle}" />
+            <TextBlock Style="{StaticResource CustomTextBlockStyle}">
+                <Run Text="{DynamicResource SubscribeDialogPrice}" />
+                <Run Text="{Binding SubscriptionPrice, StringFormat='{}{0:N0}'}" />
+                <Run Text="{DynamicResource SubscribeDialogCurrency}" />
+            </TextBlock>
+            <TextBlock Style="{StaticResource CustomTextBlockStyle}">
+                <Run Text="{DynamicResource SubscribeDialogDuration}" />
+                <Run Text="{Binding SubscriptionDuration}" />
+            </TextBlock>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="6" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,20,0,0">
+            <Button Content="{DynamicResource SubscribeDialogCancelButton}" 
+                    Width="100" 
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Click="CancelButton_Click"
+                    Style="{StaticResource DefaultButtonStyle}" />
+            <Button Content="{DynamicResource SubscribeDialogConfirmButton}" 
+                    Width="100" 
+                    Height="30"
+                    Click="ConfirmButton_Click"
+                    IsEnabled="{Binding IsDataValid}"
+                    Style="{StaticResource DefaultButtonStyle}" />
+        </StackPanel>
+    </Grid>
+</Window> 

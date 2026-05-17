@@ -1,0 +1,447 @@
+﻿<Window x:Class="WPF_FitnessClub.View.SubscriptionDetailsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_FitnessClub"
+        xmlns:vm="clr-namespace:WPF_FitnessClub.ViewModels"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:converters="clr-namespace:WPF_FitnessClub.Converters"
+        mc:Ignorable="d"
+        Title="{DynamicResource SubscriptionDetailsTitle}" 
+        Height="800" Width="800"
+        WindowStartupLocation="CenterScreen"
+        MinWidth="600px"
+        MinHeight="500px"
+        Style="{StaticResource WindowStyle}">
+
+    <Window.Resources>
+        <converters:RatingToStarsConverter x:Key="RatingToStarsConverter"/>
+        <DataTemplate x:Key="StarTemplate" DataType="{x:Type converters:Star}">
+            <TextBlock FontSize="20" Margin="0" Padding="0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Full}">
+                                <Setter Property="Text" Value="★"/>
+                                <Setter Property="Foreground" Value="Gold"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Half}">
+                                <Setter Property="Text" Value="★"/>
+                                <Setter Property="Foreground" Value="Gold"/>
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Empty}">
+                                <Setter Property="Text" Value="☆"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </DataTemplate>
+        
+        <!-- Общие стили для современного дизайна -->
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="10" ShadowDepth="2" Direction="270" Color="#22000000" Opacity="0.3"/>
+        <Style x:Key="ModernCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+        </Style>
+        <Style x:Key="ModernButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+            <Setter Property="Margin" Value="5,5,5,5"/>
+            <Setter Property="Padding" Value="15,7"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="1" Direction="270" Color="#22000000" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect BlurRadius="7" ShadowDepth="2" Direction="270" Color="#22000000" Opacity="0.5"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style x:Key="ModernTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource CustomTextBlockStyle}">
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+        <Style x:Key="ImageBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource WindowBackgroundBrush}" Padding="15">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="10">
+                <!-- Заголовок -->
+                <Border Style="{StaticResource ModernCardStyle}" Background="{StaticResource PrimaryRedBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock x:Name="SubscriptionName"
+                               Text="{Binding SubscrName}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Visibility="{Binding ViewModeVisible}" 
+                               Foreground="White"
+                               Grid.Row="0"/>
+
+                        <TextBox x:Name="EditSubscriptionName"
+                             Text="{Binding SubscrName, UpdateSourceTrigger=PropertyChanged}"
+                             FontSize="24"
+                             FontWeight="Bold"
+                             HorizontalAlignment="Center"
+                             Visibility="{Binding EditModeVisible}" 
+                             Foreground="{DynamicResource TextBrush}"
+                             Height="50"
+                             MaxLength="30"
+                             Grid.Row="0"/>
+                             
+                        <!-- Отображение рейтинга -->
+                        <StackPanel Grid.Row="1" 
+                                  HorizontalAlignment="Center" 
+                                  Orientation="Horizontal" 
+                                  Margin="0,10,0,0"
+                                  Visibility="{Binding ViewModeVisible}">
+                            <ItemsControl ItemsSource="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                        ItemTemplate="{StaticResource StarTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding Rating, StringFormat=({0:F1})}" 
+                                     Foreground="White" 
+                                     Margin="5,0,0,0" 
+                                     VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Изображение -->
+                <Border Style="{StaticResource ImageBorderStyle}">
+                    <Grid>
+                        <Image x:Name="SubscriptionImage"
+                           Source="{Binding ImagePath}"
+                           Height="300"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Center"/>
+
+                        <Button Content="{DynamicResource SelectImage}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Margin="0,0,0,10"
+                            Command="{Binding ChooseImageCommand}"
+                            Visibility="{Binding EditModeVisible}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Основная информация об абонементе -->
+                <Border Style="{StaticResource ModernCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource SubscriptionInfo}" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Цена -->
+                            <TextBlock Text="{DynamicResource Price}"
+                                   Grid.Row="0" Grid.Column="0"
+                                   FontWeight="Bold" 
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            <TextBlock Text="{Binding Price, StringFormat={}{0:0.00} Br}"
+                                   Grid.Row="0" Grid.Column="1"
+                                   Visibility="{Binding ViewModeVisible}" 
+                                   Foreground="{DynamicResource TextBrush}" 
+                                   Margin="15,0,0,0"/>
+                            <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Row="0" Grid.Column="1"
+                                 Width="150" HorizontalAlignment="Left"
+                                 Visibility="{Binding EditModeVisible}" 
+                                 Margin="15,0,0,0" 
+                                 Foreground="{DynamicResource TextBrush}" 
+                                 Style="{DynamicResource CustomTextBoxStyle}"/>
+
+                            <!-- Тип абонемента -->
+                            <TextBlock Text="{DynamicResource Type}"
+                                   Grid.Row="1" Grid.Column="0"
+                                   Margin="0,15,0,0"
+                                   FontWeight="Bold" 
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            <TextBlock Text="{Binding Type}"
+                                   Grid.Row="1" Grid.Column="1"
+                                   Visibility="{Binding ViewModeVisible}" 
+                                   Margin="15,15,0,0"
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            <ComboBox Grid.Row="1" Grid.Column="1"
+                                  Width="150" HorizontalAlignment="Left"
+                                  Visibility="{Binding EditModeVisible}" 
+                                  Margin="15,15,0,0" 
+                                  SelectedValuePath="Content"
+                                  SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource CustomComboBoxStyle}">
+                                <ComboBoxItem Content="{DynamicResource Unlimited}"/>
+                                <ComboBoxItem Content="{DynamicResource Standard}"/>
+                            </ComboBox>
+
+                            <!-- Длительность -->
+                            <TextBlock Text="{DynamicResource Duration}"
+                                   Grid.Row="2" Grid.Column="0"
+                                   Margin="0,15,0,0"
+                                   FontWeight="Bold" 
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            <TextBlock Text="{Binding Duration}"
+                                   Grid.Row="2" Grid.Column="1"
+                                   Visibility="{Binding ViewModeVisible}" 
+                                   Margin="15,15,0,0"
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            <ComboBox Grid.Row="2" Grid.Column="1"
+                                  Width="150" HorizontalAlignment="Left"
+                                  Visibility="{Binding EditModeVisible}" 
+                                  Margin="15,15,0,0" 
+                                  SelectedValuePath="Content"
+                                  SelectedValue="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource CustomComboBoxStyle}">
+                                <ComboBoxItem Content="{DynamicResource OneMonth}"/>
+                                <ComboBoxItem Content="{DynamicResource ThreeMonths}"/>
+                                <ComboBoxItem Content="{DynamicResource SixMonths}"/>
+                                <ComboBoxItem Content="{DynamicResource OneYear}"/>
+                            </ComboBox>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Описание -->
+                <Border Style="{StaticResource ModernCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Description}" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+                            
+                        <TextBlock Text="{Binding Description}"
+                               TextWrapping="Wrap"
+                               Margin="0,10,0,0"
+                               Visibility="{Binding ViewModeVisible}" 
+                               Foreground="{DynamicResource TextBrush}"/>
+                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"
+                             Height="100"
+                             Margin="0,10,0,0"
+                             AcceptsReturn="True"
+                             Visibility="{Binding EditModeVisible}" 
+                             Foreground="{DynamicResource TextBrush}" 
+                             Style="{DynamicResource CustomTextBoxStyle}"
+                             MaxLength="500"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Отзывы -->
+                <Border Style="{StaticResource ModernCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Reviews}" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+                            
+                        <Border 
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            Padding="15"
+                            Margin="0,10,0,0" 
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            BorderBrush="{StaticResource LightGrayBrush}">
+
+                            <Grid>
+                                <WrapPanel x:Name="ReviewWrapPanel">
+                                    <!-- Отзывы генерируются программно в коде -->
+                                </WrapPanel>
+                                
+                                <!-- Сообщение, когда нет отзывов -->
+                                <TextBlock Text="{DynamicResource NoReviews}" 
+                                           FontSize="16"
+                                           FontStyle="Italic"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Margin="0,30,0,30"
+                                           Foreground="{StaticResource MediumGrayBrush}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Reviews.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Сообщение о необходимости подписки для отзыва -->
+                <Border Style="{StaticResource ModernCardStyle}" Visibility="{Binding SubscribeToReviewVisible}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource SubscribeToLeaveReview}"
+                                  Foreground="{DynamicResource TextBrush}"
+                                  TextAlignment="Center"
+                                  FontStyle="Italic"
+                                  Margin="0,10,0,10"
+                                  TextWrapping="Wrap"/>
+                        
+                        <Button Content="{DynamicResource BookButton}"
+                                Command="{Binding SubscribeCommand}"
+                                Style="{StaticResource ModernButtonStyle}"
+                                HorizontalAlignment="Center"
+                                MinWidth="150"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Написать отзыв-->
+                <Border Style="{StaticResource ModernCardStyle}" Visibility="{Binding WriteReviewVisible}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource YourOpinionMatters}" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+                               
+                        <Grid Margin="0,10,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Информационный блок о публикации отзыва -->
+                            <TextBlock Text="{DynamicResource ReviewWillBePostedAsCurrentUser}" 
+                                   Grid.Row="0"
+                                   Margin="0,0,0,15"
+                                   FontStyle="Italic"
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            
+                            <TextBlock Text="{DynamicResource Rating}" 
+                                   Grid.Row="1" 
+                                   Margin="0,0,0,5"
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            
+                            <StackPanel x:Name="RatingRadioBox" 
+                                    Grid.Row="2" 
+                                    Margin="0,0,0,15"
+                                    Orientation="Horizontal">
+                                <RadioButton Content="1" 
+                                         Checked="Radio_Checked"
+                                         Style="{DynamicResource CustomRadioButtonStyle}"/>
+                                <RadioButton Content="2" 
+                                         Checked="Radio_Checked"
+                                         Style="{DynamicResource CustomRadioButtonStyle}"/>
+                                <RadioButton Content="3" 
+                                         Checked="Radio_Checked"
+                                         Style="{DynamicResource CustomRadioButtonStyle}"/>
+                                <RadioButton Content="4" 
+                                         Checked="Radio_Checked"
+                                         Style="{DynamicResource CustomRadioButtonStyle}"/>
+                                <RadioButton Content="5" 
+                                         Checked="Radio_Checked"
+                                         Style="{DynamicResource CustomRadioButtonStyle}"/>
+                            </StackPanel>
+
+                            <TextBlock Text="{DynamicResource Comment}" 
+                                   Grid.Row="3" 
+                                   Margin="0,0,0,5"
+                                   Foreground="{DynamicResource TextBrush}"/>
+                            <TextBox x:Name="CommentBox" 
+                                 Grid.Row="4" 
+                                 Height="80" 
+                                 Margin="0,0,0,15"
+                                 TextWrapping="Wrap"
+                                 Text="{Binding ReviewComment, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{DynamicResource CustomTextBoxStyle}"
+                                 MaxLength="200"/>
+                        </Grid>
+                            
+                        <Button x:Name="AddReviewButton" 
+                            Content="{DynamicResource SaveButton}" 
+                            HorizontalAlignment="Right" 
+                            Command="{Binding AddReviewCommand}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Кнопки управления -->
+                <Border Style="{StaticResource ModernCardStyle}" 
+                    Background="{DynamicResource SecondaryBackgroundBrush}">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button Content="{DynamicResource EditButton}"
+                            MinWidth="120"
+                            Command="{Binding EditCommand}"
+                            Visibility="{Binding AdminEditVisible}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+
+                        <Button Content="{DynamicResource SaveButton}"
+                            MinWidth="120"
+                            Command="{Binding SaveCommand}"
+                            Visibility="{Binding EditModeVisible}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+
+                        <Button Content="{DynamicResource DeleteButton}"
+                            MinWidth="120"
+                            Command="{Binding DeleteCommand}"
+                            Visibility="{Binding EditModeVisible}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+
+                        <Button Content="{DynamicResource CancelButton}"
+                            MinWidth="120"
+                            Command="{Binding CancelCommand}"
+                            Visibility="{Binding EditModeVisible}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+
+                        <Button Content="{DynamicResource BookButton}"
+                            MinWidth="120"
+                            Command="{Binding SubscribeCommand}"
+                            Visibility="{Binding CanSubscribeVisible}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+
+                        <Button Content="{DynamicResource CloseButton}"
+                            MinWidth="120"
+                            Command="{Binding CloseCommand}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</Window>

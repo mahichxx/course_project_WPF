@@ -1,0 +1,114 @@
+﻿<Window x:Class="WPF_FitnessClub.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_FitnessClub"
+        mc:Ignorable="d"
+        MinWidth="600px"
+        MinHeight="520px"
+        Title="{DynamicResource MainWindowTitle}" 
+        Height="450" 
+        Width="800" 
+        WindowState="Maximized"
+        Style="{StaticResource WindowStyle}">
+
+    <Grid Style="{StaticResource ResponsiveGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--#region Меню-->
+        <Border Grid.Column="0" Style="{StaticResource CustomBorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Верхние кнопки -->
+                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,10,0,0">
+                    <Button x:Name="HomeButton" 
+                            Content="⌂"
+                            Style="{StaticResource CircleButtonStyle}" 
+                            Margin="3,3,3,3"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Click="HomeButton_Click" />
+
+                    <Button x:Name="AddSubscriptionButon" 
+                            Content="✚" 
+                            Style="{StaticResource CircleButtonStyle}" 
+                            Margin="3,3,3,3"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Visibility="{Binding AddSubscriptionVisible}"
+                            ToolTip="Добавить абонемент"
+                            Click="AddSubscriptionButton_Click" />
+                    
+                    <Button x:Name="DataTableButton" 
+                            Content="🗃" 
+                            Style="{StaticResource CircleButtonStyle}" 
+                            Margin="3,3,3,3"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            ToolTip="Просмотр таблиц базы данных"
+                            Visibility="{Binding AdminRoleVisible}"
+                            Click="DataTableButton_Click" />
+                            
+                    <Button x:Name="CoachClientsButton" 
+                            Content="👥" 
+                            Style="{StaticResource CircleButtonStyle}" 
+                            Margin="3,3,3,3"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            ToolTip="Мои клиенты"
+                            Visibility="{Binding CoachRoleVisible}"
+                            Click="CoachClientsButton_Click" />
+                </StackPanel>
+                
+                <!-- Нижняя панель кнопок -->
+                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
+
+                    <Button x:Name="LogoutButton" 
+                            Content="🚪"  
+                            Margin="3,3,3,3"
+                            FontSize="20"
+                            FontWeight="Normal"
+                            Foreground="White"
+                            Click="LogoutButton_Click"
+                            Style="{DynamicResource CircleButtonStyle}" />
+
+
+                    <Button x:Name="PersonalAccountButon" 
+                            Content="👤" 
+                            Style="{StaticResource CircleButtonStyle}" 
+                            Margin="3,3,3,3"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Click="PersonalAccountButon_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <!--#endregion-->
+            
+        <!--#region Основная область содержимого-->
+        <Grid Grid.Column="1">
+            <ContentControl x:Name="MainContent">
+                <ScrollViewer x:Name="SubscriptionsPanel1"
+                            Style="{StaticResource ResponsiveScrollViewerStyle}">
+                    <WrapPanel x:Name="SubscriptionsPanel" 
+                            Style="{StaticResource ResponsiveWrapPanelStyle}"/>
+                </ScrollViewer>
+            </ContentControl>
+        </Grid>
+        <!--#endregion-->
+    </Grid>
+</Window>

@@ -1,0 +1,228 @@
+<UserControl x:Class="WPF_FitnessClub.View.SubscriptionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPF_FitnessClub.View"
+             xmlns:vm="clr-namespace:WPF_FitnessClub.ViewModels"
+             xmlns:models="clr-namespace:WPF_FitnessClub.Models"
+             xmlns:converters="clr-namespace:WPF_FitnessClub.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:RatingToStarsConverter x:Key="RatingToStarsConverter"/>
+        <DataTemplate x:Key="StarTemplate" DataType="{x:Type converters:Star}">
+            <TextBlock FontSize="16" Margin="0" Padding="0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Full}">
+                                <Setter Property="Text" Value="★"/>
+                                <Setter Property="Foreground" Value="Gold"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Half}">
+                                <Setter Property="Text" Value="★"/>
+                                <Setter Property="Foreground" Value="Gold"/>
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Empty}">
+                                <Setter Property="Text" Value="☆"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Панель с подписками -->
+        <ScrollViewer Grid.Column="0"
+                      Style="{StaticResource ResponsiveScrollViewerStyle}">
+            <ItemsControl ItemsSource="{Binding FilteredSubscriptions}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:Subscription}">
+                        <!-- Уменьшаем ширину до 180 и маргин до 5, чтобы они стояли плотнее -->
+                        <Border Width="190" 
+            Height="280" 
+            Background="{DynamicResource SecondaryBackgroundBrush}" 
+            CornerRadius="10" 
+            Margin="5" 
+            MouseDown="Subscription_MouseDown"
+            Effect="{StaticResource CardShadow}">
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="110"/>
+                                    <!-- Фиксируем высоту картинки -->
+                                    <RowDefinition Height="*"/>
+                                    <!-- Остальное место под текст -->
+                                </Grid.RowDefinitions>
+
+                                <!-- Картинка -->
+                                <Border Grid.Row="0" CornerRadius="10,10,0,0" ClipToBounds="True">
+                                    <Image Stretch="UniformToFill"
+                       Source="{Binding ImagePath, Converter={StaticResource ImagePathConverter}}"/>
+                                </Border>
+
+                                <!-- Текст -->
+                                <StackPanel Grid.Row="1" Margin="8">
+                                    <TextBlock Text="{Binding Name}"
+                           FontWeight="Bold"
+                           FontSize="13"
+                           MaxHeight="35"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextBrush}"/>
+
+                                    <TextBlock FontSize="14"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryRedBrush}" 
+                           Margin="0,2,0,2"
+                           Text="{Binding Price, StringFormat={}{0:0.00} Br}"/>
+
+                                    <TextBlock Text="{Binding Description}"
+                           TextWrapping="Wrap"
+                           Height="45" 
+                           FontSize="10"
+                           Foreground="#666666"/>
+
+                                    <!-- Рейтинг в самом низу -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <ItemsControl ItemsSource="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                 ItemTemplate="{StaticResource StarTemplate}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Кнопка управления панелью фильтров -->
+        <Button Grid.Column="1"
+                HorizontalContentAlignment="Right" 
+                Content="{Binding ManipulatePanelButtonContent}" 
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Right" 
+                Command="{Binding ToggleFilterPanelCommand}" 
+                Style="{StaticResource DefaultButtonStyle}" 
+                Margin="10"
+                Padding="10,5"/>
+
+        <!-- Панель фильтров -->
+        <Border Grid.Column="1" 
+                Style="{StaticResource CustomBorderStyle}"
+                MinWidth="200"
+                MaxWidth="300"
+                Visibility="{Binding FilterPanelVisibility}"
+                Margin="0,40,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="10*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="1" 
+                           Grid.Row="1" 
+                           MaxWidth="200">
+                    <TextBlock Text="{DynamicResource SearchButton}" 
+                             Padding="20,0,20,0" 
+                             Style="{StaticResource HeaderTextBlockStyle}" />
+
+                    <TextBox Width="190" 
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                             Style="{StaticResource CustomTextBoxStyle}"/>
+
+                    <TextBlock Text="{DynamicResource Price}" 
+                             Padding="20,20,20,0" 
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Center" 
+                             Margin="0,0,0,5" 
+                             Style="{StaticResource HeaderTextBlockStyle}" />
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="6*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{DynamicResource From}" 
+                                 HorizontalAlignment="Center" 
+                                 Style="{StaticResource CustomTextBlockStyle}"
+                                   TextWrapping="NoWrap"/>
+
+                        <TextBox Grid.Column="1" 
+                                Margin="20,0,0,10" 
+                                Text="{Binding MinCost, UpdateSourceTrigger=PropertyChanged}" 
+                                Style="{StaticResource CustomTextBoxStyle}"
+                                PreviewTextInput="PriceTextBox_PreviewTextInput"
+                                PreviewKeyDown="PriceTextBox_PreviewKeyDown"
+                                TextChanged="PriceTextBox_TextChanged"/>
+
+                        <TextBlock Text="{DynamicResource To}" 
+                                 Grid.Row="1" 
+                                 HorizontalAlignment="Center" 
+                                 Style="{StaticResource CustomTextBlockStyle}"/>
+
+                        <TextBox Grid.Column="1" 
+                                Grid.Row="1" 
+                                 Margin="20,0,0,10"
+                                Text="{Binding MaxCost, UpdateSourceTrigger=PropertyChanged}" 
+                                Style="{StaticResource CustomTextBoxStyle}"
+                                PreviewTextInput="PriceTextBox_PreviewTextInput"
+                                PreviewKeyDown="PriceTextBox_PreviewKeyDown"
+                                TextChanged="PriceTextBox_TextChanged"/>
+                    </Grid>
+
+                    <TextBlock Text="{DynamicResource Type}" 
+                             Padding="20,20,0,0" 
+                             Style="{StaticResource HeaderTextBlockStyle}"/>
+
+                    <ComboBox SelectedItem="{Binding SelectedType}" 
+                             Style="{StaticResource CustomComboBoxStyle}">
+                        <ComboBoxItem Content="{DynamicResource All}"/>
+                        <ComboBoxItem Content="{DynamicResource Unlimited}"/>
+                        <ComboBoxItem Content="{DynamicResource Standard}"/>
+                    </ComboBox>
+
+                    <TextBlock Text="{DynamicResource Duration}" 
+                             Margin="20,20,0,0" 
+                             Style="{StaticResource HeaderTextBlockStyle}" />
+
+                    <ComboBox SelectedItem="{Binding SelectedDuration}" 
+                             Style="{StaticResource CustomComboBoxStyle}">
+                        <ComboBoxItem Content="{DynamicResource All}"/>
+                        <ComboBoxItem Content="{DynamicResource OneMonth}"/>
+                        <ComboBoxItem Content="{DynamicResource ThreeMonths}"/>
+                        <ComboBoxItem Content="{DynamicResource SixMonths}"/>
+                        <ComboBoxItem Content="{DynamicResource OneYear}"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl> 

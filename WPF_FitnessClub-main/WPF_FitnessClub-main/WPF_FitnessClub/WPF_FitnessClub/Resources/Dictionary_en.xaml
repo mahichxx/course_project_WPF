@@ -1,0 +1,511 @@
+﻿ <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WPF_FitnessClub"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+
+            <!--#region ОКНА-->
+            <!-- Окно регистрации -->
+            <s:String x:Key="FullName">FullName</s:String>
+            <s:String x:Key="Email">Email</s:String>
+            <s:String x:Key="Login">Login</s:String>
+            <s:String x:Key="Password">Password</s:String>
+            <s:String x:Key="ConfirmPassword">ConfirmPassword</s:String>
+            <s:String x:Key="LoginButton">Log in</s:String>
+            <s:String x:Key="RegisterButton">Sign in</s:String>
+            <s:String x:Key="LoginTitle">Authorization</s:String>
+            <s:String x:Key="RegistrationTitle">Registration</s:String>
+            <s:String x:Key="EnteredAdmin">You have logged in as admin!</s:String>
+            <s:String x:Key="EnteredCoach">You have logged in as coach!</s:String>
+            <s:String x:Key="EnteredClient">You have logged in as client!</s:String>
+            <s:String x:Key="FailedLogin">Login failed!</s:String>
+            <s:String x:Key="RegistrationSuccess">You have succesfully signed in!</s:String>
+            <s:String x:Key="WelcomeUser">Welcome, {0}! You have logged in as {1}.</s:String>
+
+            <!-- Главное окно -->
+            <s:String x:Key="MainWindowTitle">Fitness Club</s:String>
+            <s:String x:Key="Home">Home</s:String>
+            <s:String x:Key="Subscriptions">Subscriptions</s:String>
+            <s:String x:Key="Training">Training</s:String>
+            <s:String x:Key="Trainers">Trainers</s:String>
+            <s:String x:Key="Contacts">Contacts</s:String>
+            <s:String x:Key="SearchButton">Search</s:String>
+            <s:String x:Key="HidePanelButton">Hide</s:String>
+            <s:String x:Key="ShowPanelButton">Show</s:String>
+            <s:String x:Key="Price">Price</s:String>
+            <s:String x:Key="From">from</s:String>
+            <s:String x:Key="To">to</s:String>
+            <s:String x:Key="Type">Type</s:String>
+            <s:String x:Key="Duration">Duration</s:String>
+            <s:String x:Key="AddButon">Add</s:String>
+            <s:String x:Key="DeleteButton">Delete</s:String>
+            <s:String x:Key="ConfirmLogout">Are you sure want to log out?</s:String>
+            <s:String x:Key="ConfirmTitle">Log out?</s:String>
+
+            <!-- Training submenu -->
+            <s:String x:Key="ScheduleClasses">Class Schedule</s:String>
+            <s:String x:Key="PersonalTraining">Personal Training</s:String>
+            <s:String x:Key="GroupClasses">Group Classes</s:String>
+
+            <!-- Filters -->
+            <s:String x:Key="SearchByName">Search by name</s:String>
+            <s:String x:Key="PriceRange">Price range</s:String>
+            <s:String x:Key="MinPrice">Min price</s:String>
+            <s:String x:Key="MaxPrice">Max price</s:String>
+            <s:String x:Key="SubscriptionType">Subscription type</s:String>
+
+            <!-- Add subscription window -->
+            <s:String x:Key="AddSubscriptionTitle">Add Subscription</s:String>
+            <s:String x:Key="SubscriptionName">Subscription name</s:String>
+            <s:String x:Key="SubscriptionPrice">Price</s:String>
+            <s:String x:Key="SubscriptionDescription">Description</s:String>
+            <s:String x:Key="BookButton">Book</s:String>
+            <s:String x:Key="SelectImage">Select Image</s:String>
+            <s:String x:Key="SaveButton">Save</s:String>
+            <s:String x:Key="CancelButton">Cancel</s:String>
+            <s:String x:Key="SubscriptionInfo">Basic Information</s:String>
+            <s:String x:Key="SubscriptionDetails">Subscription Features</s:String>
+            <s:String x:Key="Description">Description</s:String>
+            <s:String x:Key="SubscriptionImage">Subscription Image</s:String>
+
+            <!-- Subscription details window -->
+            <s:String x:Key="SubscriptionDetailsTitle">Subscription Details</s:String>
+            <s:String x:Key="EditButton">Edit</s:String>
+            <s:String x:Key="CloseButton">Close</s:String>
+            <s:String x:Key="Reviews">Reviews</s:String>
+            <s:String x:Key="AddReview">Add Review</s:String>
+            <s:String x:Key="Rating">Rating</s:String>
+            <s:String x:Key="Comment">Comment</s:String>
+            <s:String x:Key="UserName">Username</s:String>
+
+
+            <!-- Окно личного аккаунта-->
+            <s:String x:Key="PersonalAccountTitle">Personal account</s:String>
+            <s:String x:Key="Username">User Name</s:String>
+            <s:String x:Key="CurrentPassword">Current Password</s:String>
+            <s:String x:Key="NewPassword">New Password</s:String>
+            <s:String x:Key="ConfirmNewPassword">Confirm New Password</s:String>
+            <s:String x:Key="PersonalInfoTab">Personal info</s:String>
+            <s:String x:Key="AppSettingsTab">Settings</s:String>
+            <s:String x:Key="SecurityTab">Security</s:String>
+            <s:String x:Key="MySubscriptionsTab">My Subscriptions</s:String>
+            <s:String x:Key="LanguageSelection">LanguageSelection</s:String>
+            <s:String x:Key="ChangePasswordButton">Change Password</s:String>
+            <s:String x:Key="ClearButton">Clear</s:String>
+            <s:String x:Key="PasswordDescription">Password must be at least 6 characters long</s:String>
+            <s:String x:Key="RefreshButton">Refresh</s:String>
+            <s:String x:Key="CancelSubscriptionButton">Cancel Subscription</s:String>
+            <s:String x:Key="NoSubscriptionsMessage">You have no active subscriptions. Select a subscription from the catalog to sign up.</s:String>
+            <s:String x:Key="SubscribeButton">Sign Up</s:String>
+            <s:String x:Key="SubscriptionSignUpTitle">Subscription Sign Up</s:String>
+            <s:String x:Key="ConfirmSubscriptionButton">Confirm</s:String>
+
+            <!-- Coach Clients Window -->
+            <s:String x:Key="CoachClientsTitle">Coach Clients</s:String>
+            <s:String x:Key="DetailsButton">Details</s:String>
+            <s:String x:Key="RemoveButton">Remove</s:String>
+            <s:String x:Key="RemoveClientTooltip">Remove client from coach</s:String>
+            <s:String x:Key="ClientManagement">Client Management</s:String>
+            <s:String x:Key="Coach">Coach: </s:String>
+            <s:String x:Key="RefreshList">Refresh List</s:String>
+            <s:String x:Key="MyClients">My Clients</s:String>
+            <s:String x:Key="AllClients">Avaiable Clients</s:String>
+            <s:String x:Key="All">All</s:String>
+            <s:String x:Key="NoClientsMessage">You have no clients. Add clients from the 'All Clients' tab.</s:String>
+            <s:String x:Key="NoAvailableClientsMessage">No available clients to add.</s:String>
+            <s:String x:Key="AddButton">Add</s:String>
+            <!--#endregion-->
+
+
+
+            <!--#region  ЭЛЕМЕНТЫ-->
+            <!--Языки-->
+            <s:String x:Key="RussianLanguage">Russian</s:String>
+            <s:String x:Key="EnglishLanguage">English</s:String>
+            <!-- Messages -->
+            <s:String x:Key="ValidationError">Validation Error</s:String>
+            <s:String x:Key="RequiredField">This field is required</s:String>
+            <s:String x:Key="InvalidPrice">Invalid price</s:String>
+            <s:String x:Key="SaveSuccess">Successfully saved</s:String>
+            <s:String x:Key="SaveError">Error saving</s:String>
+            <s:String x:Key="DeleteConfirmation">Are you sure you want to delete?</s:String>
+            <s:String x:Key="ConfirmationTitle">Confirmation</s:String>
+
+            <!-- Subscription types -->
+            <s:String x:Key="AllTypes">All types</s:String>
+            <s:String x:Key="Unlimited">Unlimited</s:String>
+            <s:String x:Key="Standard">Standard</s:String>
+            <s:String x:Key="Morning">Morning</s:String>
+            <s:String x:Key="Personal">Personal</s:String>
+
+            <!-- Durations -->
+            <s:String x:Key="AllDurations">Any duration</s:String>
+            <s:String x:Key="OneMonth">1 month</s:String>
+            <s:String x:Key="ThreeMonths">3 months</s:String>
+            <s:String x:Key="SixMonths">6 months</s:String>
+            <s:String x:Key="OneYear">12 months</s:String>
+            <s:String x:Key="TenVisits">10 visits</s:String>
+
+            <!-- Validation -->
+            <s:String x:Key="ValidationErrorsHeader">The form contains the following errors:</s:String>
+            <s:String x:Key="NameRequired">Enter a name</s:String>
+            <s:String x:Key="PriceRequired">Enter a price</s:String>
+            <s:String x:Key="TypeRequired">Select a subscription type</s:String>
+            <s:String x:Key="DurationRequired">Select a duration</s:String>
+            <s:String x:Key="ImageRequired">Select an image</s:String>
+            <s:String x:Key="RatingRequired">Select a rating</s:String>
+            <s:String x:Key="CommentRequired">Add a comment</s:String>
+            <s:String x:Key="YourOpinionMatters">Your opinion matters!</s:String>
+            <s:String x:Key="NoReviews">Be the first to write a review!</s:String>
+            
+            <!-- User validation -->
+            <s:String x:Key="UsernameRequired">Username cannot be empty</s:String>
+            <s:String x:Key="UsernameTooShort">Username must be at least 3 characters long</s:String>
+            <s:String x:Key="UsernameInvalidFormat">Username can only contain letters, numbers, and underscores</s:String>
+            <s:String x:Key="EmailRequired">Email cannot be empty</s:String>
+            <s:String x:Key="EmailMustContainAtSymbol">Email must contain @ symbol</s:String>
+            <s:String x:Key="InvalidEmailFormat">Invalid email format</s:String>
+            <s:String x:Key="InvalidLocalPartFormat">Local part of email can only contain letters, numbers, dots, hyphens, and underscores</s:String>
+            <s:String x:Key="LocalPartDoubleDot">Local part of email cannot contain two consecutive dots</s:String>
+            <s:String x:Key="DomainMustContainDot">Domain must contain a dot (e.g., example.com)</s:String>
+            <s:String x:Key="DomainDoubleDot">Domain contains two consecutive dots</s:String>
+            <s:String x:Key="DomainStartEndDot">Domain cannot start or end with a dot</s:String>
+            <s:String x:Key="InvalidDomainFormat">Domain can only contain letters, numbers, dots, and hyphens</s:String>
+            <s:String x:Key="FullNameRequired">Full name cannot be empty</s:String>
+            <s:String x:Key="FullNameTooShort">Full name must be at least 3 characters long</s:String>
+            <s:String x:Key="FullNameOnlyLetters">Full name can only contain letters and spaces</s:String>
+            <s:String x:Key="FullNameRequireThreeWords">Full name must contain three words (Last First Middle)</s:String>
+            <s:String x:Key="PasswordRequired">Password cannot be empty</s:String>
+            <s:String x:Key="CurrentPasswordRequired">Current password cannot be empty</s:String>
+            <s:String x:Key="NewPasswordRequired">New password cannot be empty</s:String>
+            <s:String x:Key="ConfirmPasswordRequired">Password confirmation cannot be empty</s:String>
+            <s:String x:Key="PasswordRequireLetter">Password must contain at least one letter</s:String>
+            <s:String x:Key="PasswordRequireDigit">Password must contain at least one digit</s:String>
+            <s:String x:Key="InvalidEmail">Enter a valid email</s:String>
+            
+            <!-- User Roles -->
+            <s:String x:Key="AdminRole">Administrator</s:String>
+            <s:String x:Key="CoachRole">Coach</s:String>
+            <s:String x:Key="ClientRole">Client</s:String>
+            
+            <!--#endregion-->
+
+            <!--#region MESSAGE BOXES-->
+
+            <!-- MessageBox строки для Registration.xaml.cs-->
+            <s:String x:Key="EmptyFields">Fill in all fields!</s:String>
+            <s:String x:Key="InvalidFullName">Invalid FullName!</s:String>
+            <s:String x:Key="InvalidLogin">Invalid Login!</s:String>
+            <s:String x:Key="InvalidPassword">Invalid Password!</s:String>
+            <s:String x:Key="PasswordMismatch">Passwords are mismatching!</s:String>
+            <s:String x:Key="ExistingUser">User is already registered in the system!</s:String>
+            <s:String x:Key="UserBlocked">Your account is blocked. Please contact the administrator.</s:String>
+            <s:String x:Key="UserNotFound">User not found!</s:String>
+            <s:String x:Key="PleaseEnterLoginPass">Please enter login and password!</s:String>
+            <s:String x:Key="InvalidLoginCredentials">Invalid login or password!</s:String>
+            <s:String x:Key="FillAllFields">Please fill in all fields!</s:String>
+            <s:String x:Key="PasswordsMismatch">Passwords do not match!</s:String>
+            <s:String x:Key="InvalidUsername">Invalid username! Use only letters and numbers (3 to 15 characters).</s:String>
+            <s:String x:Key="LoginAlreadyExists">User with this login already exists!</s:String>
+            <s:String x:Key="EmailAlreadyExists">User with this email already exists!</s:String>
+
+            <!-- MessageBox strings for SubscriptionDetails.xaml.cs -->
+            <s:String x:Key="SavedSuccessfully">Changes saved successfully!</s:String>
+            <s:String x:Key="SavedTitle">Saved</s:String>
+            <s:String x:Key="ErrorSaving">Error saving changes: {0}</s:String>
+            <s:String x:Key="ErrorTitle">Error</s:String>
+            <s:String x:Key="DeleteSubscriptionConfirm">Are you sure you want to delete this subscription?</s:String>
+            <s:String x:Key="DeleteConfirmTitle">Delete?</s:String>
+            <s:String x:Key="SubscriptionDeleted">Subscription has been deleted!</s:String>
+            <s:String x:Key="DeleteReviewConfirm">Are you sure you want to delete this review?</s:String>
+            <s:String x:Key="PleaseEnterName">Please enter a name</s:String>
+            <s:String x:Key="ValidationErrorTitle">Validation Error</s:String>
+            <s:String x:Key="PleaseRateSubscription">Please rate the subscription</s:String>
+            <s:String x:Key="PleaseEnterValidName">Please enter a valid name</s:String>
+            <s:String x:Key="DeleteReviewButton">Delete</s:String>
+            <s:String x:Key="SelectImageTitle">Select an image</s:String>
+            <s:String x:Key="SubscriptionDetailsFormat">Subscription Details - {0}</s:String>
+            <s:String x:Key="SubscriptionUpdatedSuccess">Subscription successfully updated!</s:String>
+
+            <!-- MessageBox strings for MainWindow.xaml.cs -->
+            <s:String x:Key="ErrorLoadingData">Error loading data: {0}</s:String>
+            <s:String x:Key="ErrorSavingData">Error saving data: {0}</s:String>
+            <s:String x:Key="ErrorLoadingImage">Error loading image: {0}</s:String>
+
+            <!-- MessageBox strings for AddSubscription.xaml.cs -->
+            <s:String x:Key="InvalidName">Invalid name entered</s:String>
+            <s:String x:Key="EnterDescription">Enter a description!</s:String>
+            <s:String x:Key="EmptyImagePath">Select an image</s:String>
+            <s:String x:Key="EmptyDuration">Select a duration</s:String>
+            <s:String x:Key="EmptySubscriptionType">Select a subscription type</s:String>
+            <s:String x:Key="SubscriptionAddedSuccess">Subscription added successfully!</s:String>
+            <s:String x:Key="SuccessTitle">Success</s:String>
+            <s:String x:Key="ErrorSavingSubscription">Error saving: {0}</s:String>
+            <s:String x:Key="ValidationSummary">The form contains the following errors: {0}</s:String>
+
+            <!-- MessageBox strings for App.xaml.cs -->
+            <s:String x:Key="CursorFileNotFound">Cursor file not found in application resources</s:String>
+            <s:String x:Key="ErrorLoadingCursor">Error loading cursor: {0}</s:String>
+            <s:String x:Key="IconNotFound">Application icon not found in resources.</s:String>
+            <s:String x:Key="ErrorLoadingIcon">Error loading icon: {0}</s:String>
+
+            <!-- MessageBox strings for LanguageManager.cs -->
+            <s:String x:Key="ErrorChangingLanguage">Error changing language: {0}</s:String>
+
+            <!-- MessageBox строки для PersonalAccount.cs-->
+            <s:String x:Key="UnsavedChangesMessage">There are unsaved messages. Save them?</s:String>
+            <s:String x:Key="Warning">Warning</s:String>
+            <s:String x:Key="SaveSuccessful">Informtion succefully updated!</s:String>
+            <s:String x:Key="InvalidCurrentPassword">Invalid current password</s:String>
+            <s:String x:Key="PasswordChangedSuccess">Password changed successfully!</s:String>
+            <s:String x:Key="PasswordChangeFailed">Failed to change password</s:String>
+            <s:String x:Key="Success">Success</s:String>
+            <s:String x:Key="Error">Error</s:String>
+            <s:String x:Key="ChangePasswordTitle">Change Password</s:String>
+            <s:String x:Key="LoginAlreadyTaken">Login is already taken by another user</s:String>
+            <s:String x:Key="EmailValidationError">Invalid email format</s:String>
+            <s:String x:Key="AllFieldsRequired">All fields are required</s:String>
+            <s:String x:Key="CurrentPasswordIncorrect">Current password is incorrect</s:String>
+            <s:String x:Key="PasswordsDoNotMatch">Passwords do not match</s:String>
+            <s:String x:Key="PasswordTooShort">Password must be at least 6 characters long</s:String>
+            
+            <!-- MessageBox strings for user subscriptions -->
+            <s:String x:Key="SubscriptionsLoadError">Error loading subscriptions</s:String>
+            <s:String x:Key="NoSubscriptionSelected">No subscription selected</s:String>
+            <s:String x:Key="WarningTitle">Warning</s:String>
+            <s:String x:Key="SubscriptionAlreadyExpired">Subscription has already expired</s:String>
+            <s:String x:Key="ConfirmCancelSubscription">Are you sure you want to cancel this subscription?</s:String>
+            <s:String x:Key="SubscriptionCancelSuccess">Subscription successfully cancelled</s:String>
+            <s:String x:Key="SubscriptionCancelError">Error cancelling subscription</s:String>
+            <s:String x:Key="SubscriptionAddError">Error subscribing to membership</s:String>
+            <s:String x:Key="AlreadyHasActiveSubscription">You already have an active subscription of this type</s:String>
+            <s:String x:Key="PleaseLoginToSubscribe">You need to login to subscribe to a membership</s:String>
+            <s:String x:Key="StartDate">Start date</s:String>
+            <s:String x:Key="EndDate">End date</s:String>
+            <s:String x:Key="Status">Status</s:String>
+            <s:String x:Key="NonZeroToVisibilityConverter">NonZeroToVisibilityConverter</s:String>
+            
+            <!-- Strings for coach clients functionality -->
+            <s:String x:Key="ErrorAddingClient">Error adding client: {0}</s:String>
+            <s:String x:Key="ErrorRemovingClient">Error removing client: {0}</s:String>
+            <s:String x:Key="ErrorRefreshingLists">Error refreshing lists: {0}</s:String>
+            <s:String x:Key="ErrorGettingClientData">Error getting client data</s:String>
+            <s:String x:Key="ErrorOpeningClientPlans">Error opening client plans: {0}</s:String>
+            <s:String x:Key="ViewModelNotInitialized">Error: ViewModel is not initialized</s:String>
+            <s:String x:Key="ConfirmRemoveClient">Are you sure you want to remove client {0} from your list?</s:String>
+            <s:String x:Key="ClientAddedSuccessfully">Client {0} added successfully.</s:String>
+            <s:String x:Key="ClientRemovedSuccessfully">Client {0} removed successfully from your list.</s:String>
+            <s:String x:Key="FailedToAddClient">Failed to add client {0}. Check the log for additional information.</s:String>
+            <s:String x:Key="FailedToRemoveClient">Failed to remove client {0}. Check the log for additional information.</s:String>
+
+            <!-- Workout and nutrition plans tabs -->
+            <s:String x:Key="WorkoutPlansTab">Workout Plans</s:String>
+            <s:String x:Key="NutritionPlansTab">Nutrition Plans</s:String>
+
+            <!-- Theme Settings Strings -->
+            <s:String x:Key="ThemeSelection">Theme Selection</s:String>
+            <s:String x:Key="LightTheme">Light Theme</s:String>
+            <s:String x:Key="DarkTheme">Dark Theme</s:String>
+            
+            <!-- Workout and Nutrition Plans tabs -->
+            <s:String x:Key="SelectWorkoutPlan">Select a workout plan:</s:String>
+            <s:String x:Key="SelectNutritionPlan">Select a nutrition plan:</s:String>
+            <s:String x:Key="NoWorkoutPlans">You don't have any workout plans</s:String>
+            <s:String x:Key="NoNutritionPlans">You don't have any nutrition plans</s:String>
+            <s:String x:Key="RefreshPlans">Refresh plans</s:String>
+            <s:String x:Key="ShowTasks">Show Tasks</s:String>
+            <s:String x:Key="HideTasks">Hide Tasks</s:String>
+            <s:String x:Key="TasksOfPlan">Plan tasks:</s:String>
+            
+            <!-- Plan elements -->
+            <s:String x:Key="Title">Title</s:String>
+            <s:String x:Key="Exercise">Exercise</s:String>
+            <s:String x:Key="SetsReps">Sets/Reps</s:String>
+            <s:String x:Key="DayOfWeek">Day of week</s:String>
+            <s:String x:Key="Completed">Completed</s:String>
+            <s:String x:Key="MealType">Meal type</s:String>
+            <s:String x:Key="FoodName">Food name</s:String>
+            <s:String x:Key="Calories">Calories</s:String>
+            <s:String x:Key="Nutrients">Nutrients</s:String>
+            <s:String x:Key="Proteins">P</s:String>
+            <s:String x:Key="Fats">F</s:String>
+            <s:String x:Key="Carbs">C</s:String>
+
+            <!-- Subscription statuses -->
+            <s:String x:Key="StatusActive">Active</s:String>
+            <s:String x:Key="StatusExpired">Expired</s:String>
+            <s:String x:Key="StatusCancelled">Cancelled</s:String>
+            <s:String x:Key="StatusPending">Pending</s:String>
+
+            <!-- PersonalAccount validation -->
+            <s:String x:Key="InvalidPersonalName">Invalid name format! Use only letters (minimum 2 characters).</s:String>
+            <s:String x:Key="InvalidPersonalUsername">Invalid username! Use only letters and numbers (3 to 15 characters).</s:String>
+            <s:String x:Key="InvalidPersonalEmail">Invalid email format! Example: example@domain.com</s:String>
+            <s:String x:Key="PersonalFieldsRequired">All fields are required!</s:String>
+            <s:String x:Key="PersonalPasswordMismatch">Passwords do not match!</s:String>
+            <s:String x:Key="PersonalPasswordTooShort">Password must be at least 6 characters long!</s:String>
+            <s:String x:Key="PersonalCurrentPasswordRequired">Current password is required!</s:String>
+            <s:String x:Key="PersonalDataSaved">Data saved successfully!</s:String>
+            <s:String x:Key="PersonalDataError">Error saving data!</s:String>
+
+            <!-- New strings for Admin Panel -->
+            <s:String x:Key="AdminPanelExportJson">Export to JSON</s:String>
+            <s:String x:Key="AdminPanelExportJsonTooltip">Export all database data to JSON file in Resources folder</s:String>
+            <s:String x:Key="ExportJsonSuccess">Data successfully exported to JSON file in Resources folder</s:String>
+            <s:String x:Key="ExportJsonError">Error exporting data to JSON file</s:String>
+
+            <!-- New strings for User Profile -->
+            <s:String x:Key="UserProfile">User Profile</s:String>
+            <s:String x:Key="ActiveSubscriptions">Active Subscriptions</s:String>
+            <s:String x:Key="NoSubscriptions">You have no active subscriptions yet</s:String>
+            <s:String x:Key="BookPrompt">Book this subscription?</s:String>
+            <s:String x:Key="SubscribeToLeaveReview">You need to purchase the subscription before leaving a review</s:String>
+
+            <!-- New strings for AccessDenied -->
+            <s:String x:Key="SubscriptionUpdateFailed">Failed to update subscription</s:String>
+            <s:String x:Key="SubscriptionDeleteFailed">Failed to delete subscription</s:String>
+            <s:String x:Key="AccessDenied">Access Denied</s:String>
+            <s:String x:Key="OnlyCoachesCanAddSubscription">Only coaches and administrators can create subscriptions</s:String>
+
+            <!-- New strings for Workout and Nutrition Plans -->
+            <s:String x:Key="YourWorkoutPlans">Your Workout Plans</s:String>
+            <s:String x:Key="YourNutritionPlans">Your Nutrition Plans</s:String>
+            <s:String x:Key="MarkAsCompleted">Mark as completed</s:String>
+
+            <!-- Строки для AddUserDialog -->
+            <s:String x:Key="AddUserTitle">Add New User</s:String>
+            <s:String x:Key="AddUserFullName">Full Name:</s:String>
+            <s:String x:Key="AddUserEmail">Email:</s:String>
+            <s:String x:Key="AddUserLogin">Login:</s:String>
+            <s:String x:Key="AddUserPassword">Password:</s:String>
+            <s:String x:Key="AddUserRole">Role:</s:String>
+            <s:String x:Key="AddUserBlocked">Blocked</s:String>
+            <s:String x:Key="AddUserAddButton">Add</s:String>
+            <s:String x:Key="AddUserCancelButton">Cancel</s:String>
+            
+            <!-- Строки для AdminPanel -->
+            <s:String x:Key="AdminPanelTitle">Admin Panel</s:String>
+            <s:String x:Key="AdminPanelUsersTab">Users</s:String>
+            <s:String x:Key="AdminPanelIdColumn">ID</s:String>
+            <s:String x:Key="AdminPanelFullNameColumn">Full Name</s:String>
+            <s:String x:Key="AdminPanelEmailColumn">Email</s:String>
+            <s:String x:Key="AdminPanelLoginColumn">Login</s:String>
+            <s:String x:Key="AdminPanelRoleColumn">Role</s:String>
+            <s:String x:Key="AdminPanelBlockedColumn">Blocked</s:String>
+            <s:String x:Key="AdminPanelActionsColumn">Actions</s:String>
+            <s:String x:Key="AdminPanelDeleteButton">Delete</s:String>
+            <s:String x:Key="AdminPanelRefreshButton">Refresh Data</s:String>
+            <s:String x:Key="AdminPanelAddUserButton">Add User</s:String>
+            
+            <!-- Ошибки в AdminPanelViewModel -->
+            <s:String x:Key="AdminPanelInitError">Error initializing admin panel</s:String>
+            <s:String x:Key="AdminPanelLoadError">Error loading view</s:String>
+            <s:String x:Key="AdminPanelDeleteUserError">Error deleting user</s:String>
+            <s:String x:Key="AdminPanelAddUserError">Error adding user</s:String>
+            <s:String x:Key="AdminPanelUpdateUserError">Error updating user</s:String>
+            <s:String x:Key="AdminPanelLoadUsersError">Error loading users</s:String>
+            <s:String x:Key="AdminPanelNoUsersFound">Could not load users or the list is empty</s:String>
+            <s:String x:Key="AdminPanelDeleteAdminError">Cannot delete the main system administrator</s:String>
+            <s:String x:Key="AdminPanelBlockAdminError">Cannot block the main system administrator</s:String>
+            <s:String x:Key="AdminPanelBlockSelfError">You cannot block/delete your own account</s:String>
+            <s:String x:Key="AdminPanelUserNotFound">User not found in the database</s:String>
+            <s:String x:Key="AdminPanelConfirmDeleteUser">Are you sure you want to delete user {0}?</s:String>
+            <s:String x:Key="AdminPanelUserDeleted">User successfully deleted</s:String>
+            <s:String x:Key="AdminPanelUserBlocked">User successfully blocked</s:String>
+            <s:String x:Key="AdminPanelUserUnblocked">User successfully unblocked</s:String>
+            <s:String x:Key="AdminPanelUserAdded">User successfully added</s:String>
+            <s:String x:Key="AdminPanelUserUpdated">User data successfully updated</s:String>
+            <s:String x:Key="AdminPanelLimitationTitle">Limitation</s:String>
+            <s:String x:Key="AdminPanelError">Error</s:String>
+            <s:String x:Key="AdminPanelWarning">Warning</s:String>
+            <s:String x:Key="AdminPanelSuccess">Success</s:String>
+            <s:String x:Key="AdminPanelDataUpdated">Data successfully updated!</s:String>
+            <s:String x:Key="AdminPanelBlockUserError">Error changing user block status</s:String>
+
+            <!-- Валидация в AddUserDialog -->
+            <s:String x:Key="AddUserValidationEmptyFullName">Enter user's full name</s:String>
+            <s:String x:Key="AddUserValidationInvalidEmail">Enter a valid email</s:String>
+            <s:String x:Key="AddUserValidationShortLogin">Login must be at least 3 characters long</s:String>
+            <s:String x:Key="AddUserValidationShortPassword">Password must be at least 6 characters long</s:String>
+            <s:String x:Key="AddUserValidationLoginExists">A user with this login already exists</s:String>
+            <s:String x:Key="AddUserValidationEmailExists">A user with this email already exists</s:String>
+
+            <!-- Строки для AdminPanelView.xaml.cs -->
+            <s:String x:Key="RoleComboBoxLoadError">Error loading role list</s:String>
+            <s:String x:Key="RoleSelectionError">Error selecting role</s:String>
+            <s:String x:Key="CellEditError">Error editing cell</s:String>
+            
+            <!-- Строки для ClientPlansDetailsWindow -->
+            <s:String x:Key="ClientPlansTitle">Client Plans</s:String>
+            <s:String x:Key="ClientPlansHeaderText">Client Plans</s:String>
+            <s:String x:Key="ClientPlansClientLabel">Client:</s:String>
+            <s:String x:Key="ClientPlansEmailLabel">Email:</s:String>
+            <s:String x:Key="ClientPlansTitleLabel">Title:</s:String>
+            <s:String x:Key="ClientPlansDescriptionLabel">Description:</s:String>
+            <s:String x:Key="ClientPlansStartDateLabel">Start Date:</s:String>
+            <s:String x:Key="ClientPlansEndDateLabel">End Date:</s:String>
+            <s:String x:Key="ClientPlansPeriodLabel">Period:</s:String>
+            <s:String x:Key="ClientPlansCompletedStatus">Completed</s:String>
+            <s:String x:Key="ClientPlansNotCompletedStatus">Not Completed</s:String>
+            
+            <!-- Строки для SubscribeDialog -->
+            <s:String x:Key="SubscribeDialogTitle">Subscription Sign Up</s:String>
+            <s:String x:Key="SubscribeDialogHeader">Confirm Subscription Sign Up</s:String>
+            <s:String x:Key="SubscribeDialogCheckData">Please verify your information:</s:String>
+            <s:String x:Key="SubscribeDialogFullName">Full Name:</s:String>
+            <s:String x:Key="SubscribeDialogEmail">Email:</s:String>
+            <s:String x:Key="SubscribeDialogSelectedSubscription">Selected Subscription:</s:String>
+            <s:String x:Key="SubscribeDialogPrice">Price:</s:String>
+            <s:String x:Key="SubscribeDialogCurrency">RUB</s:String>
+            <s:String x:Key="SubscribeDialogDuration">Duration:</s:String>
+            <s:String x:Key="SubscribeDialogCancelButton">Cancel</s:String>
+            <s:String x:Key="SubscribeDialogConfirmButton">Confirm</s:String>
+
+            <!-- Статусы планов питания и тренировок -->
+            <s:String x:Key="PlanStatusCompleted">Completed</s:String>
+            <s:String x:Key="PlanStatusInProgress">In Progress</s:String>
+            <s:String x:Key="PlanStatusActive">Active</s:String>
+            <s:String x:Key="PlanStatusExpired">Expired</s:String>
+            <s:String x:Key="PlanStatusCancelled">Cancelled</s:String>
+            <s:String x:Key="PlanStatusPending">Pending</s:String>
+
+            <!--#region MESSAGE BOXES CLIENT PLANS -->
+            <!-- Common MessageBox strings -->
+            <s:String x:Key="ConfirmationDelete">Delete Confirmation</s:String>
+            <s:String x:Key="ValidationErrorDate">Validation Error</s:String>
+            
+            <!-- MessageBox strings for nutrition plans -->
+            <s:String x:Key="ConfirmDeleteNutritionPlan">Are you sure you want to delete nutrition plan '{0}'?</s:String>
+            <s:String x:Key="NutritionPlanDeleteSuccess">Nutrition plan successfully deleted</s:String>
+            <s:String x:Key="NutritionPlanDeleteError">Error deleting nutrition plan: {0}\n\nDetails: {1}</s:String>
+            <s:String x:Key="DateEndBeforeDateStart">End date cannot be earlier than start date!</s:String>
+            <s:String x:Key="NutritionPlanUpdateSuccess">Nutrition plan successfully updated</s:String>
+            <s:String x:Key="NutritionPlanCreateSuccess">New nutrition plan successfully created</s:String>
+            <s:String x:Key="NutritionPlanSaveError">Error saving nutrition plan: {0}</s:String>
+            
+            <!-- MessageBox strings for workout plans -->
+            <s:String x:Key="ConfirmDeleteWorkoutPlan">Are you sure you want to delete workout plan '{0}'?</s:String>
+            <s:String x:Key="WorkoutPlanDeleteSuccess">Workout plan successfully deleted</s:String>
+            <s:String x:Key="WorkoutPlanDeleteError">Error deleting workout plan: {0}\n\nDetails: {1}</s:String>
+            <s:String x:Key="WorkoutPlanUpdateSuccess">Workout plan successfully updated</s:String>
+            <s:String x:Key="WorkoutPlanCreateSuccess">New workout plan successfully created</s:String>
+            <s:String x:Key="WorkoutPlanSaveError">Error saving workout plan: {0}</s:String>
+            <s:String x:Key="LoadClientPlansError">Error loading client plans: {0}</s:String>
+            
+            <!-- Task completion status strings -->
+            <s:String x:Key="TaskStatusCompleted">Completed</s:String>
+            <s:String x:Key="TaskStatusNotCompleted">Not Completed</s:String>
+            <s:String x:Key="TaskCompletedMasculine">Completed</s:String>
+            <s:String x:Key="TaskNotCompletedMasculine">Not Completed</s:String>
+            <s:String x:Key="TaskCompletedFeminine">Completed</s:String>
+            <s:String x:Key="TaskNotCompletedFeminine">Not Completed</s:String>
+            <s:String x:Key="MarkAsCompletedButton">Mark as Completed</s:String>
+            <s:String x:Key="MarkAsNotCompletedButton">Mark as Not Completed</s:String>
+            <!--#endregion-->
+
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

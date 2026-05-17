@@ -1,0 +1,383 @@
+<Window x:Class="WPF_FitnessClub.View.CoachClientsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPF_FitnessClub.View"
+             xmlns:converters="clr-namespace:WPF_FitnessClub.Converters"
+             mc:Ignorable="d" 
+             Title="{DynamicResource CoachClientsTitle}" 
+             Height="650" 
+             Width="900"
+             WindowStartupLocation="CenterScreen"
+             Style="{DynamicResource DefaultWindowStyle}"
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <Window.Resources>
+        <!-- Конвертеры -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
+        <!-- Стили для списка клиентов -->
+        <Style x:Key="ClientListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        
+        <Style x:Key="ClientListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#E3F2FD"/>
+                                <Setter Property="BorderBrush" Value="#2196F3"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource DarkRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1976D2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0D47A1"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#BDBDBD"/>
+                                <Setter Property="BorderBrush" Value="#9E9E9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="AddClientButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Setter Property="BorderBrush" Value="#388E3C"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#388E3C"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2E7D32"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#BDBDBD"/>
+                                <Setter Property="BorderBrush" Value="#9E9E9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="10,5"/>
+        </Style>
+        
+        <!-- Стиль для TabItem -->
+        <Style x:Key="TabItemStyle" TargetType="TabItem">
+            <Setter Property="Padding" Value="15,5"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1,1,1,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Border" 
+                                CornerRadius="4,4,0,0" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#E3F2FD"/>
+                                <Setter Property="BorderBrush" Value="#2196F3"/>
+                                <Setter Property="BorderThickness" Value="1,1,1,0"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter TargetName="Border" Property="Background" Value="#E3F2FD"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#2196F3"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#EEF6FB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Шаблон для отображения клиента -->
+        <DataTemplate x:Key="ClientTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Аватар пользователя (заменяем иконкой) -->
+                <Border Grid.Column="0" 
+                        Width="40" 
+                        Height="40" 
+                        Background="#E3F2FD" 
+                        BorderBrush="#BBDEFB" 
+                        BorderThickness="1" 
+                        CornerRadius="20"
+                        Margin="0,0,10,0">
+                    <TextBlock Text="👤" 
+                               FontSize="20" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
+                </Border>
+                
+                <!-- Информация о клиенте -->
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding FullName}" 
+                               FontWeight="SemiBold" 
+                               Style="{StaticResource CustomTextBlockStyle}"
+                               FontSize="14"/>
+                    <TextBlock Text="{Binding Email}" 
+                               Foreground="#757575" 
+                               Style="{StaticResource CustomTextBlockStyle}"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="ID: " 
+                                   Foreground="#757575" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="12"/>
+                        <TextBlock Text="{Binding Id}" 
+                                   Foreground="#757575" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="12" 
+                                   FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Кнопки действий с клиентом -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="{DynamicResource DetailsButton}" 
+                            Style="{StaticResource DefaultButtonStyle}"
+                            Click="ShowClientPlansButton_Click"
+                            CommandParameter="{Binding}"
+                            Margin="2,0"/>
+                    
+                    <Button Content="{DynamicResource RemoveButton}" 
+                            Style="{StaticResource DefaultButtonStyle}"
+                            Click="RemoveClientButton_Click"
+                            CommandParameter="{Binding}"
+                            Margin="2,0"
+                            ToolTip="{DynamicResource RemoveClientTooltip}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        
+        <!-- Шаблон для отображения клиента без тренера -->
+        <DataTemplate x:Key="AvailableClientTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Аватар пользователя (заменяем иконкой) -->
+                <Border Grid.Column="0" 
+                        Width="40" 
+                        Height="40" 
+                        Background="#E3F2FD" 
+                        BorderBrush="#BBDEFB" 
+                        BorderThickness="1" 
+                        CornerRadius="20"
+                        Margin="0,0,10,0">
+                    <TextBlock Text="👤" 
+                               FontSize="20" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
+                </Border>
+                
+                <!-- Информация о клиенте -->
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding FullName}" 
+                               FontWeight="SemiBold" 
+                               Style="{StaticResource CustomTextBlockStyle}"
+                               FontSize="14"/>
+                    <TextBlock Text="{Binding Email}" 
+                               Foreground="#757575" 
+                               Style="{StaticResource CustomTextBlockStyle}"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="ID: " 
+                                   Foreground="#757575" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="12"/>
+                        <TextBlock Text="{Binding Id}" 
+                                   Foreground="#757575" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="12" 
+                                   FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Кнопка добавления клиента -->
+                <Button Grid.Column="2" 
+                        Content="{DynamicResource AddButton}" 
+                        Style="{StaticResource DefaultButtonStyle}"
+                        Click="AddClientButton_Click"
+                        CommandParameter="{Binding}"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Заголовок и информация о тренере -->
+        <Border Grid.Row="0" 
+                Background="#E3F2FD" 
+                BorderBrush="#BBDEFB" 
+                BorderThickness="0,0,0,1" 
+                Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource ClientManagement}" 
+                               Style="{StaticResource HeaderTextBlockStyle}"
+                               FontSize="22" 
+                               FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="{DynamicResource Coach}" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="14" 
+                                   Foreground="#555555"/>
+                        <TextBlock Text="{Binding CurrentCoach.FullName}" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="14" 
+                                   Foreground="#1976D2" 
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <Button Grid.Column="1" 
+                        Content="{DynamicResource RefreshList}" 
+                        Style="{StaticResource DefaultButtonStyle}" 
+                        Click="RefreshButton_Click"/>
+            </Grid>
+        </Border>
+        
+        <!-- TabControl для переключения между списками клиентов -->
+        <TabControl Grid.Row="1" 
+                   Margin="10" 
+                   Style="{StaticResource CustomTabControlStyle}"
+                   SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
+            
+            <!-- Вкладка "Мои клиенты" -->
+            <TabItem Header="{DynamicResource MyClients}" Style="{StaticResource CustomTabItemStyle}">
+                <Grid>
+                    <!-- Список клиентов -->
+                    <ListBox ItemsSource="{Binding Clients}" 
+                             SelectedItem="{Binding SelectedClient}"
+                             ItemTemplate="{StaticResource ClientTemplate}"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    
+                    <!-- Сообщение, если список пуст -->
+                    <TextBlock Text="{DynamicResource NoClientsMessage}" 
+                              Style="{StaticResource CustomTextBlockStyle}"
+                              FontSize="16" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" 
+                              Foreground="#757575"
+                              TextWrapping="Wrap"
+                              Visibility="{Binding Clients.Count, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                </Grid>
+            </TabItem>
+            
+            <!-- Вкладка "Все клиенты" -->
+            <TabItem Header="{DynamicResource AllClients}" Style="{StaticResource CustomTabItemStyle}">
+                <Grid>
+                    <!-- Список доступных клиентов -->
+                    <ListBox ItemsSource="{Binding AvailableClients}" 
+                             SelectedItem="{Binding SelectedAvailableClient}"
+                             ItemTemplate="{StaticResource AvailableClientTemplate}"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    
+                    <!-- Сообщение, если список пуст -->
+                    <TextBlock Text="{DynamicResource NoAvailableClientsMessage}" 
+                              Style="{StaticResource CustomTextBlockStyle}"
+                              FontSize="16" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" 
+                              Foreground="#757575"
+                              TextWrapping="Wrap"
+                              Visibility="{Binding AvailableClients.Count, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window> 

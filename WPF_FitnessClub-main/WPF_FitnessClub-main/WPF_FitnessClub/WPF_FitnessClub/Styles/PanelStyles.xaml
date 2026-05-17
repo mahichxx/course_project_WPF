@@ -1,0 +1,107 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WPF_FitnessClub">
+
+    <!-- Стиль для ScrollViewer -->
+    <Style x:Key="CustomScrollViewerStyle" TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+    </Style>
+    
+    <!-- Стиль для WrapPanel -->
+    <Style x:Key="CustomWrapPanelStyle" TargetType="WrapPanel">
+        <Setter Property="Margin" Value="10"/>
+    </Style>
+    
+    <!-- Стиль для Border -->
+    <Style x:Key="CustomBorderStyle" TargetType="Border">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    </Style>
+    
+    <!-- Стиль для карточек подписок -->
+    <Style x:Key="SubscriptionCardStyle" TargetType="StackPanel">
+        <Setter Property="Width" Value="360"/>
+        <Setter Property="Height" Value="500"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Стиль для адаптивной карточки подписки -->
+    <Style x:Key="ResponsiveSubscriptionCardStyle" TargetType="StackPanel">
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="MinWidth" Value="300"/>
+        <Setter Property="MaxWidth" Value="400"/>
+        <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=WrapPanel}}"/>
+        <Setter Property="Height" Value="500"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Стиль для адаптивного WrapPanel -->
+    <Style x:Key="ResponsiveWrapPanelStyle" TargetType="WrapPanel">
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ItemWidth" Value="360"/>
+        <Setter Property="ItemHeight" Value="500"/>
+    </Style>
+
+    <!-- Стиль для адаптивного ScrollViewer -->
+    <Style x:Key="ResponsiveScrollViewerStyle" TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Padding" Value="10"/>
+    </Style>
+
+    <!-- Стиль для адаптивного Grid -->
+    <Style x:Key="ResponsiveGridStyle" TargetType="Grid">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+    </Style>
+
+    <!-- Стиль для формы регистрации -->
+    <Style x:Key="RegistrationFormStyle" TargetType="Grid">
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    </Style>
+
+    <!-- Стиль для формы добавления подписки -->
+    <Style x:Key="AddSubscriptionFormStyle" TargetType="Grid">
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    </Style>
+
+    <!-- Стиль для деталей подписки -->
+    <Style x:Key="SubscriptionDetailsStyle" TargetType="Grid">
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    </Style>
+
+    <!-- Стиль для личного кабинета -->
+    <Style x:Key="PersonalAccountStyle" TargetType="Grid">
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    </Style>
+    
+    <!-- Стиль для содержимого вкладки -->
+    <Style x:Key="TabContentStyle" TargetType="StackPanel">
+        <Setter Property="Margin" Value="0,20,0,0"/>
+    </Style>
+
+</ResourceDictionary> 
