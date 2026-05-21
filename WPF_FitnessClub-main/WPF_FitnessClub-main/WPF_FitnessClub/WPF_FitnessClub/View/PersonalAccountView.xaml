@@ -73,7 +73,7 @@
                             <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource CustomTextBlockStyle}"/>
                             <TextBox Text="{Binding FullName}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
 
-                            <TextBlock Text="Телефон (+375 (XX) XXX-XX-XX)" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
+                            <TextBlock Text="{DynamicResource PhoneLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
                             <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
 
                             <Grid Margin="0,15,0,0">
@@ -101,17 +101,21 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Margin="0,0,10,0">
-                                        <TextBlock Text="Вес (кг)" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBox Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                        <!-- ИСПРАВЛЕНО: привязка к словарю -->
+                                        <TextBlock Text="{DynamicResource WeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
+                                        <TextBox Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <TextBlock Text="Рост (см)" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBox Text="{Binding Height}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                        <!-- ИСПРАВЛЕНО: привязка к словарю -->
+                                        <TextBlock Text="{DynamicResource HeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
+                                        <TextBox Text="{Binding Height}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
                                     </StackPanel>
                                 </Grid>
+
                                 <Border Background="#FFF3F3F3" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
                                     <StackPanel>
-                                        <TextBlock Text="Ваша норма калорий:" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Black"/>
+                                        <!-- ИСПРАВЛЕНО: привязка к словарю -->
+                                        <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Black"/>
                                         <TextBlock Text="{Binding DailyCalories}" FontSize="26" Foreground="#E11A22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                     </StackPanel>
                                 </Border>

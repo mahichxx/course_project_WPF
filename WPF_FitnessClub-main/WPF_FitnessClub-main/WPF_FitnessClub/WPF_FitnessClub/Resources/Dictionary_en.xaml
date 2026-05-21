@@ -505,6 +505,32 @@
             <s:String x:Key="MarkAsNotCompletedButton">Mark as Not Completed</s:String>
             <!--#endregion-->
 
+            <!-- Personal Account -->
+            <s:String x:Key="PhoneLabel">Phone (+375 (XX) XXX-XX-XX)</s:String>
+            <s:String x:Key="WeightLabel">Weight (kg)</s:String>
+            <s:String x:Key="HeightLabel">Height (cm)</s:String>
+            <s:String x:Key="AgeLabel">Age</s:String>
+            <s:String x:Key="GenderLabel">Gender</s:String>
+            <s:String x:Key="CaloriesLabel">Your daily calorie intake:</s:String>
+            <s:String x:Key="Male">Male</s:String>
+            <s:String x:Key="Female">Female</s:String>
+
+            <!-- Reviews -->
+
+            <!-- Types & Durations (КРИТИЧНО для фильтров) -->
+            <s:String x:Key="Evening">Evening</s:String>
+            <s:String x:Key="Group">Group</s:String>
+            <s:String x:Key="Single">Single</s:String>
+
+            <s:String x:Key="Visit1">1 visit</s:String>
+            <s:String x:Key="Visit4">4 visits</s:String>
+            <s:String x:Key="Visit8">8 visits</s:String>
+            <s:String x:Key="Visit16">16 visits</s:String>
+            <s:String x:Key="Visit32">32 visits</s:String>
+
+            <!-- Личный кабинет (чтобы не было русских слов) -->
+            <s:String x:Key="DailyCaloriesLabel">Daily calorie intake:</s:String>
+    
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
     

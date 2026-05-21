@@ -205,11 +205,12 @@
                     <ComboBox SelectedValuePath="Tag" 
           SelectedValue="{Binding SelectedTypeKey, UpdateSourceTrigger=PropertyChanged}" 
           Style="{StaticResource CustomComboBoxStyle}">
-                        <ComboBoxItem Content="Все" Tag="All"/>
+                        <ComboBoxItem Content="{DynamicResource All}" Tag="All"/>
                         <ComboBoxItem Content="{DynamicResource Unlimited}" Tag="Unlimited"/>
                         <ComboBoxItem Content="{DynamicResource Morning}" Tag="Morning"/>
                         <ComboBoxItem Content="{DynamicResource Evening}" Tag="Evening"/>
                         <ComboBoxItem Content="{DynamicResource Group}" Tag="Group"/>
+                        <ComboBoxItem Content="{DynamicResource Single}" Tag="Single"/>
                     </ComboBox>
 
                     <TextBlock Text="{DynamicResource Duration}" 
@@ -220,7 +221,7 @@
                     <ComboBox SelectedValuePath="Tag" 
           SelectedValue="{Binding SelectedDurationKey, UpdateSourceTrigger=PropertyChanged}" 
           Style="{StaticResource CustomComboBoxStyle}">
-                        <ComboBoxItem Content="Все" Tag="All"/>
+                        <ComboBoxItem Content="{DynamicResource All}" Tag="All"/>
                         <ComboBoxItem Content="{DynamicResource Visit1}" Tag="Visit1"/>
                         <ComboBoxItem Content="{DynamicResource Visit4}" Tag="Visit4"/>
                         <ComboBoxItem Content="{DynamicResource Visit8}" Tag="Visit8"/>

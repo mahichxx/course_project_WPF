@@ -139,6 +139,22 @@
             </Setter>
         </Style>
 
+        <!-- Добавь это в Window.Resources -->
+        <Style x:Key="StatusTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <!-- Если план выполнен -->
+                <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                    <Setter Property="Text" Value="{DynamicResource TaskStatusCompleted}"/>
+                </DataTrigger>
+                <!-- Если план НЕ выполнен -->
+                <DataTrigger Binding="{Binding IsCompleted}" Value="False">
+                    <Setter Property="Text" Value="{DynamicResource TaskStatusNotCompleted}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
         <!-- Шаблон для отображения плана тренировок -->
         <DataTemplate x:Key="WorkoutPlanTemplate">
             <StackPanel>
@@ -171,7 +187,7 @@
                             Padding="8,4" 
                             Margin="10,0,0,0"
                             VerticalAlignment="Center">
-                        <TextBlock Text="{Binding IsCompleted, Converter={StaticResource BoolToStringConverter}}" 
+                        <TextBlock Style="{StaticResource StatusTextStyle}"  
                                    Foreground="White" 
                                    FontWeight="SemiBold" />
                     </Border>
@@ -209,7 +225,7 @@
                             Padding="8,4" 
                             Margin="10,0,0,0"
                             VerticalAlignment="Center">
-                        <TextBlock Text="{Binding IsCompleted, Converter={StaticResource BoolToStringConverter}}" 
+                        <TextBlock Style="{StaticResource StatusTextStyle}" 
                                    Foreground="White" 
                                    FontWeight="SemiBold" />
                     </Border>

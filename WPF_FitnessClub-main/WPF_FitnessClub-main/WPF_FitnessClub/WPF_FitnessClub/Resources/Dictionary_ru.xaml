@@ -519,6 +519,12 @@
             <s:String x:Key="ReplyToReviewPrompt">Введите ваш ответ на отзыв пользователя {0}:</s:String>
             <s:String x:Key="ReplySaved">Ответ успешно сохранен!</s:String>
 
+            <s:String x:Key="PhoneLabel">Телефон (+375 (XX) XXX-XX-XX)</s:String>
+
+            <s:String x:Key="WeightLabel">Вес (кг)</s:String>
+            <s:String x:Key="HeightLabel">Рост (см)</s:String>
+            <s:String x:Key="DailyCaloriesLabel">Ваша норма калорий:</s:String>
+        
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 

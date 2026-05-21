@@ -83,12 +83,12 @@
                               CellEditEnding="UsersDataGrid_CellEditEnding"
                               Style="{StaticResource DefaultDataGridStyle}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" Width="40"/>
-                            <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="*"/>
-                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
-                            <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="*"/>
+                            <DataGridTextColumn Header="{DynamicResource AdminPanelIdColumn}" Binding="{Binding Id}" IsReadOnly="True" Width="40"/>
+                            <DataGridTextColumn Header="{DynamicResource FullName}" Binding="{Binding FullName}" Width="*"/>
+                            <DataGridTextColumn Header="{DynamicResource Email}" Binding="{Binding Email}" Width="*"/>
+                            <DataGridTextColumn Header="{DynamicResource Login}"  Binding="{Binding Login}" Width="*"/>
 
-                            <DataGridTemplateColumn Header="Роль" Width="110">
+                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelRoleColumn}" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Role, Converter={StaticResource RoleToStringConverter}}" VerticalAlignment="Center" Margin="5,0"/>
@@ -106,17 +106,17 @@
                                 </DataGridTemplateColumn.CellEditingTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="120"/>
-                            <DataGridTextColumn Header="Вес" Binding="{Binding Weight}" Width="60"/>
-                            <DataGridTextColumn Header="Рост" Binding="{Binding Height}" Width="60"/>
-                            <DataGridTextColumn Header="Возраст" Binding="{Binding Age}" Width="60"/>
+                            <DataGridTextColumn Header="{DynamicResource PhoneLabel}" Binding="{Binding Phone}" Width="120"/>
+                            <DataGridTextColumn Header="{DynamicResource WeightLabel}" Binding="{Binding Weight}" Width="60"/>
+                            <DataGridTextColumn Header="{DynamicResource HeightLabel}" Binding="{Binding Height}" Width="60"/>
+                            <DataGridTextColumn Header="{DynamicResource AgeLabel}" Binding="{Binding Age}" Width="60"/>
 
-                            <DataGridCheckBoxColumn Header="Забл." Binding="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+                            <DataGridCheckBoxColumn Header="{DynamicResource AdminPanelBlockedColumn}"  Binding="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
 
-                            <DataGridTemplateColumn Header="Действия" Width="90">
+                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelActionsColumn}"  Width="90">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Удалить" 
+                                        <Button Content="{DynamicResource DeleteButton}" 
                             Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
                             CommandParameter="{Binding}"
                             Background="#E11A22" 
