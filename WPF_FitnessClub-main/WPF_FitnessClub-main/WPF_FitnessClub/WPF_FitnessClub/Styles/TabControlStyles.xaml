@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Стиль для TabControl -->
+    <!-- Основной стиль TabControl -->
     <Style x:Key="CustomTabControlStyle" TargetType="TabControl">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">
@@ -12,11 +12,12 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource LightGrayBrush}" CornerRadius="0" Background="Transparent">
+                        <!-- Центрируем вкладки и убираем отступы -->
+                        <Border Grid.Row="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Center">
                             <TabPanel IsItemsHost="True"/>
                         </Border>
-                        <Border Grid.Row="1" Background="{TemplateBinding Background}" CornerRadius="0">
-                            <ContentPresenter ContentSource="SelectedContent" Margin="10"/>
+                        <Border Grid.Row="1" Background="{TemplateBinding Background}">
+                            <ContentPresenter ContentSource="SelectedContent"/>
                         </Border>
                     </Grid>
                 </ControlTemplate>
@@ -24,33 +25,41 @@
         </Setter>
     </Style>
 
-    <!-- Стиль для TabItem (Вкладки) -->
+    <!-- Стиль для TabItem (Слова Авторизация/Регистрация) -->
     <Style x:Key="CustomTabItemStyle" TargetType="TabItem">
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="20,10"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border x:Name="Border" Padding="15,8" BorderThickness="0,0,0,3" BorderBrush="Transparent" CornerRadius="0" Background="Transparent">
-                        <ContentPresenter x:Name="ContentSite" ContentSource="Header" VerticalAlignment="Center"/>
+                    <!-- CornerRadius="0" делает углы абсолютно прямыми -->
+                    <Border x:Name="Border" 
+                            Padding="{TemplateBinding Padding}" 
+                            BorderThickness="0,0,0,2" 
+                            BorderBrush="Transparent" 
+                            Background="Transparent" 
+                            CornerRadius="0">
+                        <ContentPresenter x:Name="ContentSite" ContentSource="Header" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <!-- Активная вкладка -->
                         <Trigger Property="IsSelected" Value="True">
-                            <!-- Линия под активной вкладкой — динамическая -->
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
-                            <Setter TargetName="ContentSite" Property="TextBlock.FontWeight" Value="Bold"/>
-                            <Setter Property="Foreground" Value="{DynamicResource PrimaryRedBrush}"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="White"/>
                         </Trigger>
-                        <!-- Серый фон ТОЛЬКО для невыбранных вкладок при наведении -->
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True"/>
-                                <Condition Property="IsSelected" Value="False"/>
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource MediumGrayBrush}"/>
-                        </MultiTrigger>
+                        <!-- Наведение мышкой -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#80FFFFFF"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Псевдонимы для совместимости с другими окнами -->
+    <Style x:Key="DefaultTabControlStyle" BasedOn="{StaticResource CustomTabControlStyle}" TargetType="TabControl"/>
+    <Style x:Key="DefaultTabItemStyle" BasedOn="{StaticResource CustomTabItemStyle}" TargetType="TabItem"/>
+
 </ResourceDictionary>

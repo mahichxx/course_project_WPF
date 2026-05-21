@@ -44,27 +44,31 @@
         <Border x:Name="MainBorder"
             Grid.Row="1"
             Grid.Column="1"
-            BorderThickness="2"
+            BorderThickness="0"
             CornerRadius="10" 
-            Width="300"
-            Height="270"
-        
+            Width="340"
+            Height="Auto"
+            MinHeight="400"      
+            Padding="0,15,0,0"
+            ClipToBounds="True"  
+                
+            VerticalAlignment="Center"
             Background="{DynamicResource PrimaryRedBrush}"
-            HorizontalAlignment="Center">
+            HorizontalAlignment="Center"
+            Effect="{StaticResource CardShadow}">
 
             <TabControl x:Name="MainTabControl" Style="{StaticResource CustomTabControlStyle}" SelectionChanged="MainTabControl_SelectionChanged" >
                 <TabItem Header="{DynamicResource LoginTitle}"
                          Style="{StaticResource CustomTabItemStyle}">
-            
+
+                    
                     <StackPanel
-         
-                Margin="30"
-                HorizontalAlignment="Center">
-                <TextBlock
+                HorizontalAlignment="Center" Height="255">
+                        <TextBlock
                    
                     Text="{DynamicResource Login}" Foreground="#FFF1F1F1"
                     />
-                <TextBox x:Name="LoginInput"
+                        <TextBox x:Name="LoginInput"
                     TextAlignment="Left" 
                     Width="158" 
                     MaxWidth="200" 
@@ -72,21 +76,21 @@
                     Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
                     Style="{DynamicResource CustomTextBoxStyle}" />
 
-                <TextBlock
+                        <TextBlock
                     Text="{DynamicResource Password}" Foreground="#FFEDEDED"
                      />
-                <PasswordBox x:Name="PasswordInput"
+                        <PasswordBox x:Name="PasswordInput"
                     Width="158" 
-                    MaxWidth="200" 
-                    Foreground="{DynamicResource TextBrush}" 
+                    MaxWidth="200"
                     Style="{DynamicResource CustomPasswordBoxStyle}"
-                    PreviewKeyDown="PasswordBox_PreviewKeyDown" />
+                    PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                             />
 
-                <Button x:Name="EnterButton"
+                        <Button x:Name="EnterButton"
                         Content="{DynamicResource LoginButton}"  
-                        MinWidth="80" 
+                        MinWidth="120" 
                         MaxWidth="200" 
-                        Margin="0,15,0,0" 
+                        Margin="0,60,0,0" 
                         Style="{DynamicResource EnterButton}"
                         Command="{Binding EnterCommand}"
                         CommandParameter="{Binding ElementName=PasswordInput}"/>
@@ -96,11 +100,11 @@
 
                 <TabItem Header="{DynamicResource RegistrationTitle}"
                     Style="{StaticResource CustomTabItemStyle}">
-                    <StackPanel Margin="30" HorizontalAlignment="Center">
+                    <StackPanel  Margin="30,10,30,20" HorizontalAlignment="Center">
                         <TextBlock Foreground="#FFF1F1F1" Text="{DynamicResource FullName}" />
                         <TextBox x:Name="FullNameInput" 
                                 TextAlignment="Left" 
-                                Width="200" 
+                                Width="220" 
                                 MaxLength="30"
                                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{DynamicResource CustomTextBoxStyle}" />
@@ -108,7 +112,7 @@
                         <TextBlock Text="{DynamicResource Email}" Foreground="#FFF1F1F1" />
                         <TextBox x:Name="EmailInput" 
                                 TextAlignment="Left" 
-                                Width="200" 
+                                Width="220" 
                                 MaxLength="30"
                                 Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{DynamicResource CustomTextBoxStyle}" />
@@ -116,33 +120,31 @@
                         <TextBlock Text="{DynamicResource Login}" Foreground="#FFF1F1F1" />
                         <TextBox x:Name="RegLoginInput" 
                                 TextAlignment="Left" 
-                                Width="200" 
+                                Width="220" 
                                 MaxLength="30"
                                 Text="{Binding RegLogin, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{DynamicResource CustomTextBoxStyle}" />
 
                         <TextBlock Text="{DynamicResource Password}" Foreground="#FFF1F1F1" />
                         <PasswordBox x:Name="RegPasswordInput" 
-                                    Width="200" 
-                                    Foreground="{DynamicResource TextBrush}" 
-                                    Style="{DynamicResource CustomPasswordBoxStyle}"
+                                    Width="220" 
+                                    Style="{StaticResource CustomPasswordBoxStyle}"
                                     PreviewKeyDown="PasswordBox_PreviewKeyDown" />
 
                         <TextBlock Text="{DynamicResource ConfirmPassword}" Foreground="#FFF1F1F1" />
                         <PasswordBox x:Name="ConfirmPasswordInput" 
-                                    Width="200" 
-                                    Foreground="{DynamicResource TextBrush}" 
-                                    Style="{DynamicResource CustomPasswordBoxStyle}"
+                                    Width="220" 
+                                    Style="{StaticResource CustomPasswordBoxStyle}"
                                     Tag="{Binding ElementName=RegPasswordInput}"
                                     PreviewKeyDown="PasswordBox_PreviewKeyDown" />
 
                         <Button x:Name="RegisterButton"
                                 Content="{DynamicResource RegisterButton}"
-                                MinWidth="140"
-                                Margin="0,15,0,0"
+                                MinWidth="160"
+                                Margin="0,24,0,0"
                                 Style="{DynamicResource EnterButton}" 
                                 Command="{Binding RegisterCommand}"
-                                CommandParameter="{Binding ElementName=ConfirmPasswordInput}" />   
+                                CommandParameter="{Binding ElementName=ConfirmPasswordInput}" />
                     </StackPanel>
                 </TabItem>
 
