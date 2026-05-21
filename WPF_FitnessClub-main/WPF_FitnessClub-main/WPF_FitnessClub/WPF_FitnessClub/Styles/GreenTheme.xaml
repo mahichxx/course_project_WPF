@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ЦВЕТОВАЯ ПАЛИТРА: ЗЕЛЕНАЯ ТЕМА -->
+    <Color x:Key="PrimaryRed">#83AF3B</Color>
+    <!-- Оливковый основной -->
+    <Color x:Key="DarkRed">#6B8E2E</Color>
+    <!-- Темно-зеленый -->
+    <Color x:Key="BackgroundColor">#F5F5F8</Color>
+    <Color x:Key="SecondaryBackgroundColor">#FFFFFF</Color>
+    <!-- Белые карточки -->
+    <Color x:Key="TextColor">#000000</Color>
+    <Color x:Key="LightGray">#E0E0E5</Color>
+
+    <!-- Дополнительный акцент Лайм (Accent 01 на фото) -->
+    <SolidColorBrush x:Key="LimeAccentBrush" Color="#D7FE03"/>
+
+</ResourceDictionary>

@@ -2,17 +2,25 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WPF_FitnessClub">
 
-    <!-- Стиль для окна -->
+    <!-- Базовый стиль для окон (Window) -->
     <Style x:Key="WindowStyle" TargetType="Window">
         <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <!-- Используем Segoe UI или чистый Sans-Serif для современного вида -->
+        <Setter Property="FontFamily" Value="Segoe UI, Roboto, Helvetica, Arial, sans-serif"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource TextBrush}"/>
         <Setter Property="ResizeMode" Value="CanResize"/>
+        <!-- Опционально: можно задать минимальные размеры для всех окон -->
+        <Setter Property="MinWidth" Value="400"/>
+        <Setter Property="MinHeight" Value="300"/>
     </Style>
 
-
+    <!-- Базовый стиль для страниц (UserControl) -->
     <Style x:Key="UserControlStyle" TargetType="UserControl">
-        <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <!-- Прозрачный, чтобы видеть фон окна -->
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI, Roboto, sans-serif"/>
     </Style>
 
-</ResourceDictionary> 
+</ResourceDictionary>

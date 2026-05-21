@@ -53,10 +53,10 @@
         <!-- TabControl для таблиц базы данных -->
         <TabControl Grid.Row="1" 
                     Margin="5" 
-                    Style="{StaticResource DefaultTabControlStyle}">
+                    Style="{StaticResource CustomTabControlStyle}">
             <!-- Вкладка пользователей -->
             <TabItem Header="{DynamicResource AdminPanelUsersTab}" 
-                     Style="{StaticResource DefaultTabItemStyle}">
+                     Style="{StaticResource CustomTabItemStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -119,7 +119,7 @@
                                         <Button Content="{DynamicResource DeleteButton}" 
                             Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
                             CommandParameter="{Binding}"
-                            Background="#E11A22" 
+                            Background="{DynamicResource PrimaryRedBrush}" 
                             Foreground="White"
                             FontSize="10" 
                             Padding="2" 

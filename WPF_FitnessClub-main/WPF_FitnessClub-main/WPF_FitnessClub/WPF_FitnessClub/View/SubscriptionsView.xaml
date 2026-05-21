@@ -55,11 +55,13 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:Subscription}">
                         <!-- Уменьшаем ширину до 180 и маргин до 5, чтобы они стояли плотнее -->
-                        <Border Width="190" 
-            Height="280" 
+                        <Border Width="200" 
+            Height="300" 
             Background="{DynamicResource SecondaryBackgroundBrush}" 
-            CornerRadius="10" 
-            Margin="5" 
+            BorderBrush="{DynamicResource LightGrayBrush}"
+            BorderThickness="1"
+            CornerRadius="0" 
+            Margin="8" 
             MouseDown="Subscription_MouseDown"
             Effect="{StaticResource CardShadow}">
 
@@ -88,7 +90,7 @@
 
                                     <TextBlock FontSize="14"
                            FontWeight="Bold"
-                           Foreground="{StaticResource PrimaryRedBrush}" 
+                           Foreground="{DynamicResource PrimaryRedBrush}" 
                            Margin="0,2,0,2"
                            Text="{Binding Price, StringFormat={}{0:0.00} Br}"/>
 
@@ -150,7 +152,7 @@
 
                     <TextBox Width="190" 
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                             Style="{StaticResource CustomTextBoxStyle}"/>
+                             Style="{StaticResource CustomTextBoxStyle}" Height="30"/>
 
                     <TextBlock Text="{DynamicResource Price}" 
                              Padding="20,20,20,0" 
@@ -204,7 +206,7 @@
                     <!-- Блок ТИП -->
                     <ComboBox SelectedValuePath="Tag" 
           SelectedValue="{Binding SelectedTypeKey, UpdateSourceTrigger=PropertyChanged}" 
-          Style="{StaticResource CustomComboBoxStyle}">
+          Style="{StaticResource CustomComboBoxStyle}" Height="30">
                         <ComboBoxItem Content="{DynamicResource All}" Tag="All"/>
                         <ComboBoxItem Content="{DynamicResource Unlimited}" Tag="Unlimited"/>
                         <ComboBoxItem Content="{DynamicResource Morning}" Tag="Morning"/>
@@ -215,12 +217,12 @@
 
                     <TextBlock Text="{DynamicResource Duration}" 
                              Margin="20,20,0,0" 
-                             Style="{StaticResource HeaderTextBlockStyle}" Height="25" />
+                             Style="{StaticResource HeaderTextBlockStyle}" Height="29" />
 
                     <!-- Блок ДЛИТЕЛЬНОСТЬ -->
                     <ComboBox SelectedValuePath="Tag" 
           SelectedValue="{Binding SelectedDurationKey, UpdateSourceTrigger=PropertyChanged}" 
-          Style="{StaticResource CustomComboBoxStyle}">
+          Style="{StaticResource CustomComboBoxStyle}" Height="30">
                         <ComboBoxItem Content="{DynamicResource All}" Tag="All"/>
                         <ComboBoxItem Content="{DynamicResource Visit1}" Tag="Visit1"/>
                         <ComboBoxItem Content="{DynamicResource Visit4}" Tag="Visit4"/>

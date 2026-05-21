@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WPF_FitnessClub.View.PersonalAccountView"
+<UserControl x:Class="WPF_FitnessClub.View.PersonalAccountView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -112,11 +112,11 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Border Background="#FFF3F3F3" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
+                                <Border Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
                                     <StackPanel>
                                         <!-- ИСПРАВЛЕНО: привязка к словарю -->
-                                        <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Black"/>
-                                        <TextBlock Text="{Binding DailyCalories}" FontSize="26" Foreground="#E11A22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                                        <TextBlock Text="{Binding DailyCalories}" FontSize="26" Foreground="{DynamicResource PrimaryRedBrush}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -193,12 +193,12 @@
                                                 <TextBlock Text="{Binding Subscription.Name}" FontWeight="Bold" FontSize="15" Height="50" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}"/>
                                                 <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontWeight="SemiBold" Margin="0,5,0,5"/>
                                                 <TextBlock Text="{Binding ExpiryDate, StringFormat='До: {0:dd.MM.yyyy}'}" FontSize="12" Opacity="0.6" Foreground="{DynamicResource TextBrush}"/>
-                                                <Button Content="Отменить запись" 
+                                                <Button Content="{DynamicResource CancelButton}" 
                                                         Command="{Binding DataContext.CancelSubscriptionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                                         CommandParameter="{Binding}" 
                                                         Margin="0,25,0,0" 
                                                         Style="{StaticResource DefaultButtonStyle}" 
-                                                        Background="#FF4C4C" Foreground="White" Height="30"/>
+                                                        Background="{DynamicResource PrimaryRedBrush}" Foreground="White" Height="30"/>
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>

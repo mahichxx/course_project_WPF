@@ -2,44 +2,57 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WPF_FitnessClub">
 
-    <!-- Стиль для RadioButton -->
+    <!-- Стиль для RadioButton (Переключатели) -->
     <Style x:Key="CustomRadioButtonStyle" TargetType="RadioButton">
-        <Setter Property="Margin" Value="5,0"/>
-        <Setter Property="Padding" Value="5,0"/>
+        <Setter Property="Margin" Value="8,0"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Grid>
+                    <Grid Background="Transparent">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+
+                        <!-- Внешний круг -->
                         <Ellipse x:Name="RadioOuter"
-                               Width="18"
-                               Height="18"
-                               Stroke="{DynamicResource PrimaryRedBrush}"
-                               StrokeThickness="2"
-                               Fill="Transparent"/>
+                                 Width="20" Height="20"
+                                 Stroke="{DynamicResource PrimaryRedBrush}"
+                                 StrokeThickness="2"
+                                 Fill="{DynamicResource BackgroundBrush}"/>
+
+                        <!-- Внутренний кружок (точка выбора) -->
                         <Ellipse x:Name="RadioInner"
-                               Width="10"
-                               Height="10"
-                               Fill="{DynamicResource PrimaryRedBrush}"
-                               Opacity="0"/>
+                                 Width="10" Height="10"
+                                 Fill="{DynamicResource PrimaryRedBrush}"
+                                 Opacity="0"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"/>
+
                         <ContentPresenter Grid.Column="1"
-                                      Margin="5,0,0,0"
-                                      VerticalAlignment="Center"
-                                      HorizontalAlignment="Left"
-                                      TextElement.Foreground="{DynamicResource TextBrush}"/>
+                                          Margin="8,0,0,0"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"
+                                          RecognizesAccessKey="True"/>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <!-- Когда выбрано -->
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="RadioInner" Property="Opacity" Value="1"/>
+                            <Setter TargetName="RadioOuter" Property="StrokeThickness" Value="2.5"/>
                         </Trigger>
+                        <!-- При наведении -->
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="RadioOuter" Property="Stroke" Value="{DynamicResource DarkRedBrush}"/>
                             <Setter TargetName="RadioInner" Property="Fill" Value="{DynamicResource DarkRedBrush}"/>
+                        </Trigger>
+                        <!-- Когда кнопка отключена -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="RadioOuter" Property="Stroke" Value="{DynamicResource LightGrayBrush}"/>
+                            <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -47,4 +60,4 @@
         </Setter>
     </Style>
 
-</ResourceDictionary> 
+</ResourceDictionary>
