@@ -162,9 +162,17 @@ namespace WPF_FitnessClub.View
             if (textWasChanged)
                 textBox.CaretIndex = caretIndex;
                 
-            BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
-            if (binding != null)
-                binding.UpdateSource();
+            //BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+            //if (binding != null) binding.UpdateSource();
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var element = sender as FrameworkElement;
+            if (element != null)
+            {
+                element.Focus();
+            }
         }
     }
 } 

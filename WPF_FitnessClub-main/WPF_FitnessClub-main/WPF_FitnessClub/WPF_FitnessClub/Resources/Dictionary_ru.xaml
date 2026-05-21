@@ -140,18 +140,19 @@
             <!-- Типы абонементов -->
             <s:String x:Key="AllTypes">Все типы</s:String>
             <s:String x:Key="Unlimited">Безлимит</s:String>
-            <s:String x:Key="Standard">Обычный</s:String>
             <s:String x:Key="Morning">Утренний</s:String>
-            <s:String x:Key="Personal">Персональный</s:String>
+            <s:String x:Key="Evening">Вечерний</s:String>
+            <s:String x:Key="Group">Групповая</s:String>
+            <s:String x:Key="Single">Одиночная</s:String>
+            <s:String x:Key="Standard">Обычный</s:String>
 
             <!-- Длительности -->
-            <s:String x:Key="AllDurations">Любая длительность</s:String>
-            <s:String x:Key="OneMonth">1 месяц</s:String>
-            <s:String x:Key="ThreeMonths">3 месяца</s:String>
-            <s:String x:Key="SixMonths">6 месяцев</s:String>
-            <s:String x:Key="OneYear">12 месяцев</s:String>
-            <s:String x:Key="TenVisits">10 занятий</s:String>
-
+            <s:String x:Key="Visit1">1 занятие</s:String>
+            <s:String x:Key="Visit4">4 занятия</s:String>
+            <s:String x:Key="Visit8">8 занятий</s:String>
+            <s:String x:Key="Visit16">16 занятий</s:String>
+            <s:String x:Key="Visit32">32 занятия</s:String>
+            
             <!-- Валидация -->
             <s:String x:Key="ValidationErrorsHeader">Форма содержит следующие ошибки:</s:String>
             <s:String x:Key="NameRequired">Введите название</s:String>
@@ -195,7 +196,8 @@
             <!-- Новый ключ для локализации -->
             <s:String x:Key="YourOpinionMatters">Ваше мнение очень важно!</s:String>
             <s:String x:Key="NoReviews">Напишите отзыв первым!</s:String>
-            
+            <s:String x:Key="OnlyClientsCanReview">Отзывы могут оставлять только клиенты, которые приобрели этот абонемент.</s:String>
+
             <!-- Роли пользователей -->
             <s:String x:Key="AdminRole">Администратор</s:String>
             <s:String x:Key="CoachRole">Тренер</s:String>
@@ -225,6 +227,7 @@
             <s:String x:Key="EmailAlreadyExists">Пользователь с таким email уже существует!</s:String>
    
             <!-- MessageBox строки для SubscriptionDetails.xaml.cs -->
+            <s:String x:Key="SubscriptionErrorTitle">Ошибка при записи на абонемент</s:String>
             <s:String x:Key="SavedSuccessfully">Изменения сохранены успешно!</s:String>
             <s:String x:Key="SavedTitle">Сохранено</s:String>
             <s:String x:Key="ErrorSaving">Ошибка при сохранении изменений: {0}</s:String>
@@ -431,7 +434,7 @@
             <s:String x:Key="AdminPanelUserAdded">Пользователь успешно добавлен</s:String>
             <s:String x:Key="AdminPanelUserUpdated">Данные пользователя успешно обновлены</s:String>
             <s:String x:Key="AdminPanelLimitationTitle">Ограничение</s:String>
-            <s:String x:Key="AdminPanelError">Ошибка</s:String>
+            <s:String x:Key="AdminPanelError">Ошибка панели администратора</s:String>
             <s:String x:Key="AdminPanelWarning">Предупреждение</s:String>
             <s:String x:Key="AdminPanelSuccess">Успех</s:String>
             <s:String x:Key="AdminPanelDataUpdated">Данные успешно обновлены!</s:String>
@@ -509,6 +512,12 @@
             <s:String x:Key="MarkAsCompletedButton">Отметить как выполненное</s:String>
             <s:String x:Key="MarkAsNotCompletedButton">Отметить как невыполненное</s:String>
             <!--#endregion-->
+
+            <s:String x:Key="SubscriptionSuccessMessage">Вы успешно записались на абонемент "{0}"! Срок действия: с {1} по {2}. Теперь вы можете оставить отзыв.</s:String>
+            <s:String x:Key="ReviewAccessDenied">Отзывы могут оставлять только клиенты, которые приобрели этот абонемент.</s:String>
+            <s:String x:Key="ReplyToReviewTitle">Ответ на отзыв</s:String>
+            <s:String x:Key="ReplyToReviewPrompt">Введите ваш ответ на отзыв пользователя {0}:</s:String>
+            <s:String x:Key="ReplySaved">Ответ успешно сохранен!</s:String>
 
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>

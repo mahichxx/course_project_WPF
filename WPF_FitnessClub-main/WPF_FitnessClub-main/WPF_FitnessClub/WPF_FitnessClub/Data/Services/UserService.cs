@@ -91,71 +91,39 @@ namespace WPF_FitnessClub.Data.Services
         {
             try
             {
-                // Очищаем контекст перед операцией обновления
+                // Очищаем контекст, чтобы не было конфликтов "двойников" объекта
                 _unitOfWork.Context.ChangeTracker.Entries()
                     .Where(e => e.State != System.Data.Entity.EntityState.Detached)
                     .ToList()
                     .ForEach(e => e.State = System.Data.Entity.EntityState.Detached);
-                
-                // Получаем текущую версию пользователя из базы данных
-                var existingUser = _unitOfWork.UserRepository.GetById(user.Id);
-                if (existingUser == null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Пользователь с ID {user.Id} не найден для обновления");
-                    return false;
-                }
 
-                // Обновляем свойства
+                var existingUser = _unitOfWork.UserRepository.GetById(user.Id);
+                if (existingUser == null) return false;
+
+                // ПЕРЕНОСИМ ВСЕ ДАННЫЕ В БАЗУ:
                 existingUser.FullName = user.FullName;
                 existingUser.Email = user.Email;
                 existingUser.Login = user.Login;
                 existingUser.Password = user.Password;
                 existingUser.Role = user.Role;
-                existingUser.IsBlocked = user.IsBlocked; // Явно обновляем свойство IsBlocked
+                existingUser.IsBlocked = user.IsBlocked;
 
-                // Обновляем пользователя в репозитории
+                // --- ВОТ ЭТИ СТРОКИ ОБЯЗАТЕЛЬНЫ ДЛЯ СОХРАНЕНИЯ НОВЫХ ПОЛЕЙ ---
+                existingUser.Phone = user.Phone;
+                existingUser.Age = user.Age;
+                existingUser.Gender = user.Gender;
+                existingUser.Weight = user.Weight;
+                existingUser.Height = user.Height;
+
                 _unitOfWork.UserRepository.Update(existingUser);
-                
-                try
-                {
-                    _unitOfWork.Save();
-                    System.Diagnostics.Debug.WriteLine($"Пользователь с ID {user.Id} успешно обновлен");
-                    return true;
-                }
-                catch (Exception saveEx)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Ошибка при сохранении обновлений пользователя с ID {user.Id}: {saveEx.Message}");
-                    
-                    // Попробуем еще раз после повторной очистки контекста
-                    _unitOfWork.Context.ChangeTracker.Entries()
-                        .Where(e => e.State != System.Data.Entity.EntityState.Detached)
-                        .ToList()
-                        .ForEach(e => e.State = System.Data.Entity.EntityState.Detached);
-                    
-                    // Получаем пользователя заново
-                    existingUser = _unitOfWork.UserRepository.GetById(user.Id);
-                    if (existingUser == null)
-                        return false;
-                        
-                    // Обновляем свойства
-                    existingUser.FullName = user.FullName;
-                    existingUser.Email = user.Email;
-                    existingUser.Login = user.Login;
-                    existingUser.Password = user.Password;
-                    existingUser.Role = user.Role;
-                    existingUser.IsBlocked = user.IsBlocked;
-                    
-                    // Обновляем пользователя в репозитории
-                    _unitOfWork.UserRepository.Update(existingUser);
-                    _unitOfWork.Save();
-                    
-                    System.Diagnostics.Debug.WriteLine($"Пользователь с ID {user.Id} успешно обновлен после повторной попытки");
-                    return true;
-                }
+                _unitOfWork.Save(); // Команда SQL Серверу: "Запиши изменения!"
+
+                System.Diagnostics.Debug.WriteLine($"Пользователь {user.Id} успешно сохранен.");
+                return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка в UserService.Update: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Ошибка сохранения: {ex.Message}");
                 return false;
             }
         }

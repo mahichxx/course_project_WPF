@@ -48,7 +48,7 @@ namespace WPF_FitnessClub.ViewModels
 			_originalEmail = user.Email;
 			_originalPassword = user.Password;
 			SelectedTabIndex = 0;
-
+			
 			_userService = new UserService();
 			_userSubscriptionRepository = new UserSubscriptionRepository();
 			
@@ -463,10 +463,60 @@ namespace WPF_FitnessClub.ViewModels
 				OnPropertyChanged(nameof(ConfirmPasswordErrorMessage));
 			}
 		}
-		#endregion
 
-		#region Методы загрузки данных
-		public void LoadWorkoutPlans()
+        public string Phone
+        {
+            get => _user.Phone;
+            set { _user.Phone = value; OnPropertyChanged(nameof(Phone)); }
+        }
+
+        public double Weight
+        {
+            get => _user.Weight;
+            set { _user.Weight = value; OnPropertyChanged(nameof(Weight)); OnPropertyChanged(nameof(DailyCalories)); }
+        }
+
+        public double Height
+        {
+            get => _user.Height;
+            set { _user.Height = value; OnPropertyChanged(nameof(Height)); OnPropertyChanged(nameof(DailyCalories)); }
+        }
+
+        public int Age
+        {
+            get => _user.Age;
+            set { _user.Age = value; OnPropertyChanged(nameof(Age)); OnPropertyChanged(nameof(DailyCalories)); }
+        }
+
+        public string Gender
+        {
+            get => _user.Gender;
+            set { _user.Gender = value; OnPropertyChanged(nameof(Gender)); OnPropertyChanged(nameof(DailyCalories)); }
+        }
+
+        // Свойство для выбора пола в ComboBox (0 - Мужской, 1 - Женский)
+        public int GenderIndex
+        {
+            get => Gender == "Female" ? 1 : 0;
+            set { Gender = (value == 1 ? "Female" : "Male"); OnPropertyChanged(nameof(GenderIndex)); }
+        }
+
+        // Расчет нормы калорий (КБЖУ)
+        public string DailyCalories
+        {
+            get
+            {
+                if (Weight < 30 || Height < 100 || Age < 10) return "Введите данные";
+                double bmr = (Gender == "Female")
+                    ? (10 * Weight) + (6.25 * Height) - (5 * Age) - 161
+                    : (10 * Weight) + (6.25 * Height) - (5 * Age) + 5;
+                return Math.Round(bmr * 1.2).ToString() + " ккал"; // Умножили на 1.2
+            }
+        }
+        #endregion
+
+        #region Методы загрузки данных
+        public void LoadWorkoutPlans()
 		{
 			try
 			{
@@ -654,147 +704,136 @@ namespace WPF_FitnessClub.ViewModels
 			return true;
 		}
 
-		private void ExecuteSave(object parameter)
-		{
-			try
-			{
-				List<string> validationErrors = new List<string>();
-				
-				if (string.IsNullOrWhiteSpace(Username))
-				{
-					validationErrors.Add((string)Application.Current.Resources["UsernameRequired"]);
-					IsUsernameError = true;
-					UsernameErrorMessage = (string)Application.Current.Resources["UsernameRequired"];
-				}
-				else if (Username.Length < 3)
-				{
-					validationErrors.Add((string)Application.Current.Resources["UsernameTooShort"]);
-					IsUsernameError = true;
-					UsernameErrorMessage = (string)Application.Current.Resources["UsernameTooShort"];
-				}
-				else if (!System.Text.RegularExpressions.Regex.IsMatch(Username, @"^[a-zA-Z0-9_]{3,20}$"))
-				{
-					validationErrors.Add((string)Application.Current.Resources["UsernameInvalidFormat"]);
-					IsUsernameError = true;
-					UsernameErrorMessage = (string)Application.Current.Resources["UsernameInvalidFormat"];
-				}
-				else
-				{
-					IsUsernameError = false;
-					UsernameErrorMessage = string.Empty;
-				}
-				
-				if (string.IsNullOrWhiteSpace(Email))
-				{
-					validationErrors.Add((string)Application.Current.Resources["EmailRequired"]);
-					IsEmailError = true;
-					EmailErrorMessage = (string)Application.Current.Resources["EmailRequired"];
-				}
-				else if (!ValidateEmail(Email))
-				{
-					validationErrors.Add(EmailErrorMessage);
-				}
-				
-				if (string.IsNullOrWhiteSpace(FullName))
-				{
-					validationErrors.Add((string)Application.Current.Resources["FullNameRequired"]);
-					IsFullNameError = true;
-					FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequired"];
-				}
-				else if (FullName.Length < 3)
-				{
-					validationErrors.Add((string)Application.Current.Resources["FullNameTooShort"]);
-					IsFullNameError = true;
-					FullNameErrorMessage = (string)Application.Current.Resources["FullNameTooShort"];
-				}
-				else if (!System.Text.RegularExpressions.Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$"))
-				{
-					validationErrors.Add((string)Application.Current.Resources["FullNameOnlyLetters"]);
-					IsFullNameError = true;
-					FullNameErrorMessage = (string)Application.Current.Resources["FullNameOnlyLetters"];
-				}
-				else
-				{
-					string[] nameParts = FullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-					if (nameParts.Length != 3)
-					{
-						validationErrors.Add((string)Application.Current.Resources["FullNameRequireThreeWords"]);
-						IsFullNameError = true;
-						FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequireThreeWords"];
-					}
-					else
-					{
-						IsFullNameError = false;
-						FullNameErrorMessage = string.Empty;
-					}
-				}
-				
-				if (!IsUsernameError && Username != _originalUsername)
-				{
-					var existingUser = _userService.GetByLogin(Username);
-					if (existingUser != null && existingUser.Id != _user.Id)
-					{
-						validationErrors.Add((string)Application.Current.Resources["LoginAlreadyTaken"]);
-						IsUsernameError = true;
-						UsernameErrorMessage = (string)Application.Current.Resources["LoginAlreadyTaken"];
-					}
-				}
 
-				if (!IsEmailError && Email != _originalEmail)
-				{
-					var existingUser = _userService.GetByEmail(Email);
-					if (existingUser != null && existingUser.Id != _user.Id)
-					{
-						validationErrors.Add((string)Application.Current.Resources["EmailAlreadyExists"]);
-						IsEmailError = true;
-						EmailErrorMessage = (string)Application.Current.Resources["EmailAlreadyExists"];
-					}
-				}
-				
-				if (validationErrors.Count > 0)
-				{
-					StringBuilder errorMessageBuilder = new StringBuilder();
-					errorMessageBuilder.AppendLine((string)Application.Current.Resources["ValidationErrorsHeader"]);
-					
-					foreach (var error in validationErrors)
-					{
-						errorMessageBuilder.AppendLine("- " + error);
-					}
-					
-					string message = errorMessageBuilder.ToString();
-					
-					MessageBox.Show(
-						message,
-						(string)Application.Current.Resources["ValidationErrorTitle"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
-					return;      
-				}
+        private void ExecuteSave(object parameter)
+        {
+            try
+            {
+                List<string> validationErrors = new List<string>();
 
-				_userService.Update(_user);
+                // 1. Валидация Логина (3-20 символов)
+                if (string.IsNullOrWhiteSpace(Username))
+                {
+                    validationErrors.Add((string)Application.Current.Resources["UsernameRequired"]);
+                    IsUsernameError = true;
+                    UsernameErrorMessage = (string)Application.Current.Resources["UsernameRequired"];
+                }
+                else if (Username.Length < 3 || Username.Length > 20)
+                {
+                    validationErrors.Add((string)Application.Current.Resources["UsernameTooShort"]);
+                    IsUsernameError = true;
+                    UsernameErrorMessage = (string)Application.Current.Resources["UsernameTooShort"];
+                }
+                else if (!System.Text.RegularExpressions.Regex.IsMatch(Username, @"^[a-zA-Z0-9_]{3,20}$"))
+                {
+                    validationErrors.Add((string)Application.Current.Resources["UsernameInvalidFormat"]);
+                    IsUsernameError = true;
+                    UsernameErrorMessage = (string)Application.Current.Resources["UsernameInvalidFormat"];
+                }
+                else { IsUsernameError = false; UsernameErrorMessage = string.Empty; }
 
-				_originalUsername = Username;
-				_originalEmail = Email;
+                // 2. Валидация Email
+                if (string.IsNullOrWhiteSpace(Email))
+                {
+                    validationErrors.Add((string)Application.Current.Resources["EmailRequired"]);
+                    IsEmailError = true;
+                    EmailErrorMessage = (string)Application.Current.Resources["EmailRequired"];
+                }
+                else if (!ValidateEmail(Email))
+                {
+                    validationErrors.Add(EmailErrorMessage);
+                }
+                else { IsEmailError = false; EmailErrorMessage = string.Empty; }
 
-				IsEditMode = false;
+                // 3. Валидация ФИО (только буквы и 3 слова, кроме admin)
+                if (string.IsNullOrWhiteSpace(FullName))
+                {
+                    validationErrors.Add((string)Application.Current.Resources["FullNameRequired"]);
+                    IsFullNameError = true;
+                    FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequired"];
+                }
+                else if (!System.Text.RegularExpressions.Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$"))
+                {
+                    validationErrors.Add((string)Application.Current.Resources["FullNameOnlyLetters"]);
+                    IsFullNameError = true;
+                    FullNameErrorMessage = (string)Application.Current.Resources["FullNameOnlyLetters"];
+                }
+                else
+                {
+                    string[] nameParts = FullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (_user.Role != UserRole.Admin && nameParts.Length != 3)
+                    {
+                        validationErrors.Add((string)Application.Current.Resources["FullNameRequireThreeWords"]);
+                        IsFullNameError = true;
+                        FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequireThreeWords"];
+                    }
+                    else { IsFullNameError = false; FullNameErrorMessage = string.Empty; }
+                }
 
-				MessageBox.Show(
-					(string)Application.Current.Resources["SaveSuccessful"],
-					(string)Application.Current.Resources["SuccessTitle"],
-					MessageBoxButton.OK,
-					MessageBoxImage.Information);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(
-					string.Format((string)Application.Current.Resources["ErrorSavingData"], ex.Message),
-					(string)Application.Current.Resources["ErrorTitle"],
-					MessageBoxButton.OK,
-					MessageBoxImage.Error);
-			}
-		}
+                // 4. Уникальность
+                if (!IsUsernameError && Username != _originalUsername)
+                {
+                    if (_userService.GetByLogin(Username) != null)
+                    {
+                        validationErrors.Add((string)Application.Current.Resources["LoginAlreadyTaken"]);
+                        IsUsernameError = true;
+                        UsernameErrorMessage = (string)Application.Current.Resources["LoginAlreadyTaken"];
+                    }
+                }
+                if (!IsEmailError && Email != _originalEmail)
+                {
+                    if (_userService.GetByEmail(Email) != null)
+                    {
+                        validationErrors.Add((string)Application.Current.Resources["EmailAlreadyExists"]);
+                        IsEmailError = true;
+                        EmailErrorMessage = (string)Application.Current.Resources["EmailAlreadyExists"];
+                    }
+                }
 
-		private bool ValidateUsername(string username)
+                // 5. Телефон (+375...)
+                if (!string.IsNullOrWhiteSpace(Phone) && !System.Text.RegularExpressions.Regex.IsMatch(Phone, @"^[\d\s\(\)\-\+]{10,20}$"))
+                {
+                    validationErrors.Add("Неверный формат номера телефона");
+                }
+
+                // 6. Возраст (10-100)
+                if (Age < 10 || Age > 100)
+                {
+                    validationErrors.Add("Возраст должен быть от 10 до 100 лет");
+                }
+
+                // 7. Параметры тела (только для клиентов)
+                if (_user.Role == UserRole.Client)
+                {
+                    if (Weight <= 30 || Weight > 300) validationErrors.Add("Укажите реальный вес");
+                    if (Height <= 100 || Height > 250) validationErrors.Add("Укажите реальный рост");
+                }
+
+                // Блок вывода всех ошибок
+                if (validationErrors.Count > 0)
+                {
+                    MessageBox.Show("Ошибки:\n- " + string.Join("\n- ", validationErrors),
+                                    "Ошибка валидации", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // --- СОХРАНЕНИЕ ---
+                bool success = _userService.Update(_user);
+                if (success)
+                {
+                    _originalUsername = Username;
+                    _originalEmail = Email;
+                    IsEditMode = false;
+                    MessageBox.Show((string)Application.Current.Resources["SaveSuccessful"], (string)Application.Current.Resources["SuccessTitle"], MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format((string)Application.Current.Resources["ErrorSavingData"], ex.Message), (string)Application.Current.Resources["ErrorTitle"], MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private bool ValidateUsername(string username)
 		{
 			if (string.IsNullOrWhiteSpace(username))
 			{
@@ -875,117 +914,49 @@ namespace WPF_FitnessClub.ViewModels
 			return true;
 		}
 
-		private void ExecuteChangePassword(object parameter)
-		{
-			try
-			{
-				List<string> validationErrors = new List<string>();
-				
-				if (string.IsNullOrWhiteSpace(CurrentPassword))
-				{
-					validationErrors.Add((string)Application.Current.Resources["CurrentPasswordRequired"]);
-					IsPasswordError = true;
-					PasswordErrorMessage = (string)Application.Current.Resources["CurrentPasswordRequired"];
-				}
-				else if (CurrentPassword != _originalPassword)
-				{
-					validationErrors.Add((string)Application.Current.Resources["CurrentPasswordIncorrect"]);
-					IsPasswordError = true;
-					PasswordErrorMessage = (string)Application.Current.Resources["CurrentPasswordIncorrect"];
-				}
-				else 
-				{
-					IsPasswordError = false;
-					PasswordErrorMessage = string.Empty;
-				}
-				
-				if (string.IsNullOrWhiteSpace(NewPassword))
-				{
-					validationErrors.Add((string)Application.Current.Resources["NewPasswordRequired"]);
-					IsPasswordError = true;
-					PasswordErrorMessage = (string)Application.Current.Resources["NewPasswordRequired"];
-				}
-				else if (NewPassword.Length < 8)
-				{
-					validationErrors.Add((string)Application.Current.Resources["PasswordTooShort"]);
-					IsPasswordError = true;
-					PasswordErrorMessage = (string)Application.Current.Resources["PasswordTooShort"];
-				}
-				else if (!System.Text.RegularExpressions.Regex.IsMatch(NewPassword, @"[A-Za-z]"))
-				{
-					validationErrors.Add((string)Application.Current.Resources["PasswordRequireLetter"]);
-					IsPasswordError = true;
-					PasswordErrorMessage = (string)Application.Current.Resources["PasswordRequireLetter"];
-				}
-				else if (!System.Text.RegularExpressions.Regex.IsMatch(NewPassword, @"\d"))
-				{
-					validationErrors.Add((string)Application.Current.Resources["PasswordRequireDigit"]);
-					IsPasswordError = true;
-					PasswordErrorMessage = (string)Application.Current.Resources["PasswordRequireDigit"];
-				}
-				
-				if (string.IsNullOrWhiteSpace(ConfirmPassword))
-				{
-					validationErrors.Add((string)Application.Current.Resources["ConfirmPasswordRequired"]);
-					IsConfirmPasswordError = true;
-					ConfirmPasswordErrorMessage = (string)Application.Current.Resources["ConfirmPasswordRequired"];
-				}
-				else if (NewPassword != ConfirmPassword)
-				{
-					validationErrors.Add((string)Application.Current.Resources["PasswordsDoNotMatch"]);
-					IsConfirmPasswordError = true;
-					ConfirmPasswordErrorMessage = (string)Application.Current.Resources["PasswordsDoNotMatch"];
-				}
-				else
-				{
-					IsConfirmPasswordError = false;
-					ConfirmPasswordErrorMessage = string.Empty;
-				}
-				
-				if (validationErrors.Count > 0)
-				{
-					StringBuilder errorMessageBuilder = new StringBuilder();
-					errorMessageBuilder.AppendLine((string)Application.Current.Resources["ValidationErrorsHeader"]);
-					
-					foreach (var error in validationErrors)
-					{
-						errorMessageBuilder.AppendLine("- " + error);
-					}
-					
-					string message = errorMessageBuilder.ToString();
-					
-					MessageBox.Show(
-						message,
-						(string)Application.Current.Resources["ValidationErrorTitle"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
-					return;      
-				}
+        private void ExecuteChangePassword(object parameter)
+        {
+            try
+            {
+                // 1. Проверка текущего пароля
+                if (CurrentPassword != _user.Password)
+                {
+                    MessageBox.Show((string)Application.Current.Resources["CurrentPasswordIncorrect"], "Ошибка");
+                    IsPasswordError = true;
+                    return;
+                }
 
-				_user.Password = NewPassword;
-				_userService.Update(_user);
+                // 2. Проверка нового пароля (от 6 знаков)
+                if (string.IsNullOrEmpty(NewPassword) || NewPassword.Length < 6)
+                {
+                    MessageBox.Show("Новый пароль должен быть не менее 6 символов", "Ошибка");
+                    IsPasswordError = true;
+                    return;
+                }
 
-				_originalPassword = NewPassword;
+                // 3. Подтверждение
+                if (NewPassword != ConfirmPassword)
+                {
+                    MessageBox.Show((string)Application.Current.Resources["PasswordsDoNotMatch"], "Ошибка");
+                    IsConfirmPasswordError = true;
+                    return;
+                }
 
-				ClearPasswordFields();
+                // Сохранение
+                _user.Password = NewPassword;
+                OnPropertyChanged("Password");
+                if (_userService.Update(_user))
+                {
+                    _originalPassword = NewPassword;
+                    ClearPasswordFields();
+                    MessageBox.Show((string)Application.Current.Resources["PasswordChangedSuccess"], (string)Application.Current.Resources["SuccessTitle"], MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                
+            }
+            catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); }
+        }
 
-				MessageBox.Show(
-					(string)Application.Current.Resources["PasswordChangedSuccess"],
-					(string)Application.Current.Resources["SuccessTitle"],
-					MessageBoxButton.OK,
-					MessageBoxImage.Information);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(
-					string.Format((string)Application.Current.Resources["PasswordChangeFailed"], ex.Message),
-					(string)Application.Current.Resources["ErrorTitle"],
-					MessageBoxButton.OK,
-					MessageBoxImage.Error);
-			}
-		}
-
-		private void ExecuteApplyLanguage(object parameter)
+        private void ExecuteApplyLanguage(object parameter)
 		{
 			string lang = CurrentLanguage == 0 ? "ru-RU" : "en-US";
 			LanguageChanged?.Invoke(this, lang);

@@ -21,7 +21,8 @@
                 <ResourceDictionary Source="/Styles/TabControlStyles.xaml" />
                 <ResourceDictionary Source="/Styles/ComboBoxStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
+            <converters:RoleToStringConverter x:Key="RoleToStringConverter"/>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             
             <!-- Доступные роли пользователя для ComboBox -->
@@ -82,46 +83,50 @@
                               CellEditEnding="UsersDataGrid_CellEditEnding"
                               Style="{StaticResource DefaultDataGridStyle}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{DynamicResource AdminPanelIdColumn}" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="{DynamicResource AdminPanelFullNameColumn}" Binding="{Binding FullName}" Width="200" IsReadOnly="False"/>
-                            <DataGridTextColumn Header="{DynamicResource AdminPanelEmailColumn}" Binding="{Binding Email}" Width="180" IsReadOnly="False"/>
-                            <DataGridTextColumn Header="{DynamicResource AdminPanelLoginColumn}" Binding="{Binding Login}" Width="120" IsReadOnly="False"/>
-                            
-                            <!-- Использование ComboBox для выбора роли -->
-                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelRoleColumn}" Width="120">
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" Width="40"/>
+                            <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="*"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
+                            <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="*"/>
+
+                            <DataGridTemplateColumn Header="Роль" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding RoleAsString}" Style="{StaticResource CustomTextBlockStyle}"/>
+                                        <TextBlock Text="{Binding Role, Converter={StaticResource RoleToStringConverter}}" VerticalAlignment="Center" Margin="5,0"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                                 <DataGridTemplateColumn.CellEditingTemplate>
                                     <DataTemplate>
-                                        <ComboBox Name="RoleComboBox" 
-                                                  SelectionChanged="RoleComboBox_SelectionChanged"
-                                                  Loaded="RoleComboBox_Loaded"
-                                                  Style="{StaticResource CustomComboBoxStyle}">
-                                            <ComboBoxItem Content="{DynamicResource ClientRole}" Tag="1" Style="{StaticResource CustomComboBoxItemStyle}"/>
-                                            <ComboBoxItem Content="{DynamicResource CoachRole}" Tag="2" Style="{StaticResource CustomComboBoxItemStyle}"/>
-                                            <ComboBoxItem Content="{DynamicResource AdminRole}" Tag="3" Style="{StaticResource CustomComboBoxItemStyle}"/>
+                                        <!-- Используем Tag="1", "2", "3" для связи с C#-кодом -->
+                                        <ComboBox SelectedValue="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="Клиент" Tag="{x:Static models:UserRole.Client}"/>
+                                            <ComboBoxItem Content="Тренер" Tag="{x:Static models:UserRole.Coach}"/>
+                                            <ComboBoxItem Content="Админ" Tag="{x:Static models:UserRole.Admin}"/>
                                         </ComboBox>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellEditingTemplate>
                             </DataGridTemplateColumn>
-                            
-                            <DataGridCheckBoxColumn Header="{DynamicResource AdminPanelBlockedColumn}" Binding="{Binding IsBlocked}" Width="100"/>
-                            
-                            <!-- Колонка с кнопками действий -->
-                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelActionsColumn}" Width="180">
+
+                            <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="120"/>
+                            <DataGridTextColumn Header="Вес" Binding="{Binding Weight}" Width="60"/>
+                            <DataGridTextColumn Header="Рост" Binding="{Binding Height}" Width="60"/>
+                            <DataGridTextColumn Header="Возраст" Binding="{Binding Age}" Width="60"/>
+
+                            <DataGridCheckBoxColumn Header="Забл." Binding="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+
+                            <DataGridTemplateColumn Header="Действия" Width="90">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button Content="{DynamicResource AdminPanelDeleteButton}" 
-                                                    Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
-                                                    CommandParameter="{Binding}"
-                                                    Margin="2"
-                                                    Width="80"
-                                                    Style="{StaticResource DefaultButtonStyle}"/>
-                                        </StackPanel>
+                                        <Button Content="Удалить" 
+                            Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                            CommandParameter="{Binding}"
+                            Background="#E11A22" 
+                            Foreground="White"
+                            FontSize="10" 
+                            Padding="2" 
+                            Margin="2"
+                            Height="22" 
+                            Width="70"
+                            Style="{StaticResource DefaultButtonStyle}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

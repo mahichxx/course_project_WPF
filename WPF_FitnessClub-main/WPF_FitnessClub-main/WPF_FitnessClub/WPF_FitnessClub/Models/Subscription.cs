@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Windows;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System;
@@ -41,7 +42,7 @@ namespace WPF_FitnessClub.Models
 		}
 
 		[Required]
-		[StringLength(100)]
+		[StringLength(150)]
 		public string Name
 		{
 			get => name;
@@ -84,48 +85,56 @@ namespace WPF_FitnessClub.Models
 		}
 
 		[StringLength(255)]
-		public string ImagePath
-		{
-			get => imagePath;
-			set
-			{
-				if (imagePath != value)
-				{
-					imagePath = value;
-					OnPropertyChanged();
-				}
-			}
-		}
+        public string ImagePath
+        {
+            get => imagePath;
+            set
+            {
+                if (imagePath != value)
+                {
+                    imagePath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-		[StringLength(50)]
-		public string Duration
-		{
-			get => duration;
-			set
-			{
-				if (duration != value)	
-				{
-					duration = value;
-					OnPropertyChanged();
-				}
-			}
-		}	
+        [NotMapped]
+        public string LocalizedType
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(SubscriptionType)) return "Обычный";
+                object translated = Application.Current.TryFindResource(SubscriptionType);
+                return translated != null ? translated.ToString() : SubscriptionType;
+            }
+            set
+            {
+                SubscriptionType = value;
+                OnPropertyChanged("LocalizedType");
+            }
+        }
 
-		[StringLength(50)]
-		public string SubscriptionType
-		{
-			get => subscriptionType;
-			set
-			{	
-				if (subscriptionType != value)
-				{
-					subscriptionType = value;
-					OnPropertyChanged();
-				}
-			}
-		}	
-		
-		public virtual List<Review> Reviews
+        [StringLength(50)]
+        public string Duration
+        {
+            get => duration; // ТЕПЕРЬ ОН ОТДАЕТ ЧИСТЫЙ КЛЮЧ (например, Visit8)
+            set
+            {
+                duration = value;
+                OnPropertyChanged();
+                OnPropertyChanged("LocalizedDuration"); // Уведомляем переводчик
+            }
+        }
+
+        [StringLength(50)]
+        // В файле Subscription.cs
+        public string SubscriptionType
+        {
+            get => subscriptionType;
+            set { subscriptionType = value; OnPropertyChanged(); OnPropertyChanged("LocalizedType"); }
+        }
+
+        public virtual List<Review> Reviews
 		{
 			get => reviews;
 			set
@@ -138,21 +147,31 @@ namespace WPF_FitnessClub.Models
 			}
 		}
 
-		[NotMapped]         
-		public double Rating
-		{
-			get => CalculateRating();
-			set
-			{
-				if (rating != value)
-				{
-					rating = value;
-					OnPropertyChanged();
-				}
-			}
-		}
+        [NotMapped]
+        public double Rating
+        {
+            get => CalculateRating();
+            set { OnPropertyChanged("Rating"); }
+        }
 
-		[NotMapped]      
+        [NotMapped]
+        public string LocalizedDuration
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Duration)) return "1 занятие";
+                object translated = Application.Current.TryFindResource(Duration);
+                return translated != null ? translated.ToString() : Duration;
+            }
+            set
+            {
+                Duration = value;
+                OnPropertyChanged("LocalizedDuration");
+            }
+        }
+
+
+        [NotMapped]      
 		public int? UserId
 		{
 			get => userId;

@@ -65,7 +65,7 @@
             <TextBlock Text="{DynamicResource AddUserRole}" Margin="0,5"
                        Style="{StaticResource CustomTextBlockStyle}"/>
             <ComboBox x:Name="RoleComboBox" Margin="0,5" 
-                      Style="{StaticResource CustomComboBoxStyle}">
+                      Style="{StaticResource CustomComboBoxStyle}" SelectedValuePath="Tag" SelectedValue="{Binding NewUser.Role, Mode=TwoWay}">
                 <ComboBoxItem Content="{DynamicResource ClientRole}" Tag="1" IsSelected="True"/>
                 <ComboBoxItem Content="{DynamicResource CoachRole}" Tag="2"/>
                 <ComboBoxItem Content="{DynamicResource AdminRole}" Tag="3"/>

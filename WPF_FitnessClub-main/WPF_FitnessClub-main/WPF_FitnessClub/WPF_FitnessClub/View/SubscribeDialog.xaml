@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WPF_FitnessClub.View"
         mc:Ignorable="d"
         Title="{DynamicResource SubscribeDialogTitle}" 
-        Height="400" Width="500"
+        Height="440" Width="500"
+        SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Style="{StaticResource WindowStyle}">
@@ -21,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -30,9 +31,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="* " />
         </Grid.RowDefinitions>
-        
+
         <TextBlock Grid.Row="0" 
                    Text="{DynamicResource SubscribeDialogHeader}" 
                    FontSize="18" 

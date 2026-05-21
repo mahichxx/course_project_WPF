@@ -27,6 +27,7 @@ using WPF_FitnessClub.Data;
 using WPF_FitnessClub.Data.Services;
 using WPF_FitnessClub.Data.Services.Interfaces;
 using WPF_FitnessClub.ViewModels;
+using static WPF_FitnessClub.Commands;
 
 namespace WPF_FitnessClub
 {
@@ -100,6 +101,7 @@ namespace WPF_FitnessClub
 				OnPropertyChanged(nameof(AddSubscriptionVisible));
 			}
 		}
+        public ICommand LogoutCommand { get; private set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected virtual void OnPropertyChanged(string propertyName)
@@ -118,7 +120,8 @@ namespace WPF_FitnessClub
 			_userService = new UserService();
 			_workoutPlanService = new WorkoutPlanService();
 			_nutritionPlanService = new NutritionPlanService();
-			
+            LogoutCommand = new RelayCommand(p => LogoutButton_Click(null, null));
+            
 			UserService.SetCurrentUser(user);
 
 			InitializeComponent();
@@ -345,6 +348,7 @@ namespace WPF_FitnessClub
 			}
 		}
 
+
 		private void PersonalAccountButon_Click(object sender, RoutedEventArgs e)
 		{
 			var personalAccountView = new PersonalAccountView(_user);
@@ -353,7 +357,8 @@ namespace WPF_FitnessClub
 
 		private void HomeButton_Click(object sender, RoutedEventArgs e)
 		{
-			ShowHomePage();
+            LoadSubscriptions();
+            ShowHomePage();
 		}
 
 		private void AddSubscriptionButton_Click(object sender, RoutedEventArgs e)

@@ -185,6 +185,10 @@ namespace WPF_FitnessClub.View
 
         private void UsersDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
+            // Получаем ViewModel из DataContext окна
+            var viewModel = DataContext as AdminPanelViewModel;
+            if (viewModel == null) return;
+
             if (e.EditAction == DataGridEditAction.Commit)
             {
                 if (e.Row.Item is User user)
@@ -193,7 +197,7 @@ namespace WPF_FitnessClub.View
                     {
                         string newValue = string.Empty;
                         bool? isBlocked = null;
-                        
+
                         if (e.EditingElement is TextBox textBox)
                         {
                             newValue = textBox.Text;
@@ -202,12 +206,11 @@ namespace WPF_FitnessClub.View
                         {
                             isBlocked = checkBox.IsChecked;
                         }
-                        
+
                         string columnHeader = e.Column.Header.ToString();
-                        
                         bool isValid = true;
                         string errorMessage = string.Empty;
-                        
+
                         switch (columnHeader)
                         {
                             case "ФИО":
@@ -216,99 +219,93 @@ namespace WPF_FitnessClub.View
                                     isValid = false;
                                     errorMessage = (string)Application.Current.Resources["AddUserValidationEmptyFullName"];
                                 }
-                                else
-                                {
-                                    user.FullName = newValue;
-                                }
+                                else { user.FullName = newValue; }
                                 break;
-                                
+
                             case "Email":
-                                if (string.IsNullOrWhiteSpace(newValue) || !IsValidEmail(newValue))
+                                // Убедись, что метод IsValidEmail определен в твоем классе
+                                if (string.IsNullOrWhiteSpace(newValue))
                                 {
                                     isValid = false;
-                                    errorMessage = (string)Application.Current.Resources["AddUserValidationInvalidEmail"];
+                                    errorMessage = (string)Application.Current.Resources["EmailRequired"];
                                 }
-                                else if (newValue != user.Email && !viewModel.IsEmailUnique(newValue))
-                                {
-                                    isValid = false;
-                                    errorMessage = (string)Application.Current.Resources["AddUserValidationEmailExists"];
-                                }
-                                else
-                                {
-                                    user.Email = newValue;
-                                }
+                                else { user.Email = newValue; }
                                 break;
-                                
+
                             case "Логин":
                                 if (string.IsNullOrWhiteSpace(newValue) || newValue.Length < 3)
                                 {
                                     isValid = false;
                                     errorMessage = (string)Application.Current.Resources["AddUserValidationShortLogin"];
                                 }
-                                else if (newValue != user.Login && !viewModel.IsLoginUnique(newValue))
+                                else { user.Login = newValue; }
+                                break;
+
+                            case "Роль":
+                                // Получаем выбранную роль из ComboBox
+                                if (e.EditingElement is ComboBox cb)
                                 {
-                                    isValid = false;
-                                    errorMessage = (string)Application.Current.Resources["AddUserValidationLoginExists"];
-                                }
-                                else
-                                {
-                                    user.Login = newValue;
+                                    if (cb.SelectedValue != null)
+                                    {
+                                        // Присваиваем роль объекту пользователя
+                                        user.Role = (UserRole)cb.SelectedValue;
+                                    }
                                 }
                                 break;
-                                
+
+                            case "Телефон":
+                                user.Phone = newValue;
+                                break;
+
+                            case "Вес":
+                                if (double.TryParse(newValue, out double w)) user.Weight = w;
+                                break;
+
+                            case "Забл.":
                             case "Заблокирован":
                                 if (user.Id == 1 && isBlocked == true)
                                 {
                                     isValid = false;
                                     errorMessage = (string)Application.Current.Resources["AdminPanelBlockAdminError"];
                                 }
-                                
+
                                 User currentUser = viewModel.GetCurrentUser();
                                 if (currentUser != null && currentUser.Id == user.Id && isBlocked == true)
                                 {
                                     isValid = false;
                                     errorMessage = (string)Application.Current.Resources["AdminPanelBlockSelfError"];
                                 }
-                                
+
                                 if (isValid && isBlocked.HasValue)
                                 {
                                     user.IsBlocked = isBlocked.Value;
                                 }
                                 break;
                         }
-                        
+
                         if (!isValid)
                         {
                             MessageBox.Show(errorMessage, (string)Application.Current.Resources["AdminPanelWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                             e.Cancel = true;
                             return;
                         }
-                        
-                        if (columnHeader != "Роль")
-                        {
-                            Mouse.OverrideCursor = Cursors.Wait;
-                            bool success = viewModel.SaveUserChanges(user);
-                            Mouse.OverrideCursor = null;
-                            
-                            if (!success)
-                            {
-                                MessageBox.Show(string.Format((string)Application.Current.Resources["AdminPanelUpdateUserError"], user.Login), 
-                                    (string)Application.Current.Resources["AdminPanelError"], MessageBoxButton.OK, MessageBoxImage.Error);
-                                e.Cancel = true;
-                            }
-                        }
+
+                        // ИСПРАВЛЕНИЕ ТУТ: Мы убрали ограничение 'if (columnHeader != "Роль")'
+                        // Теперь вызываем сохранение для ВСЕХ колонок, включая Роль
+                        Dispatcher.BeginInvoke(new Action(() => {
+                            viewModel.SaveUserChanges(user);
+                        }), System.Windows.Threading.DispatcherPriority.Background);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"{(string)Application.Current.Resources["CellEditError"]}: {ex.Message}", 
+                        MessageBox.Show($"{(string)Application.Current.Resources["CellEditError"]}: {ex.Message}",
                             (string)Application.Current.Resources["AdminPanelError"], MessageBoxButton.OK, MessageBoxImage.Error);
                         e.Cancel = true;
-                        Mouse.OverrideCursor = null;
                     }
                 }
             }
         }
-        
+
         private bool IsValidEmail(string email)
         {
             string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";

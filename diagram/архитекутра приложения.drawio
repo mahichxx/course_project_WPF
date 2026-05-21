@@ -1,0 +1,213 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36">
+  <diagram name="Страница-1" id="5VZZE6s0VElUDIrebNVn">
+    <mxGraphModel dx="921" dy="1490" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-150" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=26;fontFamily=Times New Roman;fontSize=14;" value=".NET Framework 4.7.2 (Windows Desktop)" vertex="1">
+          <mxGeometry height="792" width="927.33" x="1742" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-151" parent="ouVfGpyxBDxrH55nrl9G-150" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=24;fontFamily=Times New Roman;fontSize=14;" value="Монолитное WPF-приложение" vertex="1">
+          <mxGeometry height="731" width="874" x="25" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-152" parent="ouVfGpyxBDxrH55nrl9G-151" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=22;fontFamily=Times New Roman;fontSize=14;" value="UI (Presentation Layer)" vertex="1">
+          <mxGeometry height="215" width="820" x="20" y="59" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-153" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="AddSubscriptionView.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="47.25" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-154" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="CoachClientsView.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="47.25" y="98" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-155" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="AddUserDialog.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="227.25" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-156" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="PersonalAccountView.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="227.25" y="98" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-157" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="AdminPanelView.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="407.25" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-158" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="App.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="407.25" y="98" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-159" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="ClientPlansDetailsWindow.xaml" vertex="1">
+          <mxGeometry height="42" width="184.75" x="587.25" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-160" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="SubscribeDialog.xaml" vertex="1">
+          <mxGeometry height="42" width="184.75" x="587.25" y="98" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-161" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="SubscriptionDetailsView.xaml" vertex="1">
+          <mxGeometry height="42" width="184.75" x="587.25" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-162" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="SubscriptionsView.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="227.25" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-163" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="RegistrationView.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="407.25" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-164" parent="ouVfGpyxBDxrH55nrl9G-152" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="MainWindow.xaml" vertex="1">
+          <mxGeometry height="42" width="155" x="47.25" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-166" parent="ouVfGpyxBDxrH55nrl9G-151" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=22;fontFamily=Times New Roman;fontSize=14;" value="Business Logic" vertex="1">
+          <mxGeometry height="262" width="821" x="21.33" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-167" parent="ouVfGpyxBDxrH55nrl9G-166" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#ffffff;strokeColor=#000000;fontStyle=1;startSize=24;fontFamily=Times New Roman;fontSize=14;" value="&lt;span style=&quot;text-align: left;&quot;&gt;ViewModels&lt;/span&gt;" vertex="1">
+          <mxGeometry height="217" width="237.33" x="28" y="33" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-199" parent="ouVfGpyxBDxrH55nrl9G-167" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;fontSize=14;" value="AddSubscriptionVM.cs&lt;div&gt;AdminPanelViewModel.cs&lt;/div&gt;&lt;div&gt;ClientPlansDetailsViewModel.cs&lt;/div&gt;&lt;div&gt;CoachClientsViewModel.cs&lt;/div&gt;&lt;div&gt;PersonalAccountVM.cs&lt;/div&gt;&lt;div&gt;RegistrationVM.cs&lt;/div&gt;&lt;div&gt;SubscribeDialogViewModel.cs&lt;/div&gt;&lt;div&gt;SubscriptionDetailsVM.cs&lt;/div&gt;&lt;div&gt;SubscriptionsVM.cs&lt;/div&gt;&lt;div&gt;UserSubscriptionViewModel.cs&lt;/div&gt;&lt;div&gt;ViewModelBase.cs&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="5.67349609375" y="103.99666666666651" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-168" parent="ouVfGpyxBDxrH55nrl9G-166" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#ffffff;strokeColor=#000000;fontStyle=1;startSize=24;fontFamily=Times New Roman;fontSize=14;" value="&lt;span style=&quot;text-align: left;&quot;&gt;Services / Utilities&lt;/span&gt;" vertex="1">
+          <mxGeometry height="180" width="212.67" x="312.33" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-200" parent="ouVfGpyxBDxrH55nrl9G-168" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;fontSize=14;" value="&lt;div&gt;UserService&amp;nbsp;&lt;/div&gt;&lt;div&gt;SubscriptionService&lt;/div&gt;&lt;div&gt;ReviewService&amp;nbsp;&lt;/div&gt;&lt;div&gt;WorkoutPlanService&lt;/div&gt;&lt;div&gt;ThemeManager&lt;/div&gt;&lt;div&gt;LanguageManager&amp;nbsp;&lt;/div&gt;&lt;div&gt;NavigationManager&amp;nbsp;&lt;/div&gt;&lt;div&gt;DatabaseBackupService&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="120" x="16.33999999999993" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-169" parent="ouVfGpyxBDxrH55nrl9G-166" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#ffffff;strokeColor=#000000;fontStyle=1;startSize=24;fontFamily=Times New Roman;fontSize=14;" value="&lt;span style=&quot;text-align: left;&quot;&gt;Repositories&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="180" width="212.67" x="568.33" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-201" parent="ouVfGpyxBDxrH55nrl9G-169" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;fontSize=14;" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;UserRepository&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;SubscriptionRepository&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;ReviewRepository&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;UserSubscriptionRepository&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;WorkoutPlanRepository&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;NutritionPlanRepository&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;span&gt;BaseRepository&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="180" x="15.329999999999927" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-170" parent="ouVfGpyxBDxrH55nrl9G-151" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=22;fontFamily=Times New Roman;fontSize=14;" value="Data Access (Entity Framework Core)" vertex="1">
+          <mxGeometry height="104" width="825" x="20" y="609" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-171" parent="ouVfGpyxBDxrH55nrl9G-170" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontStyle=1;fontFamily=Times New Roman;fontSize=14;" value="AppDbContext" vertex="1">
+          <mxGeometry height="44" width="250" x="35" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-172" parent="ouVfGpyxBDxrH55nrl9G-170" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;b&gt;Models&lt;/b&gt;&lt;br&gt;User Subscription UserSubscription Review WorkoutPlan NutritionPlan CoachClient BaseEntity&amp;nbsp;" vertex="1">
+          <mxGeometry height="56" width="370" x="359.33" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-192" edge="1" parent="ouVfGpyxBDxrH55nrl9G-170" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" target="ouVfGpyxBDxrH55nrl9G-171" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="907" y="-133" />
+              <mxPoint x="907" y="174" />
+              <mxPoint x="159" y="174" />
+              <mxPoint x="159" y="89" />
+            </Array>
+            <mxPoint x="777.3299999999999" y="-133" as="sourcePoint" />
+            <mxPoint x="157.32999999999993" y="90.00000000000045" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-193" edge="1" parent="ouVfGpyxBDxrH55nrl9G-170" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="285" y="66.85308400976044" as="sourcePoint" />
+            <mxPoint x="359" y="67" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-188" edge="1" parent="ouVfGpyxBDxrH55nrl9G-151" style="endArrow=classic;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;endFill=1;fontFamily=Times New Roman;fontSize=14;entryX=0.898;entryY=-0.002;entryDx=0;entryDy=0;entryPerimeter=0;" target="ouVfGpyxBDxrH55nrl9G-167" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="262" y="346" />
+              <mxPoint x="263" y="346" />
+            </Array>
+            <mxPoint x="262.32999999999976" y="274" as="sourcePoint" />
+            <mxPoint x="262" y="352" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-173" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=26;fontFamily=Times New Roman;fontSize=14;" value="SQL Server LocalDB" vertex="1">
+          <mxGeometry height="340.67" width="480" x="2766.33" y="578" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-175" parent="ouVfGpyxBDxrH55nrl9G-173" style="swimlane;whiteSpace=wrap;html=1;rounded=1;fillColor=#fafafa;strokeColor=#000000;fontStyle=1;startSize=22;fontFamily=Times New Roman;fontSize=14;" value="Таблицы базы данных" vertex="1">
+          <mxGeometry height="190" width="350" x="65" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-176" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;Reviews&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="90" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-177" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;Subscriptions&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="90" x="130" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-178" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;User&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="62" x="265.67" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-179" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;NutritionPlans&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="90" x="20" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-180" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;CoachClients&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="90" x="237.67000000000002" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-182" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;WorkoutPlans&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="115" x="117.5" y="143" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-183" parent="ouVfGpyxBDxrH55nrl9G-175" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="&lt;span&gt;UserSubscriptions&lt;/span&gt;" vertex="1">
+          <mxGeometry height="36" width="125" x="125.66999999999999" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-202" parent="ouVfGpyxBDxrH55nrl9G-173" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;lid=0;fontFamily=Times New Roman;fontSize=14;" value="FitnessClubDB" vertex="1">
+          <mxGeometry height="74.33" width="210" x="135" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-184" parent="1" style="swimlane;whiteSpace=wrap;html=1;rounded=0;fillColor=#FFFFFF;strokeColor=#000000;fontStyle=1;startSize=26;fontFamily=Times New Roman;fontSize=14;" value="Файловая система" vertex="1">
+          <mxGeometry height="244" width="470" x="2756.33" y="98" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-185" parent="ouVfGpyxBDxrH55nrl9G-184" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="Images/Gym_1.png" vertex="1">
+          <mxGeometry height="42" width="400" x="45" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-186" parent="ouVfGpyxBDxrH55nrl9G-184" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="Resources/Dictionary_ru.xaml, Styles/Colors.xaml" vertex="1">
+          <mxGeometry height="42" width="400" x="45" y="111" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-187" parent="ouVfGpyxBDxrH55nrl9G-184" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="App.config, Properties/Settings.settings" vertex="1">
+          <mxGeometry height="42" width="400" x="45" y="166" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-189" edge="1" parent="1" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2054" y="590" as="sourcePoint" />
+            <mxPoint x="2101" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-190" edge="1" parent="1" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" target="ouVfGpyxBDxrH55nrl9G-169" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2067.66" y="600" />
+              <mxPoint x="2067.66" y="720" />
+              <mxPoint x="2494.66" y="720" />
+            </Array>
+            <mxPoint x="2054" y="600" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-191" edge="1" parent="1" source="ouVfGpyxBDxrH55nrl9G-168" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;fontFamily=Times New Roman;fontSize=14;" target="ouVfGpyxBDxrH55nrl9G-169" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-194" edge="1" parent="1" source="ouVfGpyxBDxrH55nrl9G-171" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1926.33" y="947" />
+              <mxPoint x="3046.33" y="947" />
+            </Array>
+            <mxPoint x="3046.33" y="918" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-195" edge="1" parent="1" source="ouVfGpyxBDxrH55nrl9G-169" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" target="ouVfGpyxBDxrH55nrl9G-175" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2726.33" y="558" />
+              <mxPoint x="2726.33" y="834" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-196" edge="1" parent="1" style="endArrow=classicThin;endFill=0;rounded=0;html=1;strokeColor=#000000;" target="ouVfGpyxBDxrH55nrl9G-185" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-197" edge="1" parent="1" source="ouVfGpyxBDxrH55nrl9G-158" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontFamily=Times New Roman;fontSize=14;" target="ouVfGpyxBDxrH55nrl9G-186" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2366" y="314" />
+              <mxPoint x="2366" y="426" />
+              <mxPoint x="2716" y="426" />
+              <mxPoint x="2716" y="229" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ouVfGpyxBDxrH55nrl9G-198" edge="1" parent="1" source="ouVfGpyxBDxrH55nrl9G-168" style="endArrow=classic;endFill=1;rounded=0;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;exitX=0.851;exitY=0.01;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Times New Roman;fontSize=14;" target="ouVfGpyxBDxrH55nrl9G-187" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2282" y="437" />
+              <mxPoint x="2731" y="437" />
+              <mxPoint x="2731" y="284" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

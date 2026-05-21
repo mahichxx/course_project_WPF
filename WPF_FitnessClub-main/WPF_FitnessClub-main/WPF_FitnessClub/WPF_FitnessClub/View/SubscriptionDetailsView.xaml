@@ -17,7 +17,7 @@
 
     <Window.Resources>
         <converters:RatingToStarsConverter x:Key="RatingToStarsConverter"/>
-        <DataTemplate x:Key="StarTemplate" DataType="{x:Type converters:Star}">
+        <DataTemplate DataType="{x:Type converters:Star}">
             <TextBlock FontSize="20" Margin="0" Padding="0">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
@@ -91,6 +91,7 @@
         </Style>
     </Window.Resources>
 
+    
     <Border Background="{DynamicResource WindowBackgroundBrush}" Padding="15">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="10">
@@ -148,10 +149,10 @@
                 <Border Style="{StaticResource ImageBorderStyle}">
                     <Grid>
                         <Image x:Name="SubscriptionImage"
-                           Source="{Binding ImagePath}"
-                           Height="300"
-                           Stretch="Uniform"
-                           HorizontalAlignment="Center"/>
+                            Source="{Binding ImagePath, Converter={StaticResource ImagePathConverter}}"
+                            Height="300"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center"/>
 
                         <Button Content="{DynamicResource SelectImage}"
                             HorizontalAlignment="Center"
@@ -166,83 +167,56 @@
                 <!-- Основная информация об абонементе -->
                 <Border Style="{StaticResource ModernCardStyle}">
                     <StackPanel>
-                        <TextBlock Text="{DynamicResource SubscriptionInfo}" 
-                               Style="{StaticResource SectionHeaderStyle}"/>
+                        <TextBlock Text="{DynamicResource SubscriptionInfo}" Style="{StaticResource SectionHeaderStyle}"/>
 
                         <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="135"/>
+                                <!-- Фиксированная ширина для надписей -->
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
                             </Grid.RowDefinitions>
 
-                            <!-- Цена -->
-                            <TextBlock Text="{DynamicResource Price}"
-                                   Grid.Row="0" Grid.Column="0"
-                                   FontWeight="Bold" 
-                                   Foreground="{DynamicResource TextBrush}"/>
-                            <TextBlock Text="{Binding Price, StringFormat={}{0:0.00} Br}"
-                                   Grid.Row="0" Grid.Column="1"
-                                   Visibility="{Binding ViewModeVisible}" 
-                                   Foreground="{DynamicResource TextBrush}" 
-                                   Margin="15,0,0,0"/>
-                            <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
-                                 Grid.Row="0" Grid.Column="1"
-                                 Width="150" HorizontalAlignment="Left"
-                                 Visibility="{Binding EditModeVisible}" 
-                                 Margin="15,0,0,0" 
-                                 Foreground="{DynamicResource TextBrush}" 
-                                 Style="{DynamicResource CustomTextBoxStyle}"/>
+                            <!-- 1. ЦЕНА -->
+                            <TextBlock Text="{DynamicResource Price}" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <TextBlock Text="{Binding Price, StringFormat={}{0:0.00} Br}" Visibility="{Binding ViewModeVisible}" Foreground="{DynamicResource TextBrush}"/>
+                                <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding EditModeVisible}" Width="150" HorizontalAlignment="Left" Style="{StaticResource CustomTextBoxStyle}"/>
+                            </StackPanel>
 
-                            <!-- Тип абонемента -->
-                            <TextBlock Text="{DynamicResource Type}"
-                                   Grid.Row="1" Grid.Column="0"
-                                   Margin="0,15,0,0"
-                                   FontWeight="Bold" 
-                                   Foreground="{DynamicResource TextBrush}"/>
-                            <TextBlock Text="{Binding Type}"
-                                   Grid.Row="1" Grid.Column="1"
-                                   Visibility="{Binding ViewModeVisible}" 
-                                   Margin="15,15,0,0"
-                                   Foreground="{DynamicResource TextBrush}"/>
-                            <ComboBox Grid.Row="1" Grid.Column="1"
-                                  Width="150" HorizontalAlignment="Left"
-                                  Visibility="{Binding EditModeVisible}" 
-                                  Margin="15,15,0,0" 
-                                  SelectedValuePath="Content"
-                                  SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource CustomComboBoxStyle}">
-                                <ComboBoxItem Content="{DynamicResource Unlimited}"/>
-                                <ComboBoxItem Content="{DynamicResource Standard}"/>
-                            </ComboBox>
+                            <!-- 2. ТИП -->
+                            <TextBlock Text="{DynamicResource Type}" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <!-- Отображение -->
+                                <TextBlock Text="{Binding LocalizedType}" Visibility="{Binding ViewModeVisible}" Foreground="{DynamicResource TextBrush}"/>
+                                <!-- Редактирование -->
+                                <ComboBox Visibility="{Binding EditModeVisible}" Width="180" HorizontalAlignment="Left" Style="{StaticResource CustomComboBoxStyle}"
+                          SelectedValuePath="Tag" SelectedValue="{Binding LocalizedType}">
+                                    <ComboBoxItem Content="Одиночная" Tag="Single"/>
+                                    <ComboBoxItem Content="Групповая" Tag="Group"/>
+                                    <ComboBoxItem Content="Безлимит" Tag="Unlimited"/>
+                                    <ComboBoxItem Content="Утренний" Tag="Morning"/>
+                                </ComboBox>
+                            </StackPanel>
 
-                            <!-- Длительность -->
-                            <TextBlock Text="{DynamicResource Duration}"
-                                   Grid.Row="2" Grid.Column="0"
-                                   Margin="0,15,0,0"
-                                   FontWeight="Bold" 
-                                   Foreground="{DynamicResource TextBrush}"/>
-                            <TextBlock Text="{Binding Duration}"
-                                   Grid.Row="2" Grid.Column="1"
-                                   Visibility="{Binding ViewModeVisible}" 
-                                   Margin="15,15,0,0"
-                                   Foreground="{DynamicResource TextBrush}"/>
-                            <ComboBox Grid.Row="2" Grid.Column="1"
-                                  Width="150" HorizontalAlignment="Left"
-                                  Visibility="{Binding EditModeVisible}" 
-                                  Margin="15,15,0,0" 
-                                  SelectedValuePath="Content"
-                                  SelectedValue="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource CustomComboBoxStyle}">
-                                <ComboBoxItem Content="{DynamicResource OneMonth}"/>
-                                <ComboBoxItem Content="{DynamicResource ThreeMonths}"/>
-                                <ComboBoxItem Content="{DynamicResource SixMonths}"/>
-                                <ComboBoxItem Content="{DynamicResource OneYear}"/>
-                            </ComboBox>
+                            <!-- 3. ДЛИТЕЛЬНОСТЬ -->
+                            <TextBlock Text="{DynamicResource Duration}" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <!-- Отображение -->
+                                <TextBlock Text="{Binding LocalizedDuration}" Visibility="{Binding ViewModeVisible}" Foreground="{DynamicResource TextBrush}"/>
+                                <!-- Редактирование -->
+                                <ComboBox Visibility="{Binding EditModeVisible}" Width="180" HorizontalAlignment="Left" Style="{StaticResource CustomComboBoxStyle}"
+                          SelectedValuePath="Tag" SelectedValue="{Binding Duration}">
+                                    <ComboBoxItem Content="1 занятие" Tag="Visit1"/>
+                                    <ComboBoxItem Content="8 занятий" Tag="Visit8"/>
+                                    <ComboBoxItem Content="16 занятий" Tag="Visit16"/>
+                                    <ComboBoxItem Content="32 занятия" Tag="Visit32"/>
+                                </ComboBox>
+                            </StackPanel>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -275,39 +249,57 @@
                     <StackPanel>
                         <TextBlock Text="{DynamicResource Reviews}" 
                                Style="{StaticResource SectionHeaderStyle}"/>
-                            
-                        <Border 
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="15"
-                            Margin="0,10,0,0" 
-                            Background="{DynamicResource SecondaryBackgroundBrush}"
-                            BorderBrush="{StaticResource LightGrayBrush}">
 
+                        <Border BorderThickness="1" CornerRadius="5" Padding="15" Margin="0,10,0,0" 
+        Background="{DynamicResource SecondaryBackgroundBrush}" BorderBrush="{StaticResource LightGrayBrush}">
                             <Grid>
-                                <WrapPanel x:Name="ReviewWrapPanel">
-                                    <!-- Отзывы генерируются программно в коде -->
-                                </WrapPanel>
-                                
+                                <!-- ТЕПЕРЬ ОТЗЫВЫ ПРИВЯЗАНЫ К КОЛЛЕКЦИИ -->
+                                <ItemsControl ItemsSource="{Binding Reviews}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="8" 
+            Padding="12" Margin="5" Background="White" Width="280" Effect="{StaticResource CardShadow}">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding User}" FontWeight="Bold" Foreground="#333" Margin="0,0,0,5"/>
+
+                                                    <!-- Твои звезды (оставляем) -->
+                                                    <ItemsControl ItemsSource="{Binding Score, Converter={StaticResource RatingToStarsConverter}}"
+                          ItemTemplate="{StaticResource StarTemplate}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Horizontal"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+
+                                                    <!-- Твой комментарий (оставляем) -->
+                                                    <TextBlock Text="{Binding Comment}" TextWrapping="Wrap" Margin="0,8,0,0" FontSize="12" Foreground="#555"/>
+
+                                                    <!-- ДОБАВЛЯЕМ КНОПКУ УДАЛЕНИЯ -->
+                                                    <Button Content="Удалить отзыв" 
+                    Margin="0,10,0,0"
+                    Background="#E11A22" Foreground="White" FontSize="10" 
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource ModernButtonStyle}"
+                    Command="{Binding DataContext.DeleteReviewCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding Id}"
+                    Visibility="{Binding DataContext.DeleteReviewVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
                                 <!-- Сообщение, когда нет отзывов -->
                                 <TextBlock Text="{DynamicResource NoReviews}" 
-                                           FontSize="16"
-                                           FontStyle="Italic"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Margin="0,30,0,30"
-                                           Foreground="{StaticResource MediumGrayBrush}">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Reviews.Count}" Value="0">
-                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
+                   FontSize="16" FontStyle="Italic" HorizontalAlignment="Center" 
+                   Margin="0,30" Foreground="{StaticResource MediumGrayBrush}"
+                   Visibility="{Binding Reviews.Count, Converter={StaticResource ZeroToVisibilityConverter}}"/>
                             </Grid>
                         </Border>
                     </StackPanel>

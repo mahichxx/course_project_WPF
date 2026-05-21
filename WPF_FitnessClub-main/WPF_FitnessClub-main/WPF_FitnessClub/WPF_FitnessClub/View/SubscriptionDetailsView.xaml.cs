@@ -58,7 +58,6 @@ namespace WPF_FitnessClub.View
 
 		private void LoadReviews()
 		{
-			ReviewWrapPanel.Children.Clear();
 			
 			foreach (var review in _viewModel.Reviews)
 			{
@@ -145,7 +144,6 @@ namespace WPF_FitnessClub.View
 				}
 
 				reviewBorder.Child = reviewPanel;
-				ReviewWrapPanel.Children.Add(reviewBorder);
 			}
 		}
 

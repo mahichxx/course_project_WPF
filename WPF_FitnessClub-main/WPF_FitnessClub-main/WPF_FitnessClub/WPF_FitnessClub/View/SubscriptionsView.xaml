@@ -37,7 +37,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Focusable="True" MouseDown="Grid_MouseDown">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
@@ -134,7 +134,7 @@
                 MinWidth="200"
                 MaxWidth="300"
                 Visibility="{Binding FilterPanelVisibility}"
-                Margin="0,40,0,0">
+                Margin="0,40,0,-85">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -177,7 +177,7 @@
 
                         <TextBox Grid.Column="1" 
                                 Margin="20,0,0,10" 
-                                Text="{Binding MinCost, UpdateSourceTrigger=PropertyChanged}" 
+                                Text="{Binding MinCost}" 
                                 Style="{StaticResource CustomTextBoxStyle}"
                                 PreviewTextInput="PriceTextBox_PreviewTextInput"
                                 PreviewKeyDown="PriceTextBox_PreviewKeyDown"
@@ -191,36 +191,48 @@
                         <TextBox Grid.Column="1" 
                                 Grid.Row="1" 
                                  Margin="20,0,0,10"
-                                Text="{Binding MaxCost, UpdateSourceTrigger=PropertyChanged}" 
+                                Text="{Binding MaxCost}" 
                                 Style="{StaticResource CustomTextBoxStyle}"
                                 PreviewTextInput="PriceTextBox_PreviewTextInput"
                                 PreviewKeyDown="PriceTextBox_PreviewKeyDown"
                                 TextChanged="PriceTextBox_TextChanged"/>
                     </Grid>
-
                     <TextBlock Text="{DynamicResource Type}" 
                              Padding="20,20,0,0" 
                              Style="{StaticResource HeaderTextBlockStyle}"/>
 
-                    <ComboBox SelectedItem="{Binding SelectedType}" 
-                             Style="{StaticResource CustomComboBoxStyle}">
-                        <ComboBoxItem Content="{DynamicResource All}"/>
-                        <ComboBoxItem Content="{DynamicResource Unlimited}"/>
-                        <ComboBoxItem Content="{DynamicResource Standard}"/>
+                    <!-- Блок ТИП -->
+                    <ComboBox SelectedValuePath="Tag" 
+          SelectedValue="{Binding SelectedTypeKey, UpdateSourceTrigger=PropertyChanged}" 
+          Style="{StaticResource CustomComboBoxStyle}">
+                        <ComboBoxItem Content="Все" Tag="All"/>
+                        <ComboBoxItem Content="{DynamicResource Unlimited}" Tag="Unlimited"/>
+                        <ComboBoxItem Content="{DynamicResource Morning}" Tag="Morning"/>
+                        <ComboBoxItem Content="{DynamicResource Evening}" Tag="Evening"/>
+                        <ComboBoxItem Content="{DynamicResource Group}" Tag="Group"/>
                     </ComboBox>
 
                     <TextBlock Text="{DynamicResource Duration}" 
                              Margin="20,20,0,0" 
-                             Style="{StaticResource HeaderTextBlockStyle}" />
+                             Style="{StaticResource HeaderTextBlockStyle}" Height="25" />
 
-                    <ComboBox SelectedItem="{Binding SelectedDuration}" 
-                             Style="{StaticResource CustomComboBoxStyle}">
-                        <ComboBoxItem Content="{DynamicResource All}"/>
-                        <ComboBoxItem Content="{DynamicResource OneMonth}"/>
-                        <ComboBoxItem Content="{DynamicResource ThreeMonths}"/>
-                        <ComboBoxItem Content="{DynamicResource SixMonths}"/>
-                        <ComboBoxItem Content="{DynamicResource OneYear}"/>
+                    <!-- Блок ДЛИТЕЛЬНОСТЬ -->
+                    <ComboBox SelectedValuePath="Tag" 
+          SelectedValue="{Binding SelectedDurationKey, UpdateSourceTrigger=PropertyChanged}" 
+          Style="{StaticResource CustomComboBoxStyle}">
+                        <ComboBoxItem Content="Все" Tag="All"/>
+                        <ComboBoxItem Content="{DynamicResource Visit1}" Tag="Visit1"/>
+                        <ComboBoxItem Content="{DynamicResource Visit4}" Tag="Visit4"/>
+                        <ComboBoxItem Content="{DynamicResource Visit8}" Tag="Visit8"/>
+                        <ComboBoxItem Content="{DynamicResource Visit16}" Tag="Visit16"/>
+                        <ComboBoxItem Content="{DynamicResource Visit32}" Tag="Visit32"/>
                     </ComboBox>
+
+                    <Button Content="Сбросить фильтры" 
+        Command="{Binding ResetFiltersCommand}"
+        Style="{StaticResource DefaultButtonStyle}"
+        Margin="10,20,10,0"
+        Height="35"/>
                 </StackPanel>
             </Grid>
         </Border>

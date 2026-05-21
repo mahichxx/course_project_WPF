@@ -6,710 +6,209 @@
              xmlns:local="clr-namespace:WPF_FitnessClub.View"
              xmlns:converters="clr-namespace:WPF_FitnessClub.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1200" d:DesignWidth="1200">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+    </UserControl.InputBindings>
+
     <UserControl.Resources>
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:NonZeroToVisibilityConverter x:Key="NonZeroToVisibilityConverter"/>
 
-        <!-- Шаблон для отображения плана тренировок -->
+        <!-- Шаблоны планов -->
         <DataTemplate x:Key="WorkoutPlanTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextBrush}" />
-                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="0,5,0,0" Foreground="{DynamicResource TextBrush}" />
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Период: " FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text="{Binding StartDate, StringFormat=dd.MM.yyyy}" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text=" - " Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text="{Binding EndDate, StringFormat=dd.MM.yyyy}" Foreground="{DynamicResource TextBrush}" />
+            <Border Background="{DynamicResource SecondaryBackgroundBrush}" Margin="0,5" Padding="10" CornerRadius="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" />
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextBrush}" />
                     </StackPanel>
-                    <!-- Индикатор статуса -->
-                    <Border Margin="0,5,0,0" 
-                            Background="{Binding IsCompleted, Converter={StaticResource BoolToColorConverter}}"
-                            Padding="5,3"
-                            CornerRadius="3"
-                            HorizontalAlignment="Left"
-                            Width="120">
-                        <TextBlock Text="{Binding Status, Converter={StaticResource PlanStatusConverter}}"
-                                   Foreground="White"
-                                   FontWeight="SemiBold"
-                                   HorizontalAlignment="Center" />
-                    </Border>
-                </StackPanel>
-                <CheckBox Grid.Column="1" 
-                          Content="{DynamicResource MarkAsCompleted}" 
-                          IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
-                          Margin="10,0,0,0"
-                          VerticalAlignment="Center"
-                          Foreground="{DynamicResource TextBrush}"
-                          Command="{Binding DataContext.MarkWorkoutPlanCompletedCommand, 
-                                    RelativeSource={RelativeSource AncestorType=ListBox}}"
-                          CommandParameter="{Binding}" />
-            </Grid>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding IsCompleted, Mode=TwoWay}" Command="{Binding DataContext.MarkWorkoutPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
         </DataTemplate>
-
-        <!-- Шаблон для отображения плана питания -->
         <DataTemplate x:Key="NutritionPlanTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextBrush}" />
-                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="0,5,0,0" Foreground="{DynamicResource TextBrush}" />
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Период: " FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text="{Binding StartDate, StringFormat=dd.MM.yyyy}" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text=" - " Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text="{Binding EndDate, StringFormat=dd.MM.yyyy}" Foreground="{DynamicResource TextBrush}" />
+            <Border Background="{DynamicResource SecondaryBackgroundBrush}" Margin="0,5" Padding="10" CornerRadius="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" />
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextBrush}" />
                     </StackPanel>
-                    <!-- Индикатор статуса -->
-                    <Border Margin="0,5,0,0" 
-                            Background="{Binding IsCompleted, Converter={StaticResource BoolToColorConverter}}"
-                            Padding="5,3"
-                            CornerRadius="3"
-                            HorizontalAlignment="Left"
-                            Width="120">
-                        <TextBlock Text="{Binding Status, Converter={StaticResource PlanStatusConverter}}"
-                                   Foreground="White"
-                                   FontWeight="SemiBold"
-                                   HorizontalAlignment="Center" />
-                    </Border>
-                </StackPanel>
-                <CheckBox Grid.Column="1" 
-                          Content="{DynamicResource MarkAsCompleted}" 
-                          IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
-                          Margin="10,0,0,0"
-                          VerticalAlignment="Center"
-                          Foreground="{DynamicResource TextBrush}"
-                          Command="{Binding DataContext.MarkNutritionPlanCompletedCommand, 
-                                    RelativeSource={RelativeSource AncestorType=ListBox}}"
-                          CommandParameter="{Binding}" />
-            </Grid>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding IsCompleted, Mode=TwoWay}" Command="{Binding DataContext.MarkNutritionPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Style="{StaticResource ResponsiveGridStyle}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <TextBlock Text="{DynamicResource PersonalAccountTitle}" 
-              Style="{StaticResource HeaderTextBlockStyle}" 
-              Margin="20,20,20,10" HorizontalAlignment="Center"/>
+    <Grid Background="{DynamicResource BackgroundBrush}">
+        <!-- ОДИН ГЛАВНЫЙ СКРОЛЛЕР НА ВСЁ ОКНО -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="0,0,0,50">
 
-        <!--#region Смена вкладок-->
-        <Grid Style="{StaticResource ResponsiveGridStyle}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <TextBlock Text="{DynamicResource PersonalAccountTitle}" 
+                           Style="{StaticResource HeaderTextBlockStyle}" 
+                           Margin="20,40,20,20" HorizontalAlignment="Center"/>
 
-            </Grid.RowDefinitions>
+                <!-- TabControl теперь растянут, центрируем содержимое внутри вкладок -->
+                <TabControl SelectedIndex="{Binding SelectedTabIndex}" 
+                            Style="{StaticResource CustomTabControlStyle}"
+                            HorizontalAlignment="Stretch">
 
-            <!-- Заголовок -->
-            <TextBlock Text="{DynamicResource PersonalAccountTitle}" 
-           Style="{StaticResource HeaderTextBlockStyle}" 
-           Margin="20,20,20,10" HorizontalAlignment="Center"/>
+                    <!-- Вкладка 1: Личная информация -->
+                    <TabItem Header="{DynamicResource PersonalInfoTab}" Style="{StaticResource CustomTabItemStyle}">
+                        <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
+                            <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource CustomTextBlockStyle}"/>
+                            <TextBox Text="{Binding FullName}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
 
-            <!--#region Вкладки -->
-            <TabControl Grid.Row="1"
-            Margin="20,0,20,20"
-            SelectedIndex="{Binding SelectedTabIndex}"
-            Style="{StaticResource CustomTabControlStyle}">
+                            <TextBlock Text="Телефон (+375 (XX) XXX-XX-XX)" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
+                            <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
 
-                <!--#region Вкладка 1: Личная информация -->
-                <TabItem Header="{DynamicResource PersonalInfoTab}"
-                    Style="{StaticResource CustomTabItemStyle}">
-                    <!--Панель с личной информацией-->
-                    <StackPanel Grid.Row="1" 
-                          Margin="20,0,20,20"
-                          MaxWidth="500px"
-                          HorizontalAlignment="Center">
-                        <!-- Режим просмотра -->
-                        <StackPanel Visibility="{Binding ViewModeVisible}">
-                            <TextBlock Text="{DynamicResource FullName}" 
-                               Style="{StaticResource CustomTextBlockStyle}"
-                               HorizontalAlignment="Center"/>
-                            <TextBox x:Name="FullNameViewInput"
-                              Text="{Binding FullName}"
-                              IsReadOnly="True"
-                              MaxLength="30"
-                              Style="{StaticResource CustomTextBoxStyle}"
-                              HorizontalAlignment="Center"
-                              Width="300"/>
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,10,0">
+                                    <TextBlock Text="Возраст" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <TextBox Text="{Binding Age}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="Пол" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <ComboBox SelectedIndex="{Binding GenderIndex}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomComboBoxStyle}">
+                                        <ComboBoxItem Content="Мужской"/>
+                                        <ComboBoxItem Content="Женский"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
 
-                            <TextBlock Text="{DynamicResource Username}" 
-                               Style="{StaticResource CustomTextBlockStyle}"
-                               HorizontalAlignment="Center"/>
-                            <TextBox x:Name="UsernameInput"
-                              Text="{Binding Username}"
-                              IsReadOnly="True"
-                              MaxLength="30"
-                              Style="{StaticResource CustomTextBoxStyle}"
-                              HorizontalAlignment="Center"
-                              Width="300"/>
+                            <StackPanel Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid Margin="0,15,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="Вес (кг)" Style="{StaticResource CustomTextBlockStyle}"/>
+                                        <TextBox Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="Рост (см)" Style="{StaticResource CustomTextBlockStyle}"/>
+                                        <TextBox Text="{Binding Height}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Border Background="#FFF3F3F3" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
+                                    <StackPanel>
+                                        <TextBlock Text="Ваша норма калорий:" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Black"/>
+                                        <TextBlock Text="{Binding DailyCalories}" FontSize="26" Foreground="#E11A22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
 
-                            <TextBlock Text="{DynamicResource Email}" 
-                               Style="{StaticResource CustomTextBlockStyle}" 
-                               Margin="0,10,0,0"
-                               HorizontalAlignment="Center"/>
-                            <TextBox x:Name="EmailInput"
-                              Text="{Binding Email}"
-                              IsReadOnly="True"
-                              MaxLength="30"
-                              Style="{StaticResource CustomTextBoxStyle}"
-                              HorizontalAlignment="Center"
-                              Width="300"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
+                                <Button Content="{DynamicResource EditButton}" Command="{Binding EditCommand}" Visibility="{Binding ViewModeVisible}" Style="{StaticResource DefaultButtonStyle}" Margin="0,0,10,0" Width="120"/>
+                                <Button Content="{DynamicResource SaveButton}" Command="{Binding SaveCommand}" Visibility="{Binding EditModeVisible}" Style="{StaticResource DefaultButtonStyle}" Margin="0,0,10,0" Width="100"/>
+                                <Button Content="{DynamicResource CancelButton}" Command="{Binding CancelCommand}" Visibility="{Binding EditModeVisible}" Style="{StaticResource DefaultButtonStyle}" Width="100"/>
+                            </StackPanel>
                         </StackPanel>
+                    </TabItem>
 
-                        <!-- Режим редактирования -->
-                        <StackPanel Visibility="{Binding EditModeVisible}">
-                            <TextBlock Text="{DynamicResource FullName}" 
+                    <!-- Вкладка 2: Настройки -->
+                    <TabItem Header="{DynamicResource AppSettingsTab}" Style="{StaticResource CustomTabItemStyle}">
+                        <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
+                            <TextBlock Text="{DynamicResource LanguageSelection}" Style="{StaticResource CustomTextBlockStyle}" HorizontalAlignment="Center"/>
+                            <ComboBox x:Name="LanguageSelectionComboBox" SelectionChanged="LanguageSelectionComboBox_SelectionChanged" Style="{StaticResource CustomComboBoxStyle}" Margin="0,5,0,25">
+                                <ComboBoxItem Content="{DynamicResource RussianLanguage}" Tag="ru-RU" />
+                                <ComboBoxItem Content="{DynamicResource EnglishLanguage}" Tag="en-US" />
+                            </ComboBox>
+                            <TextBlock Text="{DynamicResource ThemeSelection}" Style="{StaticResource CustomTextBlockStyle}" HorizontalAlignment="Center"/>
+                            <ComboBox x:Name="ThemeSelectionComboBox" SelectionChanged="ThemeSelectionComboBox_SelectionChanged" Style="{StaticResource CustomComboBoxStyle}">
+                                <ComboBoxItem Content="{DynamicResource LightTheme}" Tag="Light" />
+                                <ComboBoxItem Content="{DynamicResource DarkTheme}" Tag="Dark" />
+                            </ComboBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- Вкладка 3: Безопасность -->
+                    <TabItem Header="{DynamicResource SecurityTab}" Style="{StaticResource CustomTabItemStyle}">
+                        <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
+                            <TextBlock Text="{DynamicResource ChangePasswordTitle}" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <TextBlock Text="{DynamicResource Password}" Style="{StaticResource CustomTextBlockStyle}"/>
+                            <TextBox x:Name="SecurityCurrentPasswordInput" Style="{StaticResource CustomTextBoxStyle}" Text="{Binding Password}" IsReadOnly="true" Margin="0,5,0,15"/>
+                            <TextBlock Text="{DynamicResource NewPassword}" Style="{StaticResource CustomTextBlockStyle}"/>
+                            <PasswordBox x:Name="SecurityNewPasswordInput" Style="{StaticResource CustomPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+                            <TextBlock Text="{DynamicResource ConfirmPassword}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,5"/>
+                            <PasswordBox x:Name="SecurityConfirmPasswordInput" Style="{StaticResource CustomPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+                            <Button Content="{DynamicResource ChangePasswordButton}" Command="{Binding ChangePasswordCommand}" Style="{StaticResource DefaultButtonStyle}" Margin="0,30,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- Вкладки Планов -->
+                    <TabItem Header="{DynamicResource WorkoutPlansTab}" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource CustomTabItemStyle}">
+                        <StackPanel MaxWidth="800" HorizontalAlignment="Center" Margin="0,30,0,30">
+                            <TextBlock Text="{DynamicResource YourWorkoutPlans}" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+                            <ListBox ItemsSource="{Binding WorkoutPlans}" ItemTemplate="{StaticResource WorkoutPlanTemplate}" Style="{StaticResource CustomListBoxStyle}" Background="Transparent" BorderThickness="0"/>
+                        </StackPanel>
+                    </TabItem>
+
+                    <TabItem Header="{DynamicResource NutritionPlansTab}" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource CustomTabItemStyle}">
+                        <StackPanel MaxWidth="800" HorizontalAlignment="Center" Margin="0,30,0,30">
+                            <TextBlock Text="{DynamicResource YourNutritionPlans}" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+                            <ListBox ItemsSource="{Binding NutritionPlans}" ItemTemplate="{StaticResource NutritionPlanTemplate}" Style="{StaticResource CustomListBoxStyle}" Background="Transparent" BorderThickness="0"/>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- Вкладка 6: Мои занятия (АДАПТИВНАЯ И ЛИСТАЕТСЯ) -->
+                    <TabItem Header="{DynamicResource MySubscriptionsTab}" Style="{StaticResource CustomTabItemStyle}" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel MaxWidth="1200" HorizontalAlignment="Center" Margin="0,30,0,30">
+                            <TextBlock Text="Ваши текущие записи" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+
+                            <ItemsControl ItemsSource="{Binding UserSubscriptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Width="270" Height="240" Margin="10" CornerRadius="12" 
+                                                Background="{DynamicResource SecondaryBackgroundBrush}" Effect="{StaticResource CardShadow}">
+                                            <StackPanel Margin="20">
+                                                <TextBlock Text="{Binding Subscription.Name}" FontWeight="Bold" FontSize="15" Height="50" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}"/>
+                                                <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontWeight="SemiBold" Margin="0,5,0,5"/>
+                                                <TextBlock Text="{Binding ExpiryDate, StringFormat='До: {0:dd.MM.yyyy}'}" FontSize="12" Opacity="0.6" Foreground="{DynamicResource TextBrush}"/>
+                                                <Button Content="Отменить запись" 
+                                                        Command="{Binding DataContext.CancelSubscriptionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                        CommandParameter="{Binding}" 
+                                                        Margin="0,25,0,0" 
+                                                        Style="{StaticResource DefaultButtonStyle}" 
+                                                        Background="#FF4C4C" Foreground="White" Height="30"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="{DynamicResource NoSubscriptionsMessage}" 
                                        Style="{StaticResource CustomTextBlockStyle}"
-                                       HorizontalAlignment="Center"/>
-                            <TextBox x:Name="EditFullNameInput"
-                                      Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      MaxLength="30"
-                                      Style="{StaticResource CustomTextBoxStyle}"
-                                      HorizontalAlignment="Center"
-                                      Width="300"/>
-                            <TextBlock x:Name="FullNameErrorText" 
-                                       Text="{Binding FullNameErrorMessage}" 
-                                       Foreground="Red" 
-                                       FontSize="12" 
-                                       Visibility="{Binding IsFullNameError, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                       Margin="0,2,0,5"
-                                       HorizontalAlignment="Center"/>
-
-                            <TextBlock Text="{DynamicResource Username}" 
-                                       Style="{StaticResource CustomTextBlockStyle}"
-                                       HorizontalAlignment="Center"/>
-                            <TextBox x:Name="EditUsernameInput"
-                                      Text="{Binding Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      MaxLength="30"
-                                      Style="{StaticResource CustomTextBoxStyle}"
-                                      HorizontalAlignment="Center"
-                                      Width="300"/>
-                            <TextBlock x:Name="UsernameErrorText" 
-                                       Text="{Binding UsernameErrorMessage}" 
-                                       Foreground="Red" 
-                                       FontSize="12" 
-                                       Visibility="{Binding IsUsernameError, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                       Margin="0,2,0,5"
-                                       HorizontalAlignment="Center"/>
-
-                            <TextBlock Text="{DynamicResource Email}" 
-                                       Style="{StaticResource CustomTextBlockStyle}" 
-                                       Margin="0,10,0,0"
-                                       HorizontalAlignment="Center"/>
-                            <TextBox x:Name="EditEmailInput"
-                                      Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      MaxLength="30"
-                                      Style="{StaticResource CustomTextBoxStyle}"
-                                      PreviewTextInput="EmailTextBox_PreviewTextInput"
-                                      LostFocus="EmailTextBox_LostFocus"
-                                      HorizontalAlignment="Center"
-                                      Width="300"/>
-                            <TextBlock x:Name="EmailErrorText" 
-                                       Text="{Binding EmailErrorMessage}" 
-                                       Foreground="Red" 
-                                       FontSize="12" 
-                                       Visibility="{Binding IsEmailError, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                       Margin="0,2,0,5"
-                                       HorizontalAlignment="Center"/>
+                                       Visibility="{Binding UserSubscriptions.Count, Converter={StaticResource ZeroToVisibilityConverter}}"
+                                       HorizontalAlignment="Center" Margin="0,50,0,0"/>
                         </StackPanel>
-
-
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20,0,0">
-                            <!-- Кнопка редактирования (видима только в режиме просмотра) -->
-                            <Button x:Name="EditButton"
-                                Content="{DynamicResource EditButton}"
-                                Command="{Binding EditCommand}"
-                                Visibility="{Binding ViewModeVisible}"
-                                Style="{StaticResource DefaultButtonStyle}" 
-                                Margin="0,0,10,0"/>
-
-                            <!-- Кнопки сохранения и отмены (видимы только в режиме редактирования) -->
-                            <Button x:Name="SaveButton"
-                                Content="{DynamicResource SaveButton}"
-                                Command="{Binding SaveCommand}"
-                                Visibility="{Binding EditModeVisible}"
-                                Style="{StaticResource DefaultButtonStyle}" 
-                                Margin="0,0,10,0"/>
-
-                            <Button x:Name="CancelButton"
-                                Content="{DynamicResource CancelButton}"
-                                Command="{Binding CancelCommand}"
-                                Visibility="{Binding EditModeVisible}"
-                                Style="{StaticResource DefaultButtonStyle}" 
-                                Margin="0,0,0,0"/>
-                        </StackPanel>
-
-                    </StackPanel>
-
-                </TabItem>
-                <!--#endregion-->
-
-                <!--#region Вкладка 2: Настройки приложения -->
-                <TabItem Header="{DynamicResource AppSettingsTab}"
-                    Style="{StaticResource CustomTabItemStyle}">
-                    <StackPanel Style="{StaticResource TabContentStyle}">
-                        <!-- Настройки языка -->
-                        <TextBlock Text="{DynamicResource LanguageSelection}" 
-                              Style="{StaticResource CustomTextBlockStyle}" 
-                              Margin="10"
-                              HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="LanguageSelectionComboBox" 
-                             SelectionChanged="LanguageSelectionComboBox_SelectionChanged" 
-                             Style="{StaticResource CustomComboBoxStyle}" 
-                             Width="300" 
-                             HorizontalAlignment="Center" 
-                             MinWidth="200"
-                             Margin="10,0,10,10">
-                            <ComboBoxItem Content="{DynamicResource RussianLanguage}" Tag="ru-RU" />
-                            <ComboBoxItem Content="{DynamicResource EnglishLanguage}" Tag="en-US" />
-                        </ComboBox>
-
-                        <!-- Настройки темы -->
-                        <TextBlock Text="{DynamicResource ThemeSelection}" 
-                              Style="{StaticResource CustomTextBlockStyle}" 
-                              Margin="10,20,10,10"
-                              HorizontalAlignment="Center"/>
-
-                        <ComboBox x:Name="ThemeSelectionComboBox" 
-                             SelectionChanged="ThemeSelectionComboBox_SelectionChanged" 
-                             Style="{StaticResource CustomComboBoxStyle}" 
-                             Width="300" 
-                             HorizontalAlignment="Center" 
-                             MinWidth="200"
-                             Margin="10,0,10,20">
-                            <ComboBoxItem Content="{DynamicResource LightTheme}" Tag="Light" />
-                            <ComboBoxItem Content="{DynamicResource DarkTheme}" Tag="Dark" />
-                        </ComboBox>
-                    </StackPanel>
-                </TabItem>
-                <!--#endregion-->
-
-                <!--#region Вкладка 3: Безопасность -->
-                <TabItem Header="{DynamicResource SecurityTab}"
-                    Style="{StaticResource CustomTabItemStyle}" Height="38" Margin="0,0,5,0" VerticalAlignment="Top">
-                    <StackPanel Style="{StaticResource TabContentStyle}">
-                        <TextBlock Text="{DynamicResource ChangePasswordTitle}" 
-                              Style="{StaticResource HeaderTextBlockStyle}" 
-                              HorizontalAlignment="Center"
-                              Margin="10, 0, 10, 0"/>
-
-                        <!-- Форма смены пароля -->
-                        <Grid MaxWidth="500" Margin="10,0,10,20" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="7*"/>
-                                <ColumnDefinition Width="353*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-
-                            </Grid.RowDefinitions>
-
-                            <!-- Текущий пароль -->
-                            <TextBlock Grid.Row="0" 
-                                 Text="{DynamicResource Password}" 
-                                 Style="{StaticResource CustomTextBlockStyle}" 
-                                 Margin="0,5,0,93" Grid.ColumnSpan="2"
-                                 HorizontalAlignment="Center"/>
-                            <TextBox 
-                                   x:Name="SecurityCurrentPasswordInput"
-                                   Style="{StaticResource CustomTextBoxStyle}" 
-                                   Text="{Binding Password}"
-                                   MaxLength="30"
-                                   IsReadOnly="true" Grid.ColumnSpan="2" 
-                                   Margin="0,24,0,63"
-                                   HorizontalAlignment="Center"
-                                   Width="300"/>
-
-                            <!-- Новый пароль -->
-                            <TextBlock 
-                                 Text="{DynamicResource NewPassword}" 
-                                 Style="{StaticResource CustomTextBlockStyle}" 
-                                 Margin="0,69,0,30" Grid.ColumnSpan="2"
-                                 HorizontalAlignment="Center"/>
-                            <PasswordBox 
-                                   x:Name="SecurityNewPasswordInput"
-                                   Style="{StaticResource CustomPasswordBoxStyle}" 
-                                   Grid.ColumnSpan="2" 
-                                   Margin="0,87,0,30" 
-                                   Grid.RowSpan="2"
-                                   PreviewKeyDown="PasswordBox_PreviewKeyDown"
-                                   HorizontalAlignment="Center"
-                                   Width="300"
-                                 />
-                            <TextBlock 
-                                 Text="{Binding PasswordErrorMessage}" 
-                                 Foreground="Red" 
-                                 FontSize="12" 
-                                 Visibility="{Binding IsPasswordError, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                 Grid.ColumnSpan="2" 
-                                 Margin="0,118,0,5" 
-                                 Grid.RowSpan="2"
-                                 HorizontalAlignment="Center"/>
-
-                            <!-- Подтверждение нового пароля -->
-                            <TextBlock Grid.Row="1" 
-                                 Text="{DynamicResource ConfirmPassword}" 
-                                 Style="{StaticResource CustomTextBlockStyle}" 
-                                 Margin="0,15,0,216" 
-                                 Grid.ColumnSpan="2" 
-                                 Grid.RowSpan="2"
-                                 HorizontalAlignment="Center"/>
-                            <PasswordBox Grid.Row="2" 
-                                   x:Name="SecurityConfirmPasswordInput"
-                                   Style="{StaticResource CustomPasswordBoxStyle}" 
-                                   Grid.ColumnSpan="2" 
-                                   Margin="0,4,0,186"
-                                   PreviewKeyDown="PasswordBox_PreviewKeyDown"
-                                   HorizontalAlignment="Center"
-                                   Width="300"
-                                   />
-                            <TextBlock Grid.Row="2" 
-                                 Text="{Binding ConfirmPasswordErrorMessage}" 
-                                 Foreground="Red" 
-                                 FontSize="12" 
-                                 Visibility="{Binding IsConfirmPasswordError, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                 Grid.ColumnSpan="2" 
-                                 Margin="0,35,0,156"
-                                 HorizontalAlignment="Center"/>
-
-                            <!-- Дополнительная информация о теме -->
-                            <Border Style="{StaticResource CustomBorderStyle}" Margin="10,54,0,119" MaxWidth="600" HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2">
-                                <TextBlock Text="{DynamicResource PasswordDescription}" 
-                                         Style="{StaticResource CustomTextBlockStyle}" 
-                                        TextWrapping="Wrap"/>
-                            </Border>
-
-                            <!-- Кнопки действий -->
-                            <StackPanel Grid.Row="2" 
-                                  Orientation="Horizontal" 
-                                  HorizontalAlignment="Center" 
-                                  Margin="0,141,0,39" Grid.ColumnSpan="2">
-                                <Button x:Name="ChangePasswordButton" 
-                                  Content="{DynamicResource ChangePasswordButton}" 
-                                  Command="{Binding ChangePasswordCommand}"
-                                  Style="{StaticResource DefaultButtonStyle}" 
-                                  Margin="0,0,10,0"/>
-                               
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                </TabItem>
-                <!--#endregion-->
-
-                <!--#region Вкладка 4: Планы тренировок -->
-                <TabItem Header="{DynamicResource WorkoutPlansTab}" Style="{StaticResource CustomTabItemStyle}"
-                         Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="{DynamicResource YourWorkoutPlans}" Style="{StaticResource HeaderTextBlockStyle}" Margin="10" />
-
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <!-- Индикатор загрузки -->
-                                <ProgressBar IsIndeterminate="True" Height="4" Margin="10" 
-                                             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                                <!-- Список планов тренировок -->
-                                <ListBox ItemsSource="{Binding WorkoutPlans}" 
-                                         SelectedItem="{Binding SelectedWorkoutPlan}"
-                                         ItemTemplate="{StaticResource WorkoutPlanTemplate}"
-                                         Style="{StaticResource CustomListBoxStyle}" 
-                                         Margin="10"
-                                         ItemContainerStyle="{StaticResource CustomListBoxItemStyle}"
-                                         Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
-
-                                <!-- Сообщение, если нет планов -->
-                                <TextBlock Text="{DynamicResource NoWorkoutPlans}" 
-                                           Style="{StaticResource CustomTextBlockStyle}" 
-                                           HorizontalAlignment="Center" 
-                                           Margin="0,50,0,0"
-                                           Foreground="{DynamicResource TextBrush}"
-                                           Visibility="{Binding WorkoutPlans.Count, Converter={StaticResource ZeroToVisibilityConverter}}" />
-
-                                <!-- Кнопка обновления -->
-                                <Button Content="{DynamicResource RefreshPlans}" 
-                                        Command="{Binding RefreshWorkoutPlansCommand}"
-                                        Style="{StaticResource DefaultButtonStyle}" 
-                                        HorizontalAlignment="Center" 
-                                        Margin="0,20,0,10" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                </TabItem>
-                <!--#endregion-->
-                
-                <!--#region Вкладка 5: Планы питания -->
-                <TabItem Header="{DynamicResource NutritionPlansTab}" Style="{StaticResource CustomTabItemStyle}"
-                         Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="{DynamicResource YourNutritionPlans}" Style="{StaticResource HeaderTextBlockStyle}" Margin="10" />
-
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <!-- Индикатор загрузки -->
-                                <ProgressBar IsIndeterminate="True" Height="4" Margin="10" 
-                                             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                                <!-- Список планов питания -->
-                                <ListBox ItemsSource="{Binding NutritionPlans}" 
-                                         SelectedItem="{Binding SelectedNutritionPlan}"
-                                         ItemTemplate="{StaticResource NutritionPlanTemplate}"
-                                         Style="{StaticResource CustomListBoxStyle}" 
-                                         Margin="10"
-                                         ItemContainerStyle="{StaticResource CustomListBoxItemStyle}"
-                                         Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
-
-                                <!-- Сообщение, если нет планов -->
-                                <TextBlock Text="{DynamicResource NoNutritionPlans}" 
-                                           Style="{StaticResource CustomTextBlockStyle}" 
-                                           HorizontalAlignment="Center" 
-                                           Margin="0,50,0,0"
-                                           Foreground="{DynamicResource TextBrush}"
-                                           Visibility="{Binding NutritionPlans.Count, Converter={StaticResource ZeroToVisibilityConverter}}" />
-
-                                <!-- Кнопка обновления -->
-                                <Button Content="{DynamicResource RefreshPlans}" 
-                                        Command="{Binding RefreshNutritionPlansCommand}"
-                                        Style="{StaticResource DefaultButtonStyle}" 
-                                        HorizontalAlignment="Center" 
-                                        Margin="0,20,0,10" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                </TabItem>
-                <!--#endregion-->
-
-                <!--#region Вкладка 6: Мои абонементы -->
-                <TabItem Header="{DynamicResource MySubscriptionsTab}" Style="{StaticResource CustomTabItemStyle}"
-                         Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        
-                        <!-- Заголовок и кнопка обновления -->
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            
-                            <TextBlock Grid.Column="0" 
-                                      Text="{DynamicResource MySubscriptionsTab}" 
-                                      Style="{StaticResource HeaderTextBlockStyle}" 
-                                      Margin="10,15,0,15"/>
-                            
-                            <Button Grid.Column="1"
-                                   Content="{DynamicResource RefreshButton}" 
-                                   Command="{Binding RefreshSubscriptionsCommand}"
-                                   Style="{StaticResource DefaultButtonStyle}" 
-                                   Margin="0,0,10,0"/>
-                        </Grid>
-                        
-                        <!-- Список абонементов -->
-                        <ListView Grid.Row="1" 
-                                 ItemsSource="{Binding UserSubscriptions}"
-                                 SelectedItem="{Binding SelectedUserSubscription}"
-                                 Margin="10"
-                                 BorderThickness="1"
-                                 BorderBrush="{DynamicResource TextBrush}"
-                                 Background="{DynamicResource BackgroundBrush}"
-                                 Foreground="{DynamicResource TextBrush}"
-                                 Visibility="{Binding UserSubscriptions.Count, Converter={StaticResource NonZeroToVisibilityConverter}}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="{DynamicResource LightGrayBrush}" 
-                                           BorderThickness="1" 
-                                           CornerRadius="5"
-                                           Padding="10" 
-                                           Margin="5" 
-                                           Background="{DynamicResource SecondaryBackgroundBrush}"
-                                           Width="300">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            
-                                            <!-- Название абонемента -->
-                                            <TextBlock Grid.Row="0" 
-                                                     Text="{Binding Subscription.Name}"
-                                                     FontSize="16"
-                                                     FontWeight="Bold"
-                                                     Foreground="{DynamicResource TextBrush}"
-                                                     Margin="0,0,0,5"/>
-
-                                            <!-- Тип абонемента -->
-                                            <StackPanel Grid.Row="1" 
-                                                      Orientation="Horizontal"
-                                                      Margin="0,0,0,3">
-                                                <TextBlock Text="{DynamicResource Type}" 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text=": " 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text="{Binding Subscription.SubscriptionType}"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                            </StackPanel>
-                                            
-                                            <!-- Цена абонемента -->
-                                            <StackPanel Grid.Row="2" 
-                                                      Orientation="Horizontal"
-                                                      Margin="0,0,0,3">
-                                                <TextBlock Text="{DynamicResource Price}" 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text=": " 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Foreground="{DynamicResource TextBrush}">
-                                                    <Run Text="{Binding Subscription.Price, StringFormat='{}{0:N0}'}"/>
-                                                    <Run Text=" руб."/>
-                                                </TextBlock>
-                                            </StackPanel>
-                                            
-                                            <!-- Период действия -->
-                                            <StackPanel Grid.Row="3" 
-                                                      Orientation="Horizontal"
-                                                      Margin="0,0,0,3">
-                                                <TextBlock Text="{DynamicResource StartDate}" 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text=": " 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text="{Binding PurchaseDate, StringFormat=dd.MM.yyyy}"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                            </StackPanel>
-                                            
-                                            <StackPanel Grid.Row="4" 
-                                                      Orientation="Horizontal"
-                                                      Margin="0,0,0,3">
-                                                <TextBlock Text="{DynamicResource EndDate}" 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text=": " 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text="{Binding ExpiryDate, StringFormat=dd.MM.yyyy}"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                            </StackPanel>
-                                            
-                                            <!-- Статус -->
-                                            <StackPanel Grid.Row="5" 
-                                                      Orientation="Horizontal"
-                                                      Margin="0,0,0,3">
-                                                <TextBlock Text="{DynamicResource Status}" 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text=": " 
-                                                         FontWeight="SemiBold"
-                                                         Foreground="{DynamicResource TextBrush}"/>
-                                                <TextBlock Text="{Binding StatusText}" 
-                                                         Foreground="{Binding StatusColor}">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsCanceled}" Value="True">
-                                                                    <Setter Property="FontWeight" Value="Bold"/>
-                                                                    <Setter Property="TextDecorations" Value="Underline"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </StackPanel>
-                                            
-                                            <!-- Кнопка отмены абонемента -->
-                                            <Button Grid.Row="6"
-                                                   Content="{DynamicResource CancelSubscriptionButton}"
-                                                   Command="{Binding DataContext.CancelSubscriptionCommand, 
-                                                            RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
-                                                   CommandParameter="{Binding}"
-                                                   Style="{StaticResource DefaultButtonStyle}"
-                                                   Margin="0,10,0,0">
-                                                <Button.Visibility>
-                                                    <MultiBinding Converter="{StaticResource CombinedVisibilityConverter}">
-                                                        <Binding Path="IsExpired" Converter="{StaticResource InverseBooleanToVisibilityConverter}"/>
-                                                        <Binding Path="IsCanceled" Converter="{StaticResource InverseBooleanToVisibilityConverter}"/>
-                                                    </MultiBinding>
-                                                </Button.Visibility>
-                                            </Button>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                        </ListView>
-                        
-                        <!-- Сообщение, если список пуст -->
-                        <TextBlock Grid.Row="1" 
-                                  Text="{DynamicResource NoSubscriptionsMessage}" 
-                                  FontSize="14" 
-                                  TextWrapping="Wrap"
-                                  MaxWidth="500"
-                                  HorizontalAlignment="Center" 
-                                  VerticalAlignment="Center"
-                                  Foreground="{DynamicResource TextBrush}"
-                                  Visibility="{Binding UserSubscriptions.Count, Converter={StaticResource ZeroToVisibilityConverter}}"/>
-                    </Grid>
-                </TabItem>
-                <!--#endregion-->
-
-            </TabControl>
-            <!--#endregion-->
-
-            <StackPanel Grid.Row="2" 
-                Orientation="Horizontal" 
-                HorizontalAlignment="Right" 
-                Margin="20">
+                    </TabItem>
+                </TabControl>
             </StackPanel>
-        </Grid>
-        <!--#endregion-->
-
+        </ScrollViewer>
     </Grid>
 </UserControl>

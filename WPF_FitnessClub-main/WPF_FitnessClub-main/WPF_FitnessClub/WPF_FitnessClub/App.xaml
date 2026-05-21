@@ -26,6 +26,32 @@
                               Color="Black" 
                               Opacity="0.3" 
                               ShadowDepth="2"/>
+            <!-- Шаблон для рисования одной звезды -->
+            <DataTemplate x:Key="StarTemplate">
+                <TextBlock FontSize="18" Margin="0" Padding="0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <!-- По умолчанию звезда пустая (серая) -->
+                            <Setter Property="Text" Value="☆"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Style.Triggers>
+                                <!-- СРАВНЕНИЕ С ПОЛНОЙ ЗВЕЗДОЙ (Используем точный тип из конвертеров) -->
+                                <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Full}">
+                                    <Setter Property="Text" Value="★"/>
+                                    <Setter Property="Foreground" Value="Gold"/>
+                                </DataTrigger>
+
+                                <!-- СРАВНЕНИЕ С ПОЛОВИНКОЙ -->
+                                <DataTrigger Binding="{Binding Type}" Value="{x:Static converters:StarType.Half}">
+                                    <Setter Property="Text" Value="★"/>
+                                    <Setter Property="Foreground" Value="Gold"/>
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </DataTemplate>
 
             <!-- Стандартный конвертер BooleanToVisibilityConverter из WPF -->
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>

@@ -18,7 +18,8 @@ namespace WPF_FitnessClub
 		private string user;
 		private int score;
 		private string comment;
-		private DateTime createdDate;
+		private string adminReply;
+        private DateTime createdDate;
 		private int subscriptionId;
 		private Subscription subscription;
 
@@ -95,7 +96,16 @@ namespace WPF_FitnessClub
 			}
 		}
 
-		[NotMapped]      
+        public string AdminReply 
+		{ 
+			get => adminReply; 
+			set 
+			{
+				adminReply = value; 
+				OnPropertyChanged(); }
+		}
+
+        [NotMapped]      
 		public DateTime CreatedDate
 		{
 			get => createdDate;

@@ -6,6 +6,10 @@ using System.Windows.Media;
 using WPF_FitnessClub.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media.Imaging;
+using System.IO;                 
+using System.Windows.Media.Imaging; 
+using System.Globalization;     
 
 namespace WPF_FitnessClub.Converters
 {
@@ -13,16 +17,38 @@ namespace WPF_FitnessClub.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || string.IsNullOrEmpty(value.ToString()))
-                return "/Images/default-profile.jpg";
+            string fileName = value as string;
+            if (string.IsNullOrWhiteSpace(fileName)) return null;
 
-            return value.ToString();
+            try
+            {
+                // Убираем возможные приставки, оставляем только чистое имя файла (например, gym2.jpg)
+                string cleanName = Path.GetFileName(fileName);
+
+                // Собираем путь к папке с картинками внутри твоего проекта
+                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", cleanName);
+
+                if (File.Exists(fullPath))
+                {
+                    var image = new BitmapImage();
+                    image.BeginInit();
+                    image.UriSource = new Uri(fullPath);
+                    image.CacheOption = BitmapCacheOption.OnLoad; // Чтобы картинка не "зависала" в памяти
+                    image.EndInit();
+                    return image;
+                }
+
+                // Если файла на диске нет, пробуем запасной путь (через ресурсы сборки)
+                return new BitmapImage(new Uri($"pack://application:,,,/Images/{cleanName}", UriKind.Absolute));
+            }
+            catch
+            {
+                // Если картинки нет, вернем null (карточка просто будет без фото, но программа не вылетит)
+                return null;
+            }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 
     public class RatingToVisibilityConverter : IValueConverter
@@ -160,52 +186,31 @@ namespace WPF_FitnessClub.Converters
 
     public class RatingToStarsConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value is double rating)
+            double rating = 0;
+            if (value != null) rating = System.Convert.ToDouble(value);
+
+            var stars = new List<Star>();
+            for (int i = 1; i <= 5; i++)
             {
-                var stars = new List<Star>();
-                
-                int fullStars = (int)Math.Floor(rating);
-                
-                bool hasHalfStar = (rating - fullStars) >= 0.5;
-                
-                for (int i = 0; i < fullStars; i++)
-                {
-                    stars.Add(new Star { Type = StarType.Full });
-                }
-                
-                if (hasHalfStar)
-                {
-                    stars.Add(new Star { Type = StarType.Half });
-                }
-                
-                while (stars.Count < 5)
-                {
-                    stars.Add(new Star { Type = StarType.Empty });
-                }
-                
-                return stars;
+                if (rating >= i) stars.Add(new Star { Type = StarType.Full });
+                else if (rating >= i - 0.5) stars.Add(new Star { Type = StarType.Half });
+                else stars.Add(new Star { Type = StarType.Empty });
             }
-            
-            return Enumerable.Repeat(new Star { Type = StarType.Empty }, 5).ToList();
+            return stars;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return Binding.DoNothing;
+            throw new NotImplementedException();
         }
     }
-    
+
     public class Star
     {
-        public StarType Type { get; set; }
+        public StarType Type { get; set; } // Свойство должно называться именно Type
     }
-    
-    public enum StarType
-    {
-        Empty,    
-        Half,     
-        Full      
-    }
+
+    public enum StarType { Full, Half, Empty }
 } 

@@ -13,6 +13,10 @@
         WindowState="Maximized"
         Style="{StaticResource WindowStyle}">
 
+    <Window.InputBindings>
+        <KeyBinding Key="L" Modifiers="Control" Command="{Binding LogoutCommand}"/>
+    </Window.InputBindings>
+    
     <Grid Style="{StaticResource ResponsiveGridStyle}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

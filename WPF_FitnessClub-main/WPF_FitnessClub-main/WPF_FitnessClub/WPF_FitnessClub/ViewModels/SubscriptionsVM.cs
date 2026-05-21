@@ -13,6 +13,7 @@ using static WPF_FitnessClub.Commands;
 using WPF_FitnessClub.Data;
 using WPF_FitnessClub.Data.Services;
 
+
 namespace WPF_FitnessClub.ViewModels
 {
 	public class SubscriptionsVM : ViewModelBase
@@ -33,31 +34,22 @@ namespace WPF_FitnessClub.ViewModels
 			{ "Обычный", "Обычный" },
 		};
 
-		private readonly Dictionary<string, string> _durationTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private readonly Dictionary<string, string> _durationTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "OneMonth", "1 месяц" },
-			{ "One Month", "1 месяц" },
-			{ "1 Month", "1 месяц" },
-			{ "ThreeMonths", "3 месяца" },
-			{ "Three Months", "3 месяца" },
-			{ "3 Months", "3 месяца" },
-			{ "SixMonths", "6 месяцев" },
-			{ "Six Months", "6 месяцев" },
-			{ "6 Months", "6 месяцев" },
-			{ "OneYear", "1 год" },
-			{ "One Year", "1 год" },
-			{ "1 Year", "1 год" },
-			{ "TwelveMonths", "12 месяцев" },
-			{ "Twelve Months", "12 месяцев" },
-			{ "12 Months", "12 месяцев" },
-			{ "1 месяц", "1 месяц" },
-			{ "3 месяца", "3 месяца" },
-			{ "6 месяцев", "6 месяцев" },
-			{ "1 год", "1 год" },
-			{ "12 месяцев", "12 месяцев" }
+			// Связываем то, что в выпадающем списке, с тем, что лежит в базе
+			{ "1 занятие", "Visit1" },
+			{ "4 занятия", "Visit4" },
+			{ "8 занятий", "Visit8" },
+			{ "16 занятий", "Visit16" },
+			{ "32 занятия", "Visit32" },
+    
+			// Оставляем старые варианты на случай, если в базе еще есть "месяцы"
+			{ "1 месяц", "Visit1" },
+			{ "3 месяца", "Visit8" },
+			{ "12 месяцев", "Visit32" }
 		};
 
-		private string _searchText;
+        private string _searchText;
 		private string _minCost;
 		private string _maxCost;
 		private ComboBoxItem _selectedType;
@@ -67,9 +59,11 @@ namespace WPF_FitnessClub.ViewModels
 
 		public event Action<Subscription> SubscriptionSelected;
 
-		#region Свойства
+        private string _selectedTypeKey;
 
-		public ObservableCollection<Subscription> FilteredSubscriptions
+        #region Свойства
+
+        public ObservableCollection<Subscription> FilteredSubscriptions
 		{
 			get => _filteredSubscriptions;
 			set
@@ -171,17 +165,23 @@ namespace WPF_FitnessClub.ViewModels
             }
         }
 
-		#endregion
+        private string _selectedDurationKey;
+        public string SelectedDurationKey
+        {
+            get => _selectedDurationKey;
+            set { _selectedDurationKey = value; OnPropertyChanged("SelectedDurationKey"); ApplyFilters(); }
+        }
+        #endregion
 
-		#region Команды
+        #region Команды
 
-		public ICommand ToggleFilterPanelCommand { get; }
+        public ICommand ToggleFilterPanelCommand { get; }
 		public ICommand SelectSubscriptionCommand { get; }
 		public ICommand RefreshSubscriptionsCommand { get; }
+        public ICommand ResetFiltersCommand { get; private set; }
+        #endregion
 
-		#endregion
-
-		public SubscriptionsVM(MainWindow mainWindow, List<Subscription> subscriptions)
+        public SubscriptionsVM(MainWindow mainWindow, List<Subscription> subscriptions)
 		{
 			_mainWindow = mainWindow;
 			_subscriptionService = new SubscriptionService();
@@ -191,7 +191,8 @@ namespace WPF_FitnessClub.ViewModels
 			ToggleFilterPanelCommand = new RelayCommand(ToggleFilterPanel);
 			SelectSubscriptionCommand = new RelayCommand<Subscription>(OnSubscriptionSelected);
             RefreshSubscriptionsCommand = new RelayCommand(_ => RefreshSubscriptions());
-            
+            ResetFiltersCommand = new RelayCommand(p => ResetFilters());
+
             _searchText = string.Empty;
             _minCost = string.Empty;
             _maxCost = string.Empty;
@@ -284,121 +285,46 @@ namespace WPF_FitnessClub.ViewModels
 				   normalizedDuration.Contains("месяц") && normalizedDuration.Contains("12");
 		}
 
-		private void ApplyFilters()
-		{
-			try
-			{
-				string currentLang = GetCurrentLanguage();
-				System.Diagnostics.Debug.WriteLine($"Applying filters... Current language: {currentLang}");
-				
-				if (_allSubscriptions == null)
-				{
-					System.Diagnostics.Debug.WriteLine("_allSubscriptions is null, returning empty list");
-					FilteredSubscriptions = new ObservableCollection<Subscription>();
-					return;
-				}
+        private void ApplyFilters()
+        {
+            try
+            {
+                if (_allSubscriptions == null) return;
 
-				decimal? minCostValue = null;
-				decimal? maxCostValue = null;
+                var filtered = _allSubscriptions.AsQueryable();
 
-				if (!string.IsNullOrEmpty(MinCost) && decimal.TryParse(MinCost, out decimal min))
-				{
-					minCostValue = min;
-				}
+                // 1. Поиск по тексту
+                if (!string.IsNullOrEmpty(SearchText))
+                {
+                    filtered = filtered.Where(s => s.Name.ToLower().Contains(SearchText.ToLower()));
+                }
 
-				if (!string.IsNullOrEmpty(MaxCost) && decimal.TryParse(MaxCost, out decimal max))
-				{
-					maxCostValue = max;
-				}
+                // 2. Цена
+                if (decimal.TryParse(MinCost, out decimal min)) filtered = filtered.Where(s => s.Price >= min);
+                if (decimal.TryParse(MaxCost, out decimal max)) filtered = filtered.Where(s => s.Price <= max);
 
-				if (minCostValue.HasValue && maxCostValue.HasValue)
-				{
-					if (minCostValue.Value > maxCostValue.Value)
-					{
-						var temp = minCostValue;
-						minCostValue = maxCostValue;
-						maxCostValue = temp;
-						
-						_minCost = minCostValue.Value.ToString();
-						_maxCost = maxCostValue.Value.ToString();
-						
-						OnPropertyChanged(nameof(MinCost));
-						OnPropertyChanged(nameof(MaxCost));
-					}
-				}
+                // 3. ТИП (через прямое сравнение выбранного элемента)
+                if (!string.IsNullOrEmpty(SelectedTypeKey) && SelectedTypeKey != "All")
+                {
+                    // Сравниваем ключ из фильтра (например, "Group") 
+                    // с ключом из базы данных (там тоже должно быть "Group")
+                    filtered = filtered.Where(s => s.SubscriptionType == SelectedTypeKey);
+                }
 
-				string typeFilter = SelectedType?.Content?.ToString();
-				string durationFilter = SelectedDuration?.Content?.ToString();
+                // 4. ДЛИТЕЛЬНОСТЬ (ГЛАВНЫЙ ИСПРАВЛЕННЫЙ БЛОК)
+                if (!string.IsNullOrEmpty(SelectedDurationKey) && SelectedDurationKey != "All")
+                {
+                    // Теперь мы сравниваем КЛЮЧ (Visit32) с тем, что лежит в БД (тоже Visit32)
+                    filtered = filtered.Where(s => s.Duration == SelectedDurationKey);
+                }
 
-				System.Diagnostics.Debug.WriteLine($"Выбранный тип: {typeFilter}, выбранная длительность: {durationFilter}");
-
-				string typeFilterDb = GetDatabaseValue(typeFilter, _typeTranslations);
-				string durationFilterDb = GetDatabaseValue(durationFilter, _durationTranslations);
-
-				System.Diagnostics.Debug.WriteLine($"Значение для поиска в БД - тип: {typeFilterDb}, длительность: {durationFilterDb}");
-
-				var filtered = _allSubscriptions.AsQueryable();
-
-				if (!string.IsNullOrEmpty(SearchText))
-				{
-					System.Diagnostics.Debug.WriteLine($"Применяем фильтр по тексту: '{SearchText}'");
-					filtered = filtered.Where(s => 
-						s.Name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
-						(s.Description != null && s.Description.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
-					);
-				}
-
-				if (minCostValue.HasValue)
-				{
-					System.Diagnostics.Debug.WriteLine($"Применяем фильтр по минимальной цене: {minCostValue.Value}");
-					filtered = filtered.Where(s => s.Price >= minCostValue.Value);
-				}
-
-				if (maxCostValue.HasValue)
-				{
-					System.Diagnostics.Debug.WriteLine($"Применяем фильтр по максимальной цене: {maxCostValue.Value}");
-					filtered = filtered.Where(s => s.Price <= maxCostValue.Value);
-				}
-
-				if (!string.IsNullOrEmpty(typeFilterDb))
-				{
-					System.Diagnostics.Debug.WriteLine($"Применяем фильтр по типу абонемента: '{typeFilterDb}'");
-					
-					var allTypes = _allSubscriptions.Select(s => s.SubscriptionType).Distinct().ToList();
-					System.Diagnostics.Debug.WriteLine($"Доступные типы абонементов: {string.Join(", ", allTypes)}");
-					
-					filtered = filtered.Where(s => s.SubscriptionType == typeFilterDb);
-				}
-
-				if (!string.IsNullOrEmpty(durationFilterDb))
-				{
-					System.Diagnostics.Debug.WriteLine($"Применяем фильтр по длительности абонемента: '{durationFilterDb}'");
-					
-					var allDurations = _allSubscriptions.Select(s => s.Duration).Distinct().ToList();
-					System.Diagnostics.Debug.WriteLine($"Доступные длительности абонементов: {string.Join(", ", allDurations)}");
-					
-					if (IsYearDuration(durationFilterDb))
-					{
-						filtered = filtered.Where(s => IsYearDuration(s.Duration));
-						System.Diagnostics.Debug.WriteLine($"Применен фильтр по годовой длительности");
-					}
-					else
-					{
-						filtered = filtered.Where(s => s.Duration == durationFilterDb);
-					}
-				}
-
-				FilteredSubscriptions = new ObservableCollection<Subscription>(filtered);
-				System.Diagnostics.Debug.WriteLine($"Отфильтровано {FilteredSubscriptions.Count} абонементов");
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"Ошибка при применении фильтров: {ex.Message}");
-			}
-		}
+                FilteredSubscriptions = new ObservableCollection<Subscription>(filtered.ToList());
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine("Ошибка фильтра: " + ex.Message); }
+        } 
 
 
-		private string GetCurrentLanguage()
+        private string GetCurrentLanguage()
 		{
 			try
 			{
@@ -639,10 +565,10 @@ namespace WPF_FitnessClub.ViewModels
 			_searchText = string.Empty;
 			_minCost = string.Empty;
 			_maxCost = string.Empty;
-			
-			_selectedType = null;
-			_selectedDuration = null;
-			_isFiltersApplied = false;
+
+            SelectedTypeKey = "All";
+            SelectedDurationKey = "All";
+            _isFiltersApplied = false;
 			
 			OnPropertyChanged(nameof(SearchText));
 			OnPropertyChanged(nameof(MinCost));
@@ -651,7 +577,9 @@ namespace WPF_FitnessClub.ViewModels
 			OnPropertyChanged(nameof(SelectedDuration));
 			
 			FilteredSubscriptions = new ObservableCollection<Subscription>(_allSubscriptions);
-		}
+
+            OnPropertyChanged(nameof(FilteredSubscriptions));
+        }
 		
 		private void ValidateAndCorrectPrices()
 		{
@@ -680,6 +608,12 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
+        public string SelectedTypeKey
+        {
+            get => _selectedTypeKey;
+            set { _selectedTypeKey = value; OnPropertyChanged("SelectedTypeKey"); ApplyFilters(); }
+        }
+        
 		private void OnLanguageChanged(object sender, string languageCode)
 		{
 			System.Diagnostics.Debug.WriteLine($"Язык изменен на: {languageCode}");

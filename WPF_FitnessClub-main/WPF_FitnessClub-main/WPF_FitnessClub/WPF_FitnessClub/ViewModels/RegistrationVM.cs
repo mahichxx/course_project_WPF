@@ -360,145 +360,46 @@ namespace WPF_FitnessClub.ViewModels
 			ShowWarning("UserNotFound");
 		}
 
-		private void ExecuteRegisterCommand(object parameter)
-		{
-			System.Diagnostics.Debug.WriteLine($"Попытка регистрации: {RegLogin}, {Email}, {FullName}");
-			
-			var passwordBox = parameter as PasswordBox;
-			var confirmPasswordBox = passwordBox?.Tag as PasswordBox;
-			
-			if (passwordBox == null || confirmPasswordBox == null)
-			{
-				return;
-			}
-			
-			RegPassword = passwordBox.Password;
-			ConfirmPassword = confirmPasswordBox.Password;
-			
-			if (string.IsNullOrEmpty(RegLogin) || string.IsNullOrEmpty(RegPassword) || 
-				string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Email) || 
-				string.IsNullOrEmpty(FullName))
-			{
-				ShowWarning("FillAllFields");
-				return;
-			}
-			
-			if (RegPassword != ConfirmPassword)
-			{
-				ShowWarning("PasswordsMismatch");
-				return;
-			}
-			
-			if (!IsValid(RegLogin, @"^[a-zA-Z0-9]{3,15}$", "InvalidUsername"))
-				return;
-				
-			if (!IsValid(Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", "InvalidEmail"))
-				return;
-				
-			if (!IsValid(RegPassword, @"^.{4,}$", "InvalidPassword"))
-				return;
-                
-            if (!Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$"))
+        private void ExecuteRegisterCommand(object parameter)
+        {
+            var passwordBox = parameter as PasswordBox;
+            var confirmPasswordBox = passwordBox?.Tag as PasswordBox;
+            if (passwordBox == null || confirmPasswordBox == null) return;
+
+            RegPassword = passwordBox.Password;
+            ConfirmPassword = confirmPasswordBox.Password;
+
+            // Проверка на пустоту
+            if (string.IsNullOrEmpty(RegLogin) || string.IsNullOrEmpty(RegPassword) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(FullName))
             {
-                ShowWarning("FullNameOnlyLetters");
+                ShowWarning("FillAllFields");
                 return;
             }
-                
+
+            // Пароли должны совпадать
+            if (RegPassword != ConfirmPassword) { ShowWarning("PasswordsMismatch"); return; }
+
+            // ВАЛИДАЦИЯ ПАРОЛЯ (мин. 6)
+            if (RegPassword.Length < 6) { ShowWarning("PasswordTooShort"); return; }
+
+            // ВАЛИДАЦИЯ ФИО (буквы и 3 слова)
+            if (!Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$")) { ShowWarning("FullNameOnlyLetters"); return; }
             string[] nameParts = FullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (nameParts.Length != 3)
+            if (RegLogin.ToLower() != "admin" && nameParts.Length != 3) { ShowWarning("FullNameRequireThreeWords"); return; }
+
+            // Дальше твой оригинальный код проверки уникальности в БД...
+            if (!_userService.IsLoginUnique(RegLogin)) { ShowWarning("LoginAlreadyExists"); return; }
+            if (!_userService.IsEmailUnique(Email)) { ShowWarning("EmailAlreadyExists"); return; }
+
+            var newUser = new User(FullName, Email, RegLogin, RegPassword, UserRole.Client);
+            if (_userService.Add(newUser) > 0)
             {
-                ShowWarning("FullNameRequireThreeWords");
-                return;
+                MessageBox.Show((string)Application.Current.Resources["RegistrationSuccess"], (string)Application.Current.Resources["SuccessTitle"]);
+                OpenMainWindow(newUser);
             }
-				
-			bool isLoginUnique = true;
-			bool isEmailUnique = true;
-			
-			if (_databaseConnectionService.IsDatabaseExists())
-			{
-				try
-				{
-					isLoginUnique = _userService.IsLoginUnique(RegLogin);
-					isEmailUnique = _userService.IsEmailUnique(Email);
-				}
-				catch (Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine($"Ошибка при проверке уникальности в БД: {ex.Message}");
-				}
-			}
-			
-			if (!isLoginUnique || _users.Any(u => u.Login == RegLogin))
-			{
-				ShowWarning("LoginAlreadyExists");
-				return;
-			}
-			
-			if (!isEmailUnique || _users.Any(u => u.Email == Email))
-			{
-				ShowWarning("EmailAlreadyExists");
-				return;
-			}
-			
-			var newUser = new User(FullName, Email, RegLogin, RegPassword, UserRole.Client);
-			
+        }
 
-			if (_databaseConnectionService.IsDatabaseExists())
-			{
-				try
-				{
-					int userId = _userService.Add(newUser);
-					if (userId > 0)
-					{
-						
-						System.Diagnostics.Debug.WriteLine($"Пользователь успешно сохранен в БД с ID: {userId}");
-						MessageBox.Show((string)Application.Current.Resources["RegistrationSuccess"], 
-							(string)Application.Current.Resources["SuccessTitle"], 
-							MessageBoxButton.OK, MessageBoxImage.Information);
-						
-						roleName = GetRoleNameInCurrentLanguage(newUser.Role);
-						welcomeMessage = string.Format(
-							(string)Application.Current.Resources["WelcomeUser"],
-							newUser.Login,
-							roleName);
-						
-						MessageBox.Show(
-							welcomeMessage,
-							(string)Application.Current.Resources["SuccessTitle"],
-							MessageBoxButton.OK,
-							MessageBoxImage.Information);
-						
-						OpenMainWindow(newUser);
-						return;
-					}
-				}
-				catch (Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine($"Ошибка при сохранении пользователя в БД: {ex.Message}");
-				}
-			}
-			
-			_users.Add(newUser);
-			
-			MessageBox.Show((string)Application.Current.Resources["RegistrationSuccess"], 
-				(string)Application.Current.Resources["SuccessTitle"], 
-				MessageBoxButton.OK, MessageBoxImage.Information);
-			
-			roleName = GetRoleNameInCurrentLanguage(newUser.Role);
-			welcomeMessage = string.Format(
-				(string)Application.Current.Resources["WelcomeUser"],
-				newUser.Login,
-				roleName);
-			
-			MessageBox.Show(
-				welcomeMessage,
-				(string)Application.Current.Resources["SuccessTitle"],
-				MessageBoxButton.OK,
-				MessageBoxImage.Information);
-			
-			OpenMainWindow(newUser);
-		}
-
-		private bool IsValid(string input, string pattern, string errorKey)
+        private bool IsValid(string input, string pattern, string errorKey)
 		{
 			if (!Regex.IsMatch(input, pattern))
 			{

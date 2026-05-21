@@ -106,26 +106,31 @@
                                 <StackPanel Margin="0,0,5,0">
                                     <TextBlock Text="{DynamicResource Type}" 
                                               Style="{StaticResource ModernTextBlockStyle}"/>
-                                    <ComboBox x:Name="ChooseType" 
-                                              Style="{StaticResource CustomComboBoxStyle}"
-                                              SelectedValuePath="Content"
-                                              SelectedValue="{Binding SubscriptionType, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBoxItem Content="{DynamicResource Unlimited}"/>
-                                        <ComboBoxItem Content="{DynamicResource Standard}"/>
+                                    <ComboBox SelectedValuePath="Tag" 
+          SelectedValue="{Binding SelectedTypeKey, UpdateSourceTrigger=PropertyChanged}" 
+          Style="{StaticResource CustomComboBoxStyle}">
+                                        <ComboBoxItem Content="Все" Tag="All"/>
+                                        <ComboBoxItem Content="{DynamicResource Unlimited}" Tag="Unlimited"/>
+                                        <ComboBoxItem Content="{DynamicResource Morning}" Tag="Morning"/>
+                                        <ComboBoxItem Content="{DynamicResource Evening}" Tag="Evening"/>
+                                        <ComboBoxItem Content="{DynamicResource Group}" Tag="Group"/>
+                                        <ComboBoxItem Content="Одиночная" Tag="Single"/>
                                     </ComboBox>
                                 </StackPanel>
-                                
+
                                 <StackPanel Grid.Column="1" Margin="5,0,0,0">
                                     <TextBlock Text="{DynamicResource Duration}" 
-                                              Style="{StaticResource ModernTextBlockStyle}"/>
+                                         Style="{StaticResource ModernTextBlockStyle}"/>
                                     <ComboBox x:Name="ChooseDuration"                
-                                              Style="{DynamicResource CustomComboBoxStyle}"
-                                              SelectedValuePath="Content"
-                                              SelectedValue="{Binding Duration, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBoxItem Content="{DynamicResource OneMonth}"/>
-                                        <ComboBoxItem Content="{DynamicResource ThreeMonths}"/>
-                                        <ComboBoxItem Content="{DynamicResource SixMonths}"/>
-                                        <ComboBoxItem Content="{DynamicResource OneYear}"/>
+                                            Style="{StaticResource CustomComboBoxStyle}"
+                                             SelectedValuePath="Content"
+                                             SelectedValue="{Binding Duration, UpdateSourceTrigger=PropertyChanged}">
+                                        <!-- ИСПОЛЬЗУЕМ НОВЫЕ КЛЮЧИ ИЗ СЛОВАРЯ (которые мы добавили) -->
+                                        <ComboBoxItem Content="{DynamicResource Visit1}"/>
+                                        <ComboBoxItem Content="{DynamicResource Visit4}"/>
+                                        <ComboBoxItem Content="{DynamicResource Visit8}"/>
+                                        <ComboBoxItem Content="{DynamicResource Visit16}"/>
+                                        <ComboBoxItem Content="{DynamicResource Visit32}"/>
                                     </ComboBox>
                                 </StackPanel>
                             </Grid>

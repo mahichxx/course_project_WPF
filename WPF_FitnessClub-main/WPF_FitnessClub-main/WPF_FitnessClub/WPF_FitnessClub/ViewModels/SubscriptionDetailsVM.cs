@@ -49,27 +49,41 @@ namespace WPF_FitnessClub.ViewModels
 		private bool _canSubscribe;
 		private bool _canReviewSubscription;
 
-		private readonly Dictionary<string, string> _typeTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private readonly Dictionary<string, string> _typeTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Unlimited", "Безлимит" },
-			{ "Standard", "Обычный" },
-			{ "Безлимит", "Безлимит" },
-			{ "Обычный", "Обычный" },
+			// { "То, что написано в меню", "То, что лежит в Базе (Ключ)" }
+			{ "Безлимит", "Unlimited" },
+			{ "Обычный", "Standard" },
+			{ "Групповая", "Group" },
+			{ "Утренний", "Morning" },
+			{ "Вечерний", "Evening" },
+			{ "Одиночная", "Single" },
+    
+			// Оставляем английские варианты для совместимости (если язык переключен)
+			{ "Unlimited", "Unlimited" },
+			{ "Standard", "Standard" },
+			{ "Group", "Group" },
+			{ "Morning", "Morning" },
+			{ "Evening", "Evening" },
+			{ "Single", "Single" }
 		};
 
-		private readonly Dictionary<string, string> _durationTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private readonly Dictionary<string, string> _durationTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "1 Month", "1 месяц" },
-			{ "3 Months", "3 месяца" },
-			{ "6 Months", "6 месяцев" },
-			{ "12 Months", "12 месяцев" },
-			{ "1 месяц", "1 месяц" },
-			{ "3 месяца", "3 месяца" },
-			{ "6 месяцев", "6 месяцев" },
-			{ "12 месяцев", "12 месяцев" }
+			// { "То, что в меню", "То, что в Базе" }
+			{ "1 занятие", "Visit1" },
+			{ "4 занятия", "Visit4" },
+			{ "8 занятий", "Visit8" },
+			{ "16 занятий", "Visit16" },
+			{ "32 занятия", "Visit32" },
+    
+			// Старые варианты из месяцев для страховки
+			{ "1 месяц", "Visit1" },
+			{ "3 месяца", "Visit8" },
+			{ "6 месяцев", "Visit16" },
+			{ "12 месяцев", "Visit32" }
 		};
-
-		private Dictionary<string, string> GetReverseTypeTranslations()
+        private Dictionary<string, string> GetReverseTypeTranslations()
 		{
 			var reverseDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 			
@@ -222,40 +236,34 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
-		public string Duration
-		{
-			get => _duration;
-			set
-			{
-				_duration = value;
-				OnPropertyChanged("Duration");
-			}
-		}
+        public string LocalizedType
+        {
+            get => _currentSubscription?.LocalizedType;
+            set { _currentSubscription.LocalizedType = value; OnPropertyChanged("LocalizedType"); }
+        }
 
-		public string Type
-		{
-			get => _type;
-			set
-			{
-				_type = value;
-				OnPropertyChanged("Type");
-			}
-		}
+        public string Duration
+        {
+            get => _currentSubscription?.Duration; // Привязываем к ключу для ComboBox
+            set { _currentSubscription.Duration = value; OnPropertyChanged("Duration"); OnPropertyChanged("LocalizedDuration"); }
+        }
 
-		public bool IsEditMode
-		{
-			get => _isEditMode;
-			set
-			{
-				_isEditMode = value;
-				OnPropertyChanged("IsEditMode");
-				OnPropertyChanged(nameof(ViewModeVisible));
-				OnPropertyChanged(nameof(EditModeVisible));
-				OnPropertyChanged(nameof(AdminEditVisible));
-			}
-		}
+        public string LocalizedDuration => _currentSubscription?.LocalizedDuration;
 
-		public string ReviewComment
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set
+            {
+                _isEditMode = value;
+                OnPropertyChanged("IsEditMode");
+                OnPropertyChanged("ViewModeVisible");
+                OnPropertyChanged("EditModeVisible");
+                OnPropertyChanged("AdminEditVisible");
+            }
+        }
+
+        public string ReviewComment
 		{
 			get => _reviewComment;
 			set
@@ -351,45 +359,24 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
-		public Visibility DeleteReviewVisible => _currentUserRole == UserRole.Admin ? Visibility.Visible : Visibility.Collapsed;
-		public Visibility WriteReviewVisible
-		{
-			get
-			{
-				if (_currentUserRole != UserRole.Client)
-					return Visibility.Collapsed;
-				
-				if (HasUserReviewed || _mainWindow == null || _mainWindow._user == null)
-					return Visibility.Collapsed;
-				
-				if (_canReviewSubscription)
-				{
-					return Visibility.Visible;
-				}
-				
-				return Visibility.Collapsed;
-			}
-		}
+        // Теперь кнопку "Удалить" на отзыве увидят и Админ, и Тренер
+		public Visibility DeleteReviewVisible => (_currentUserRole == UserRole.Admin || _currentUserRole == UserRole.Coach) ? Visibility.Visible : Visibility.Collapsed;
+        // Показываем блок "Для оставления отзыва купите..." только если клиент еще НЕ купил
+        public Visibility SubscribeToReviewVisible =>
+            (_currentUserRole == UserRole.Client && !_canReviewSubscription) ? Visibility.Visible : Visibility.Collapsed;
 
-		public Visibility SubscribeToReviewVisible
-		{
-			get
-			{
-				if (_currentUserRole == UserRole.Client && 
-					_mainWindow != null && 
-					_mainWindow._user != null && 
-					!_hasUserReviewed && 
-					!_canReviewSubscription)
-				{
-					return Visibility.Visible;
-				}
-				return Visibility.Collapsed;
-			}
-		}
-		#endregion
+        // Показываем форму ввода "Ваше мнение очень важно" только если клиент КУПИЛ и еще НЕ писал отзыв
+        public Visibility WriteReviewVisible =>(_currentUserRole == UserRole.Client && _canReviewSubscription && !HasUserReviewed) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility CanReplyVisible => (_currentUserRole != UserRole.Client) ? Visibility.Visible : Visibility.Collapsed;
+        private void ExecuteSendReply(object parameter)
+        {
+            MessageBox.Show("Для ввода текста ответа нужно создать окно ввода. Пока эта функция просто выводит это сообщение.",
+                            "Техническое сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        #endregion
 
-		#region Команды
-		public ICommand ChooseImageCommand { get; private set; }
+        #region Команды
+        public ICommand ChooseImageCommand { get; private set; }
 		public ICommand EditCommand { get; private set; }
 		public ICommand SaveCommand { get; private set; }
 		public ICommand DeleteCommand { get; private set; }
@@ -398,10 +385,11 @@ namespace WPF_FitnessClub.ViewModels
 		public ICommand DeleteReviewCommand { get; private set; }
 		public ICommand AddReviewCommand { get; private set; }
 		public ICommand SubscribeCommand { get; private set; }
-		#endregion
+		public ICommand SendReplyCommand { get; private set; }
+        #endregion
 
-		#region События
-		public event EventHandler RequestClose;
+        #region События
+        public event EventHandler RequestClose;
 		public event EventHandler<Review> ReviewAdded;
 		public event EventHandler<Review> ReviewDeleted;
 		public event EventHandler<Subscription> SubscriptionDeleted;
@@ -435,30 +423,31 @@ namespace WPF_FitnessClub.ViewModels
 			DeleteReviewCommand = new RelayCommand(ExecuteDeleteReview);
 			AddReviewCommand = new RelayCommand(ExecuteAddReview, CanExecuteAddReview);
 			SubscribeCommand = new RelayCommand(ExecuteSubscribe);
-
+            
 			LoadDetails();
 			LoadReviews();
 			
 			CheckIfUserHasReviewed();
 			CheckCanSubscribe();
 		}
-		#endregion
+        #endregion
 
-		#region Методы команд
-		private void ExecuteEdit(object parameter)
-		{
-			if (_currentUserRole == UserRole.Coach || _currentUserRole == UserRole.Admin)
-			{
-				Type = (string)Application.Current.Resources[GetTypeResourceKey(_currentSubscription.SubscriptionType)];
-				Duration = (string)Application.Current.Resources[GetDurationResourceKey(_currentSubscription.Duration)];
-				
-				IsEditMode = true;
-				OnPropertyChanged(nameof(EditModeVisible));
-				OnPropertyChanged(nameof(AdminEditVisible));
-			}
-		}
+        #region Методы команд
+        private void ExecuteEdit(object parameter)
+        {
+            // 1. Перед началом редактирования синхронизируем поля VM с моделью
+            LoadDetails();
 
-		private string GetTypeResourceKey(string subscriptionType)
+            // 2. Включаем режим (это откроет ComboBox и TextBox)
+            IsEditMode = true;
+
+            // 3. Пинкаем кнопки, чтобы они пересчитали свою видимость
+            OnPropertyChanged("EditModeVisible");
+            OnPropertyChanged("ViewModeVisible");
+            OnPropertyChanged("AdminEditVisible");
+        }
+
+        private string GetTypeResourceKey(string subscriptionType)
 		{
 			if (string.IsNullOrEmpty(subscriptionType))
 				return "Standard";   
@@ -493,170 +482,60 @@ namespace WPF_FitnessClub.ViewModels
 			return true;
 		}
 
-		private void ExecuteSave(object parameter)
-		{
-			try
-			{
-				IsLoading = true;
-				
-				List<string> validationErrors = new List<string>();
-				
-				if (string.IsNullOrEmpty(SubscrName?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["NameRequired"]);
-				}
-				
-				decimal priceValue = 0;
-				string normalizedPrice = _price?.Replace(',', '.');
-				
-				if (string.IsNullOrEmpty(_price?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["PriceRequired"]);
-				}
-				else if (!decimal.TryParse(normalizedPrice, System.Globalization.NumberStyles.Any, 
-				                     System.Globalization.CultureInfo.InvariantCulture, out priceValue))
-				{
-					validationErrors.Add((string)Application.Current.Resources["InvalidPrice"]);
-				}
-				else if (priceValue <= 0)
-				{
-					validationErrors.Add((string)Application.Current.Resources["InvalidPrice"]);
-				}
-				
-				if (string.IsNullOrEmpty(Description?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["EnterDescription"]);
-				}
-				
-				if (string.IsNullOrEmpty(ImagePath?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["EmptyImagePath"]);
-				}
-				
-				if (string.IsNullOrEmpty(Type?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["EmptySubscriptionType"]);
-				}
-				
-				if (string.IsNullOrEmpty(Duration?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["EmptyDuration"]);
-				}
-				
-				if (validationErrors.Count > 0)
-				{
-					string errorList = string.Join("\n- ", validationErrors);
-					errorList = "- " + errorList;
-					
-					string message = string.Format(
-						(string)Application.Current.Resources["ValidationSummary"], 
-						errorList);
-						
-					MessageBox.Show(
-						message,
-						(string)Application.Current.Resources["ValidationErrorTitle"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
-					
-					IsLoading = false;
-					return;      
-				}
-				
-				var currentReviews = _currentSubscription.Reviews;
-				
-				_currentSubscription.Name = SubscrName;
-				_currentSubscription.ImagePath = ImagePath;
-				_currentSubscription.Price = priceValue;
-				
-				if (Type == (string)Application.Current.Resources["Unlimited"])
-					_currentSubscription.SubscriptionType = "Безлимит";
-				else if (Type == (string)Application.Current.Resources["Standard"])
-					_currentSubscription.SubscriptionType = "Обычный";
-				else
-					_currentSubscription.SubscriptionType = GetDbValue(Type, _typeTranslations);
-				
-				if (Duration == (string)Application.Current.Resources["OneMonth"])
-					_currentSubscription.Duration = "1 месяц";
-				else if (Duration == (string)Application.Current.Resources["ThreeMonths"])
-					_currentSubscription.Duration = "3 месяца";
-				else if (Duration == (string)Application.Current.Resources["SixMonths"])
-					_currentSubscription.Duration = "6 месяцев";
-				else if (Duration == (string)Application.Current.Resources["OneYear"])
-					_currentSubscription.Duration = "12 месяцев";
-				else
-					_currentSubscription.Duration = GetDbValue(Duration, _durationTranslations);
-				
-				_currentSubscription.Description = Description;
+        private void ExecuteSave(object parameter)
+        {
+            try
+            {
+                IsLoading = true;
 
-				bool isSuccess = _subscriptionService.Update(_currentSubscription);
-				
-				if (isSuccess)
-				{
-					var freshSubscription = _subscriptionService.GetById(_currentSubscription.Id);
-					if (freshSubscription != null)
-					{
-						int subscriptionIndex = -1;
-						for (int i = 0; i < _subscriptions.Count; i++)
-						{
-							if (_subscriptions[i].Id == _currentSubscription.Id)
-							{
-								subscriptionIndex = i;
-								break;
-							}
-						}
-						
-						if (subscriptionIndex >= 0)
-						{
-							_subscriptions[subscriptionIndex] = freshSubscription;
-						}
-						
-						freshSubscription.Reviews = currentReviews;
-						_currentSubscription = freshSubscription;
-					}
-					
-					IsEditMode = false;
-					
-					LoadDetails();
-					
-					if (_mainWindow != null)
-					{
-						_mainWindow.UpdateUIWithSubscriptions(_subscriptions.ToList());
-					}
-					
-					MessageBox.Show(
-						(string)Application.Current.Resources["SubscriptionUpdatedSuccess"],
-						(string)Application.Current.Resources["Success"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Information);
-				}
-				else
-				{
-					MessageBox.Show(
-						(string)Application.Current.Resources["SubscriptionUpdateFailed"],
-						(string)Application.Current.Resources["Error"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Error);
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine($"Error saving subscription: {ex.Message}");
-				MessageBox.Show(
-					$"{(string)Application.Current.Resources["SubscriptionUpdateFailed"]}\n\n{ex.Message}",
-					(string)Application.Current.Resources["Error"],
-					MessageBoxButton.OK,
-					MessageBoxImage.Error);
-			}
-			finally
-			{
-				IsLoading = false;
-				OnPropertyChanged(nameof(ViewModeVisible));
-				OnPropertyChanged(nameof(EditModeVisible));
-				OnPropertyChanged(nameof(AdminEditVisible));
-			}
-		}
+                // 1. ПЕРЕНОСИМ ДАННЫЕ ИЗ ПОЛЕЙ ВВОДА В МОДЕЛЬ
+                _currentSubscription.Name = SubscrName;
+                _currentSubscription.Description = Description;
+                _currentSubscription.Price = decimal.Parse(Price.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
 
-		private void ExecuteDelete(object parameter)
+                // ОБЯЗАТЕЛЬНО ОБНОВЛЯЕМ ПУТЬ К ФОТО
+                _currentSubscription.ImagePath = ImagePath;
+
+                _currentSubscription.SubscriptionType = LocalizedType;
+                _currentSubscription.Duration = Duration;
+
+                // 2. СОХРАНЯЕМ В БАЗУ
+                bool isSuccess = _subscriptionService.Update(_currentSubscription);
+
+                if (isSuccess)
+                {
+                    IsEditMode = false;
+
+                    // 3. ОБНОВЛЯЕМ ГЛАВНЫЙ ЭКРАН (СИНХРОНИЗАЦИЯ)
+                    if (_mainWindow != null)
+                    {
+                        // Ищем этот же абонемент в списке на главной странице
+                        var mainSub = _mainWindow.subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
+                        if (mainSub != null)
+                        {
+                            // Обновляем данные в объекте, который видит главная страница
+                            mainSub.Name = _currentSubscription.Name;
+                            mainSub.Price = _currentSubscription.Price;
+                            mainSub.ImagePath = _currentSubscription.ImagePath; // ФОТО
+                            mainSub.SubscriptionType = _currentSubscription.SubscriptionType;
+                        }
+
+                        // Даем команду главному окну перерисовать список
+                        _mainWindow.UpdateUIWithSubscriptions(_mainWindow.subscriptions);
+                    }
+
+                    LoadDetails(); // Обновляем текущее окно
+                    MessageBox.Show("Данные успешно сохранены!", "Успех");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка сохранения: " + ex.Message);
+            }
+            finally { IsLoading = false; }
+        }
+
+        private void ExecuteDelete(object parameter)
 		{
 			if (_currentUserRole != UserRole.Coach && _currentUserRole != UserRole.Admin)
 			{
@@ -871,260 +750,175 @@ namespace WPF_FitnessClub.ViewModels
 			return true;
 		}
 
-		private void ExecuteAddReview(object parameter)
-		{
-			try
-			{
-				IsLoading = true;
-				
-				List<string> validationErrors = new List<string>();
-				
-				if (string.IsNullOrEmpty(ReviewComment?.Trim()))
-				{
-					validationErrors.Add((string)Application.Current.Resources["CommentRequired"]);
-				}
-				else if (ReviewComment.Length < 3)
-				{
-					validationErrors.Add((string)Application.Current.Resources["CommentTooShort"]);
-				}
-				
-				if (ReviewRating <= 0)
-				{
-					validationErrors.Add((string)Application.Current.Resources["RatingRequired"]);
-				}
-				
-				if (validationErrors.Count > 0)
-				{
-					string errorList = string.Join("\n- ", validationErrors);
-					errorList = "- " + errorList;
-					
-					string message = string.Format(
-						(string)Application.Current.Resources["ValidationSummary"], 
-						errorList);
-						
-					MessageBox.Show(
-						message,
-						(string)Application.Current.Resources["ValidationErrorTitle"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
-					
-					IsLoading = false;
-					return;      
-				}
-				
-				string userName = _mainWindow._user.Login;    
-				int userId = _mainWindow._user.Id;
-				
-				System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Добавление отзыва от пользователя {userName} для абонемента {_currentSubscription.Name} (ID: {_currentSubscription.Id})");
-				
-				bool hasReviewed = _reviewService.HasUserReviewedSubscription(userName, _currentSubscription.Id);
-				
-				if (hasReviewed)
-				{
-					MessageBox.Show((string)Application.Current.Resources["UserAlreadyReviewed"], 
-						(string)Application.Current.Resources["InfoTitle"], 
-						MessageBoxButton.OK, MessageBoxImage.Information);
-						
-					ReviewComment = string.Empty;
-					ReviewRating = 0;
-					System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Пользователь {userName} уже оставлял отзыв для абонемента {_currentSubscription.Id}");
-					return;
-				}
-				
-				bool canReviewSubscription = _reviewService.CanUserReviewSubscription(userId, _currentSubscription.Id);
-				
-				if (!canReviewSubscription)
-				{
-					MessageBox.Show(
-						"Вы не можете оставить отзыв на абонемент, который никогда не приобретали.",
-						"Ограничение доступа", 
-						MessageBoxButton.OK, MessageBoxImage.Warning);
-						
-					ReviewComment = string.Empty;
-					ReviewRating = 0;
-					System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Пользователь {userName} не имеет права оставлять отзыв для абонемента {_currentSubscription.Id}");
-					return;
-				}
+        private void ExecuteAddReview(object parameter)
+        {
+            if (!_canReviewSubscription)
+            {
+                MessageBox.Show("Ай-ай-ай! Отзывы могут оставлять только клиенты, которые приобрели этот абонемент.",
+                                "Доступ ограничен", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ReviewComment = string.Empty;
+                ReviewRating = 0;
+                return;
+            }
 
-				Review newReview = new Review
-				{
-					User = userName,       
-					Comment = ReviewComment,
-					Score = ReviewRating,
-					CreatedDate = DateTime.Now,
-					SubscriptionId = _currentSubscription.Id
-				};
-				
-				System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Создан отзыв от {userName} для абонемента ID={_currentSubscription.Id}, рейтинг: {ReviewRating}, комментарий: {ReviewComment}");
-				
-				int reviewId = _reviewService.Add(newReview);
-				
-				System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Отзыв сохранен в БД, получен ID={reviewId}");
-				
-				if (reviewId > 0)
-				{
-					newReview.Id = reviewId;
-					
-					HasUserReviewed = true;
-					
-					System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Перезагрузка отзывов для обновления UI");
-					
-					LoadReviews();
-					
-					if (_currentSubscription.Reviews == null)
-					{
-						_currentSubscription.Reviews = new List<Review>();
-					}
-					_currentSubscription.Reviews.Add(newReview);
-					
-					double newRating = _currentSubscription.CalculateRating();
-					Rating = newRating;       
-					
-					var subscriptionInCollection = _subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
-					if (subscriptionInCollection != null)
-					{
-						subscriptionInCollection.Rating = Rating;
-						if (subscriptionInCollection.Reviews == null)
-						{
-							subscriptionInCollection.Reviews = new List<Review>();
-						}
-						subscriptionInCollection.Reviews.Add(newReview);
-					}
-					
-					ReviewAdded?.Invoke(this, newReview);
-					
-					_mainWindow.UpdateUIWithSubscriptions(_subscriptions.ToList());
-					
-					ReviewComment = string.Empty;
-					ReviewRating = 0;
-					
-					MessageBox.Show((string)Application.Current.Resources["ReviewAdded"], 
-						(string)Application.Current.Resources["SuccessTitle"], 
-						MessageBoxButton.OK, MessageBoxImage.Information);
-				}
-				else
-				{
-					System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Ошибка при добавлении отзыва, получен ID={reviewId}");
-					MessageBox.Show((string)Application.Current.Resources["ErrorAddingReview"], 
-						(string)Application.Current.Resources["ErrorTitle"], 
-						MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"ExecuteAddReview: Исключение при добавлении отзыва: {ex.Message}");
-				MessageBox.Show($"{(string)Application.Current.Resources["ErrorAddingReview"]}: {ex.Message}", 
-					(string)Application.Current.Resources["ErrorTitle"], 
-					MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-			finally
-			{
-				IsLoading = false;
-			}
-		}
+            try
+            {
+                IsLoading = true;
 
-		private void ExecuteChooseImage(object parameter)
-		{
-			OpenFileDialog openFileDialog = new OpenFileDialog();
-			openFileDialog.Filter = "Файлы JPG и PNG (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png";
-			
-			if (openFileDialog.ShowDialog() == true)
-			{
-				string selectedPath = openFileDialog.FileName;
-				
-				string projectDirectory = AppDomain.CurrentDomain.BaseDirectory;
-				string imagesDirectory = Path.Combine(projectDirectory, "Images");
-				
-				if (selectedPath.StartsWith(imagesDirectory, StringComparison.OrdinalIgnoreCase))
-				{
-					string relativePath = "Images/" + Path.GetFileName(selectedPath);
-					ImagePath = relativePath;
-					System.Diagnostics.Debug.WriteLine($"Выбрано изображение из папки проекта. Сохраняем относительный путь: {relativePath}");
-				}
-				else
-				{
-					ImagePath = selectedPath;
-					System.Diagnostics.Debug.WriteLine($"Выбрано изображение вне папки проекта. Сохраняем абсолютный путь: {selectedPath}");
-				}
-			}
-		}
+                if (string.IsNullOrWhiteSpace(ReviewComment) || ReviewComment.Length < 3)
+                {
+                    MessageBox.Show("Пожалуйста, введите текст отзыва (минимум 3 символа).", "Ошибка валидации");
+                    return;
+                }
+                if (ReviewRating <= 0)
+                {
+                    MessageBox.Show("Пожалуйста, поставьте оценку.", "Ошибка");
+                    return;
+                }
 
-		private void LoadDetails()
-		{
-			try
-			{
-				System.Diagnostics.Debug.WriteLine($"LoadDetails: загрузка абонемента с ID {_currentSubscription.Id}");
-				
-				var freshSubscription = _subscriptionService.GetById(_currentSubscription.Id);
-				if (freshSubscription != null)
-				{
-					bool hadReviews = _currentSubscription.Reviews?.Count > 0;
-					bool hasNewReviews = freshSubscription.Reviews?.Count > 0;
-					
-					System.Diagnostics.Debug.WriteLine($"LoadDetails: абонемент загружен успешно, отзывов было: {_currentSubscription.Reviews?.Count ?? 0}, " +
-													$"отзывов получено: {freshSubscription.Reviews?.Count ?? 0}");
-					
-					if (hadReviews && !hasNewReviews)
-					{
-						System.Diagnostics.Debug.WriteLine("LoadDetails: сохраняем текущие отзывы, так как новые не загружены");
-						var currentReviews = _currentSubscription.Reviews;
-						_currentSubscription = freshSubscription;
-						_currentSubscription.Reviews = currentReviews;
-					}
-					else
-					{
-						_currentSubscription = freshSubscription;
-					}
-				}
-				else
-				{
-					System.Diagnostics.Debug.WriteLine("LoadDetails: не удалось загрузить абонемент, получен null");
-				}
-			}
-			catch (Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"Ошибка при загрузке данных абонемента: {ex.Message}");
-			}
-			
-			SubscrName = _currentSubscription.Name;
-			ImagePath = _currentSubscription.ImagePath;
-			Price = _currentSubscription.Price.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture);
-			
-			if (!IsEditMode)
-			{
-				Dictionary<string, string> reverseTypeTranslations = GetReverseTypeTranslations();
-				Dictionary<string, string> reverseDurationTranslations = GetReverseDurationTranslations();
-				
-				Type = GetLocalizedValue(_currentSubscription.SubscriptionType, reverseTypeTranslations);
-				Duration = GetLocalizedValue(_currentSubscription.Duration, reverseDurationTranslations);
-			}
-			else
-			{
-				Type = (string)Application.Current.Resources[GetTypeResourceKey(_currentSubscription.SubscriptionType)];
-				Duration = (string)Application.Current.Resources[GetDurationResourceKey(_currentSubscription.Duration)];
-			}
-			
-			Description = _currentSubscription.Description;
-			
-			if (_currentSubscription.Reviews == null || _currentSubscription.Reviews.Count == 0)
-			{
-				System.Diagnostics.Debug.WriteLine("LoadDetails: отзывы отсутствуют, загружаем отдельно");
-				LoadReviews();
-			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine($"LoadDetails: отзывы уже присутствуют ({_currentSubscription.Reviews.Count} шт.), обновляем UI");
-				Reviews = new ObservableCollection<Review>(_currentSubscription.Reviews);
-				
-				CheckIfUserHasReviewed();
-				
-				RecalculateRating();
-				
-				OnPropertyChanged(nameof(Reviews));
-			}
-		}
-	
-		private void LoadReviews()
+                string userName = _mainWindow._user.Login;
+
+                Review newReview = new Review
+                {
+                    User = userName,
+                    Comment = ReviewComment,
+                    Score = ReviewRating,
+                    CreatedDate = DateTime.Now,
+                    SubscriptionId = _currentSubscription.Id
+                };
+
+                int reviewId = _reviewService.Add(newReview);
+
+                if (reviewId > 0)
+                {
+                    newReview.Id = reviewId;
+                    HasUserReviewed = true;
+
+                    // 1. ОБНОВЛЯЕМ ТЕКУЩЕЕ ОКНО (чтобы звезды в шапке изменились)
+                    if (_currentSubscription.Reviews == null) _currentSubscription.Reviews = new List<Review>();
+                    _currentSubscription.Reviews.Add(newReview);
+
+                    // Сначала обновляем коллекцию отзывов на экране
+                    if (Reviews == null) Reviews = new ObservableCollection<Review>();
+                    Reviews.Add(newReview);
+
+                    // Считаем новый рейтинг и ГОВОРИМ ОБ ЭТОМ ИНТЕРФЕЙСУ
+                    double newRating = _currentSubscription.CalculateRating();
+                    _currentSubscription.Rating = newRating;
+
+                    OnPropertyChanged("Rating"); // Уведомляем VM
+                    _currentSubscription.OnPropertyChanged("Rating"); // Уведомляем саму модель (ВАЖНО!)
+                    OnPropertyChanged("Reviews");
+
+                    // 2. ОБНОВЛЯЕМ ГЛАВНЫЙ ЭКРАН
+                    if (_mainWindow != null)
+                    {
+                        var mainSub = _mainWindow.subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
+                        if (mainSub != null) { mainSub.Rating = _currentSubscription.CalculateRating(); }
+                        _mainWindow.UpdateUIWithSubscriptions(_mainWindow.subscriptions);
+                    }
+
+                    HasUserReviewed = true;
+                    ReviewComment = string.Empty;
+                    ReviewRating = 0;
+
+                    OnPropertyChanged("WriteReviewVisible"); // Скрываем форму ввода
+
+                    MessageBox.Show("Отзыв добавлен!", "Успех");
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); }
+            finally { IsLoading = false; }
+        }
+        private void ExecuteChooseImage(object parameter)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Картинки (*.jpg;*.png)|*.jpg;*.png";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Берем ТОЛЬКО имя файла (например "gym2.jpg")
+                ImagePath = System.IO.Path.GetFileName(openFileDialog.FileName);
+                OnPropertyChanged("ImagePath");
+            }
+        }
+
+        private void LoadDetails()
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"LoadDetails: загрузка абонемента с ID {_currentSubscription.Id}");
+
+                // 1. Получаем свежие данные из базы данных
+                var freshSubscription = _subscriptionService.GetById(_currentSubscription.Id);
+                if (freshSubscription != null)
+                {
+                    bool hadReviews = _currentSubscription.Reviews?.Count > 0;
+                    bool hasNewReviews = freshSubscription.Reviews?.Count > 0;
+
+                    if (hadReviews && !hasNewReviews)
+                    {
+                        var currentReviews = _currentSubscription.Reviews;
+                        _currentSubscription = freshSubscription;
+                        _currentSubscription.Reviews = currentReviews;
+                    }
+                    else
+                    {
+                        _currentSubscription = freshSubscription;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка при загрузке данных абонемента: {ex.Message}");
+            }
+
+            // 2. ЗАПОЛНЯЕМ СВОЙСТВА ДЛЯ ЭКРАНА (синхронизируем VM с моделью)
+            SubscrName = _currentSubscription.Name;
+            ImagePath = _currentSubscription.ImagePath;
+            Price = _currentSubscription.Price.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture);
+            Description = _currentSubscription.Description;
+
+            // 3. ОБНОВЛЯЕМ ТИП И ДЛИТЕЛЬНОСТЬ (с учетом перевода)
+            Dictionary<string, string> reverseTypeTranslations = GetReverseTypeTranslations();
+            Dictionary<string, string> reverseDurationTranslations = GetReverseDurationTranslations();
+
+            if (!IsEditMode)
+            {
+                // В режиме просмотра превращаем ключ (Unlimited) в слово (Безлимит)
+                LocalizedType = GetLocalizedValue(_currentSubscription.SubscriptionType, reverseTypeTranslations);
+                Duration = GetLocalizedValue(_currentSubscription.Duration, reverseDurationTranslations);
+            }
+            else
+            {
+                // В режиме редактирования берем ресурсы
+                LocalizedType = (string)Application.Current.Resources[GetTypeResourceKey(_currentSubscription.SubscriptionType)];
+                Duration = (string)Application.Current.Resources[GetDurationResourceKey(_currentSubscription.Duration)];
+            }
+
+            // 4. РАБОТА С ОТЗЫВАМИ И РЕЙТИНГОМ
+            if (_currentSubscription.Reviews == null || _currentSubscription.Reviews.Count == 0)
+            {
+                LoadReviews();
+            }
+            else
+            {
+                Reviews = new ObservableCollection<Review>(_currentSubscription.Reviews);
+                CheckIfUserHasReviewed();
+                RecalculateRating();
+            }
+
+            // 5. САМОЕ ВАЖНОЕ: Пинкаем интерфейс, чтобы он всё перерисовал
+            OnPropertyChanged("SubscrName");
+            OnPropertyChanged("Price");
+            LocalizedType = _currentSubscription.SubscriptionType;
+            Duration = _currentSubscription.Duration;
+            OnPropertyChanged("LocalizedType"); // Название в XAML должно быть таким же!
+            OnPropertyChanged("Duration");
+            OnPropertyChanged("Description");
+            OnPropertyChanged("Rating");
+        }
+
+        private void LoadReviews()
 		{
 			try
 			{
@@ -1254,67 +1048,52 @@ namespace WPF_FitnessClub.ViewModels
 				CanSubscribe = !_userSubscriptionRepository.HasActiveSubscription(currentUser.Id, _currentSubscription.Id);
 			}
 		}
-		private void ExecuteSubscribe(object parameter)
-		{
-			try
-			{
-				var currentUser = _userService.GetCurrentUser();
-				if (currentUser == null)
-				{
-					MessageBox.Show("Для записи на абонемент необходимо авторизоваться.", 
-								  "Ошибка авторизации", 
-								  MessageBoxButton.OK, 
-								  MessageBoxImage.Warning);
-					return;
-				}
+        private void ExecuteSubscribe(object parameter)
+        {
+            try
+            {
+                var currentUser = _userService.GetCurrentUser();
+                if (currentUser == null) return;
 
-				if (_userSubscriptionRepository.HasActiveSubscription(currentUser.Id, _currentSubscription.Id))
-				{
-					MessageBox.Show("У вас уже есть активный абонемент данного типа.", 
-								 "Информация", 
-								 MessageBoxButton.OK, 
-								 MessageBoxImage.Information);
-					return;
-				}
+                var subscribeDialog = new View.SubscribeDialog(_currentSubscription);
+                if (subscribeDialog.ShowDialog() == true && subscribeDialog.Result != null)
+                {
+                    var userSub = subscribeDialog.Result;
+                    _canReviewSubscription = true; // Сразу даем право писать отзыв
 
-				var subscribeDialog = new View.SubscribeDialog(_currentSubscription);
-				var dialogResult = subscribeDialog.ShowDialog();
-				
-				if (dialogResult == true && subscribeDialog.Result != null)
-				{
-					var userSubscription = subscribeDialog.Result;
-					
-					_canReviewSubscription = true;
-					OnPropertyChanged(nameof(SubscribeToReviewVisible));
-					OnPropertyChanged(nameof(WriteReviewVisible));
-					
-					System.Diagnostics.Debug.WriteLine($"ExecuteSubscribe: обновлен статус возможности оставления отзыва после покупки абонемента");
-					
-					CheckCanSubscribe();
-					
-					MessageBox.Show($"Вы успешно записались на абонемент \"{_currentSubscription.Name}\"!\n" +
-								  $"Срок действия: с {userSubscription.PurchaseDate:dd.MM.yyyy} по {userSubscription.ExpiryDate:dd.MM.yyyy}\n\n" +
-								  $"Теперь вы можете оставить отзыв об этом абонементе.", 
-								  "Успех", 
-								  MessageBoxButton.OK, 
-								  MessageBoxImage.Information);
-					
-					if (_mainWindow != null)
-					{
-						_mainWindow.RefreshUserSubscriptions();
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show($"Ошибка при записи на абонемент: {ex.Message}", 
-							 "Ошибка", 
-							 MessageBoxButton.OK, 
-							 MessageBoxImage.Error);
-			}
-		}
-		
-		public void UpdateSubscriptionDetails(Subscription updatedSubscription, List<Subscription> allSubscriptions)
+                    // Пробуем взять текст из ресурсов
+                    string resourceMsg = (string)Application.Current.Resources["SubscriptionSuccessMessage"];
+                    string message;
+
+                    if (!string.IsNullOrEmpty(resourceMsg))
+                    {
+                        // Если ресурс найден, форматируем его
+                        message = string.Format(resourceMsg, _currentSubscription.Name,
+                                  userSub.PurchaseDate.ToString("dd.MM.yyyy"),
+                                  userSub.ExpiryDate.ToString("dd.MM.yyyy"));
+                    }
+                    else
+                    {
+                        // ЗАПАСНОЙ ВАРИАНТ (если окно было пустым)
+                        message = $"Успех! Вы записались на абонемент \"{_currentSubscription.Name}\".\n" +
+                                  $"Срок: с {userSub.PurchaseDate:dd.MM.yyyy} по {userSub.ExpiryDate:dd.MM.yyyy}.\n" +
+                                  $"Теперь вы можете оставить отзыв!";
+                    }
+
+                    MessageBox.Show(message, "Запись подтверждена", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    CheckCanSubscribe();
+                    OnPropertyChanged("WriteReviewVisible");
+                    if (_mainWindow != null) _mainWindow.RefreshUserSubscriptions();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при записи: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void UpdateSubscriptionDetails(Subscription updatedSubscription, List<Subscription> allSubscriptions)
 		{
 			if (updatedSubscription == null) return;
 			
@@ -1329,8 +1108,8 @@ namespace WPF_FitnessClub.ViewModels
 			CheckIfUserHasReviewed();
 			CheckCanSubscribe();
 		}
-		
-		#endregion
-	}
+        
+    }
+        #endregion
+    
 }
-

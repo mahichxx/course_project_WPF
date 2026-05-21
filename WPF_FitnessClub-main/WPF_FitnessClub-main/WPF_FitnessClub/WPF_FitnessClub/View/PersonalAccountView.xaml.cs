@@ -31,7 +31,9 @@ namespace WPF_FitnessClub.View
 		public PersonalAccountView(User user)
 		{
 			InitializeComponent();
-			
+            this.Focusable = true;
+            this.MouseDown += (s, e) => this.Focus();
+            
 			var workoutPlanService = new WorkoutPlanService();
 			var nutritionPlanService = new NutritionPlanService();
 			
@@ -232,5 +234,11 @@ namespace WPF_FitnessClub.View
 			ThemeManager.Instance.PropertyChanged -= ThemeManager_PropertyChanged;
 			_viewModel.LanguageChanged -= OnLanguageChanged;
 		}
-	}
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            // Разрешаем только цифры
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+    }
 }

@@ -258,76 +258,39 @@ namespace WPF_FitnessClub.ViewModels
             try
             {
                 var addUserDialog = new View.AddUserDialog();
-                
-                var mainWindow = Application.Current.MainWindow;
-                addUserDialog.Owner = mainWindow;
-                
-                bool? result = addUserDialog.ShowDialog();
-                
-                if (result == true && addUserDialog.NewUser != null)
+                addUserDialog.Owner = Application.Current.MainWindow;
+
+                if (addUserDialog.ShowDialog() == true && addUserDialog.NewUser != null)
                 {
                     IsLoading = true;
-                    
-                    List<string> validationErrors = new List<string>();
-                    
-                    if (!_userService.IsLoginUnique(addUserDialog.NewUser.Login))
+                    User u = addUserDialog.NewUser;
+
+                    // ПРОВЕРКА ПО ЕДИНОМУ СТАНДАРТУ
+                    if (u.Password.Length < 6) { MessageBox.Show("Пароль: мин. 6 символов"); IsLoading = false; return; }
+
+                    string[] parts = u.FullName?.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (u.Login.ToLower() != "admin" && (parts == null || parts.Length != 3))
                     {
-                        validationErrors.Add((string)Application.Current.Resources["LoginAlreadyTaken"]);
+                        MessageBox.Show((string)Application.Current.Resources["FullNameRequireThreeWords"]); IsLoading = false; return;
                     }
-                    
-                    if (!_userService.IsEmailUnique(addUserDialog.NewUser.Email))
+
+                    if (!_userService.IsLoginUnique(u.Login))
                     {
-                        validationErrors.Add((string)Application.Current.Resources["EmailAlreadyExists"]);
+                        MessageBox.Show((string)Application.Current.Resources["LoginAlreadyTaken"]); IsLoading = false; return;
                     }
-                    
-                    if (validationErrors.Count > 0)
-                    {
-                        StringBuilder errorMessageBuilder = new StringBuilder();
-                        errorMessageBuilder.AppendLine((string)Application.Current.Resources["ValidationErrorsHeader"]);
-                        
-                        foreach (var error in validationErrors)
-                        {
-                            errorMessageBuilder.AppendLine("- " + error);
-                        }
-                        
-                        string message = errorMessageBuilder.ToString();
-                        
-                        MessageBox.Show(
-                            message,
-                            (string)Application.Current.Resources["ValidationErrorTitle"],
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Warning);
-                        IsLoading = false;
-                        return;
-                    }
-                    
-                    int userId = _userService.Add(addUserDialog.NewUser);
-                    
+
+                    int userId = _userService.Add(u);
                     if (userId > 0)
                     {
-                        MessageBox.Show((string)Application.Current.Resources["AdminPanelUserAdded"],
-                            (string)Application.Current.Resources["AdminPanelSuccess"], MessageBoxButton.OK, MessageBoxImage.Information);
-                        
-                        _context.ChangeTracker.Entries()
-                            .Where(e => e.State != EntityState.Detached)
-                            .ToList()
-                            .ForEach(e => e.State = EntityState.Detached);
-                        
+                        // Очистка кэша EF (твой оригинальный важный код)
+                        _context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
                         LoadUsersData();
-                    }
-                    else
-                    {
-                        MessageBox.Show((string)Application.Current.Resources["AdminPanelAddUserError"],
-                            (string)Application.Current.Resources["AdminPanelError"], MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show((string)Application.Current.Resources["AdminPanelUserAdded"], (string)Application.Current.Resources["AdminPanelSuccess"]);
                     }
                     IsLoading = false;
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{(string)Application.Current.Resources["AdminPanelAddUserError"]}: {ex.Message}",
-                    (string)Application.Current.Resources["AdminPanelError"], MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); IsLoading = false; }
         }
 
         #endregion
