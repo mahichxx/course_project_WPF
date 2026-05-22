@@ -1,25 +1,31 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Единый стиль для TextBox (Логин, ФИО и т.д.) -->
-    <Style x:Key="CustomTextBoxStyle" TargetType="TextBox">
+    <!-- ======================================================= -->
+    <!-- 1. СТИЛИ ДЛЯ ОКНА ВХОДА И РЕГИСТРАЦИИ (ВСЕГДА БЕЛЫЕ)      -->
+    <!-- ======================================================= -->
+
+    <!-- Белые подписи полей (ФИО, Логин и т.д.) -->
+    <Style x:Key="AuthTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Margin" Value="0,8,0,2"/>
+    </Style>
+
+    <!-- Белые текстовые поля (подчеркнутые) -->
+    <Style x:Key="AuthTextBoxStyle" TargetType="TextBox">
         <Setter Property="Height" Value="35"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CaretBrush" Value="White"/>
         <Setter Property="BorderBrush" Value="#B0FFFFFF"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
-        <!-- Только нижняя линия -->
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="CaretBrush" Value="White"/>
         <Setter Property="Padding" Value="2,0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <!-- CornerRadius="0" убирает округление -->
-                    <Border Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}" 
-                            CornerRadius="0">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
                         <ScrollViewer x:Name="PART_ContentHost"/>
                     </Border>
                 </ControlTemplate>
@@ -28,30 +34,24 @@
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="BorderThickness" Value="0,0,0,2"/>
-                <!-- Утолщение при печати -->
                 <Setter Property="BorderBrush" Value="White"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <!-- Единый стиль для PasswordBox (Пароль) - копия стиля TextBox -->
-    <Style x:Key="CustomPasswordBoxStyle" TargetType="PasswordBox">
+    <!-- Белые поля пароля (точки будут белыми) -->
+    <Style x:Key="AuthPasswordBoxStyle" TargetType="PasswordBox">
         <Setter Property="Height" Value="35"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CaretBrush" Value="White"/>
         <Setter Property="BorderBrush" Value="#B0FFFFFF"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="CaretBrush" Value="White"/>
-        <Setter Property="Padding" Value="2,0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
-                    <Border Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}" 
-                            TextElement.Foreground="{TemplateBinding Foreground}"
-                            CornerRadius="0">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
                         <ScrollViewer x:Name="PART_ContentHost"/>
                     </Border>
                 </ControlTemplate>
@@ -65,18 +65,80 @@
         </Style.Triggers>
     </Style>
 
+
+    <!-- ======================================================= -->
+    <!-- 2. ОБЩИЕ СТИЛИ ДЛЯ ЛИЧНОГО КАБИНЕТА И КАТАЛОГА (ТЕМНЫЕ)   -->
+    <!-- ======================================================= -->
+
+    <!-- Темные подписи полей (Цвет берется из темы: черный или темный) -->
     <Style x:Key="CustomTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
         <Setter Property="Margin" Value="0,5,0,2"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
-    <!-- Стиль для заголовков, который потерялся -->
+    <!-- Темные текстовые поля (подчеркнутые цветом темы) -->
+    <Style x:Key="GeneralTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource LightGrayBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
+                        <ScrollViewer x:Name="PART_ContentHost"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Темные поля пароля (для безопасности в личном кабинете) -->
+    <Style x:Key="GeneralPasswordBoxStyle" TargetType="PasswordBox">
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource LightGrayBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
+                        <ScrollViewer x:Name="PART_ContentHost"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Стиль заголовков -->
     <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <!-- Используем динамический ресурс, чтобы заголовок менял цвет -->
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
         <Setter Property="Margin" Value="0,15,0,10"/>
     </Style>
+
+    <!-- ССЫЛКИ ДЛЯ СОВМЕСТИМОСТИ (чтобы ничего не вылетало) -->
+    <Style x:Key="CustomTextBoxStyle" BasedOn="{StaticResource GeneralTextBoxStyle}" TargetType="TextBox"/>
+    <Style x:Key="CustomPasswordBoxStyle" BasedOn="{StaticResource GeneralPasswordBoxStyle}" TargetType="PasswordBox"/>
+
 </ResourceDictionary>

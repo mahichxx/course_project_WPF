@@ -31,21 +31,20 @@
 
     <!-- 2. Стиль для обычных кнопок (Сохранить, Удалить и т.д.) -->
     <Style x:Key="DefaultButtonStyle" TargetType="Button">
-        <Setter Property="MinHeight" Value="32"/>
-        <Setter Property="Padding" Value="20,5"/>
-        <!-- УВЕЛИЧИЛИ ОТСТУПЫ СБОКУ -->
-        <Setter Property="Margin" Value="5"/>
+        <Setter Property="MinHeight" Value="35"/>
+        <Setter Property="MinWidth" Value="120"/>
+        <!-- Увеличили минимальную ширину -->
+        <Setter Property="Padding" Value="15,5"/>
+        <!-- Добавили внутренние отступы -->
         <Setter Property="Background" Value="{DynamicResource PrimaryRedBrush}"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" CornerRadius="4">
-                        <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                        <!-- Используем Margin для контента внутри кнопки -->
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

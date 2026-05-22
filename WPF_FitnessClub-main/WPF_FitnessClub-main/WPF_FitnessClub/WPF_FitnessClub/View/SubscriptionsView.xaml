@@ -42,7 +42,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        
+
         <!-- Панель с подписками -->
         <ScrollViewer Grid.Column="0"
                       Style="{StaticResource ResponsiveScrollViewerStyle}">
@@ -168,36 +168,33 @@
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="6*" />
+                            <ColumnDefinition Width="27*" />
+                            <ColumnDefinition Width="147*" />
+                            <ColumnDefinition Width="16*"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="{DynamicResource From}" 
-                                 HorizontalAlignment="Center" 
-                                 Style="{StaticResource CustomTextBlockStyle}"
-                                   TextWrapping="NoWrap"/>
+           HorizontalAlignment="Left" 
+           Foreground="{DynamicResource TextBrush}"
+           Style="{StaticResource CustomTextBlockStyle}"/>
 
                         <TextBox Grid.Column="1" 
-                                Margin="20,0,0,10" 
-                                Text="{Binding MinCost}" 
-                                Style="{StaticResource CustomTextBoxStyle}"
-                                PreviewTextInput="PriceTextBox_PreviewTextInput"
-                                PreviewKeyDown="PriceTextBox_PreviewKeyDown"
-                                TextChanged="PriceTextBox_TextChanged"/>
+         Margin="10,0,0,10" 
+         Text="{Binding MinCost}" 
+         Style="{StaticResource GeneralTextBoxStyle}"/>
 
                         <TextBlock Text="{DynamicResource To}" 
-                                 Grid.Row="1" 
-                                 HorizontalAlignment="Center" 
-                                 Style="{StaticResource CustomTextBlockStyle}"/>
+           Grid.Row="1" 
+           Foreground="{DynamicResource TextBrush}"
+           HorizontalAlignment="Left" 
+           Style="{StaticResource CustomTextBlockStyle}"/>
 
                         <TextBox Grid.Column="1" 
-                                Grid.Row="1" 
-                                 Margin="20,0,0,10"
-                                Text="{Binding MaxCost}" 
-                                Style="{StaticResource CustomTextBoxStyle}"
-                                PreviewTextInput="PriceTextBox_PreviewTextInput"
-                                PreviewKeyDown="PriceTextBox_PreviewKeyDown"
-                                TextChanged="PriceTextBox_TextChanged"/>
+         Grid.Row="1" 
+         Margin="10,0,0,10"
+         Text="{Binding MaxCost}" 
+         Style="{StaticResource GeneralTextBoxStyle}"/>
+                    
                     </Grid>
                     <TextBlock Text="{DynamicResource Type}" 
                              Padding="20,20,0,0" 

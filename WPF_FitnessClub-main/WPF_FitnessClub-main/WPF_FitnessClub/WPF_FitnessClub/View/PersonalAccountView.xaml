@@ -29,8 +29,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextBrush}" />
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Style="{StaticResource CustomTextBlockStyle}" />
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" />
                     </StackPanel>
                     <CheckBox Grid.Column="1" IsChecked="{Binding IsCompleted, Mode=TwoWay}" Command="{Binding DataContext.MarkWorkoutPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" VerticalAlignment="Center"/>
                 </Grid>
@@ -44,8 +44,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Foreground="{DynamicResource TextBrush}" />
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Style="{StaticResource CustomTextBlockStyle}" />
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" />
                     </StackPanel>
                     <CheckBox Grid.Column="1" IsChecked="{Binding IsCompleted, Mode=TwoWay}" Command="{Binding DataContext.MarkNutritionPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" VerticalAlignment="Center"/>
                 </Grid>
@@ -59,7 +59,7 @@
             <StackPanel Margin="0,0,0,50">
 
                 <TextBlock Text="{DynamicResource PersonalAccountTitle}" 
-                           Style="{StaticResource HeaderTextBlockStyle}" 
+                           Style="{StaticResource CustomTextBlockStyle}"
                            Margin="20,40,20,20" HorizontalAlignment="Center"/>
 
                 <!-- TabControl теперь растянут, центрируем содержимое внутри вкладок -->
@@ -70,11 +70,11 @@
                     <!-- Вкладка 1: Личная информация -->
                     <TabItem Header="{DynamicResource PersonalInfoTab}" Style="{StaticResource CustomTabItemStyle}">
                         <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
-                            <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource CustomTextBlockStyle}"/>
-                            <TextBox Text="{Binding FullName}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                            <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource CustomTextBlockStyle}" />
+                            <TextBox Text="{Binding FullName}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
 
                             <TextBlock Text="{DynamicResource PhoneLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
-                            <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                            <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
 
                             <Grid Margin="0,15,0,0">
                                 <Grid.ColumnDefinitions>
@@ -83,7 +83,7 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,10,0">
                                     <TextBlock Text="Возраст" Style="{StaticResource CustomTextBlockStyle}"/>
-                                    <TextBox Text="{Binding Age}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                    <TextBox Text="{Binding Age}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
                                     <TextBlock Text="Пол" Style="{StaticResource CustomTextBlockStyle}"/>
@@ -103,20 +103,20 @@
                                     <StackPanel Margin="0,0,10,0">
                                         <!-- ИСПРАВЛЕНО: привязка к словарю -->
                                         <TextBlock Text="{DynamicResource WeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBox Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                        <TextBox Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
                                         <!-- ИСПРАВЛЕНО: привязка к словарю -->
                                         <TextBlock Text="{DynamicResource HeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBox Text="{Binding Height}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomTextBoxStyle}"/>
+                                        <TextBox Text="{Binding Height}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
                                     </StackPanel>
                                 </Grid>
 
                                 <Border Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
                                     <StackPanel>
                                         <!-- ИСПРАВЛЕНО: привязка к словарю -->
-                                        <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
-                                        <TextBlock Text="{Binding DailyCalories}" FontSize="26" Foreground="{DynamicResource PrimaryRedBrush}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                        <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Style="{StaticResource CustomTextBlockStyle}"/>
+                                        <TextBlock Text="{Binding DailyCalories}" Style="{StaticResource CustomTextBlockStyle}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -150,11 +150,11 @@
                         <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
                             <TextBlock Text="{DynamicResource ChangePasswordTitle}" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             <TextBlock Text="{DynamicResource Password}" Style="{StaticResource CustomTextBlockStyle}"/>
-                            <TextBox x:Name="SecurityCurrentPasswordInput" Style="{StaticResource CustomTextBoxStyle}" Text="{Binding Password}" IsReadOnly="true" Margin="0,5,0,15"/>
+                            <TextBox x:Name="SecurityCurrentPasswordInput" Style="{StaticResource GeneralTextBoxStyle}" Text="{Binding Password}" IsReadOnly="true" Margin="0,5,0,15"/>
                             <TextBlock Text="{DynamicResource NewPassword}" Style="{StaticResource CustomTextBlockStyle}"/>
-                            <PasswordBox x:Name="SecurityNewPasswordInput" Style="{StaticResource CustomPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+                            <PasswordBox x:Name="SecurityNewPasswordInput" Style="{StaticResource GeneralPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
                             <TextBlock Text="{DynamicResource ConfirmPassword}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,5"/>
-                            <PasswordBox x:Name="SecurityConfirmPasswordInput" Style="{StaticResource CustomPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+                            <PasswordBox x:Name="SecurityConfirmPasswordInput" Style="{StaticResource GeneralPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
                             <Button Content="{DynamicResource ChangePasswordButton}" Command="{Binding ChangePasswordCommand}" Style="{StaticResource DefaultButtonStyle}" Margin="0,30,0,0" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </TabItem>

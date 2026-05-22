@@ -4,19 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_FitnessClub"
-        xmlns:windows="clr-namespace:WPF_FitnessClub.View" xmlns:viewmodels="clr-namespace:WPF_FitnessClub.ViewModels"
+        xmlns:windows="clr-namespace:WPF_FitnessClub.View" 
+        xmlns:viewmodels="clr-namespace:WPF_FitnessClub.ViewModels"
         mc:Ignorable="d"
         Title="{DynamicResource RegistrationTitle}"
-        Height="500" Width="800">
-    <Grid
-        Background="{DynamicResource WindowBackgroundBrush}">
+        Height="600" Width="800"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -24,134 +24,107 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel
-            Grid.Row="0"
-            Grid.ColumnSpan="3"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Margin="0,10,10,0">
-
+        <!-- Кнопки смены языка -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,15,15,0">
             <Button x:Name="RussianButton" Style="{DynamicResource LanguageButton}" 
                     Click="RussianButton_Click" Content="RU"
                     ToolTip="Переключить на русский язык" />
             <Button x:Name="EnglishButton" Style="{DynamicResource LanguageButton}" 
                     Click="EnglishButton_Click" Content="EN"
                     ToolTip="Switch to English language" />
-
         </StackPanel>
 
+        <!-- ГЛАВНЫЙ ОРАНЖЕВЫЙ/ЗЕЛЕНЫЙ БОКС -->
         <Border x:Name="MainBorder"
-            Grid.Row="1"
-            Grid.Column="1"
-            BorderThickness="0"
-            CornerRadius="10" 
-            Width="350"
-            Height="Auto"
-            MinHeight="400"      
-            Padding="0,20,0,0"
-            ClipToBounds="True"
-            Margin="10" 
-                
-            VerticalAlignment="Center"
-            Background="{DynamicResource PrimaryRedBrush}"
-            HorizontalAlignment="Center"
-            Effect="{StaticResource CardShadow}">
+                Grid.Row="1" Grid.Column="1"
+                BorderThickness="0"
+                CornerRadius="25" 
+                Width="380"
+                Height="Auto"
+                MinHeight="500"      
+                Padding="0,25,0,20"
+                ClipToBounds="True"  
+                VerticalAlignment="Center"
+                Background="{DynamicResource PrimaryRedBrush}"
+                HorizontalAlignment="Center"
+                Effect="{StaticResource CardShadow}">
 
-            <TabControl x:Name="MainTabControl" Style="{StaticResource CustomTabControlStyle}" SelectionChanged="MainTabControl_SelectionChanged" >
+            <TabControl x:Name="MainTabControl" 
+                        Style="{StaticResource CustomTabControlStyle}" 
+                        SelectionChanged="MainTabControl_SelectionChanged" >
+
+                <!-- ВКЛАДКА: АВТОРИЗАЦИЯ -->
                 <TabItem Header="{DynamicResource LoginTitle}"
-                         Style="{StaticResource CustomTabItemStyle}">
-
-                    
-                    <StackPanel
-                HorizontalAlignment="Center" Height="255">
-                        <TextBlock
-                   
-                    Text="{DynamicResource Login}" Foreground="#FFF1F1F1"
-                    />
+                         Style="{StaticResource AuthTabItemStyle}">
+                    <StackPanel Margin="30,45,30,30" HorizontalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Login}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,0,0,5"/>
                         <TextBox x:Name="LoginInput"
-                    TextAlignment="Left" 
-                    Width="158" 
-                    MaxWidth="200" 
-                    MaxLength="30"
-                    Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{DynamicResource CustomTextBoxStyle}" />
+                                 Width="220" 
+                                 Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource AuthTextBoxStyle}" />
 
-                        <TextBlock
-                    Text="{DynamicResource Password}" Foreground="#FFEDEDED"
-                     />
+                        <TextBlock Text="{DynamicResource Password}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,15,0,5"/>
                         <PasswordBox x:Name="PasswordInput"
-                    Width="158" 
-                    MaxWidth="200"
-                    Style="{DynamicResource CustomPasswordBoxStyle}"
-                    PreviewKeyDown="PasswordBox_PreviewKeyDown"
-                             />
+                                     Width="220"
+                                     Style="{StaticResource AuthPasswordBoxStyle}"
+                                     PreviewKeyDown="PasswordBox_PreviewKeyDown" />
 
                         <Button x:Name="EnterButton"
-                        Content="{DynamicResource LoginButton}"  
-                        MinWidth="120" 
-                        MaxWidth="200" 
-                        Margin="0,60,0,0" 
-                        Style="{DynamicResource EnterButton}"
-                        Command="{Binding EnterCommand}"
-                        CommandParameter="{Binding ElementName=PasswordInput}"/>
-
+                                Content="{DynamicResource LoginButton}"  
+                                IsDefault="True"
+                                MinWidth="130" 
+                                Margin="0,50,0,0" 
+                                Style="{DynamicResource EnterButton}"
+                                Command="{Binding EnterCommand}"
+                                CommandParameter="{Binding ElementName=PasswordInput}"/>
                     </StackPanel>
                 </TabItem>
 
+                <!-- ВКЛАДКА: РЕГИСТРАЦИЯ -->
                 <TabItem Header="{DynamicResource RegistrationTitle}"
-                    Style="{StaticResource CustomTabItemStyle}">
-                    <StackPanel  Margin="30,10,30,20" HorizontalAlignment="Center">
-                        <TextBlock Foreground="#FFF1F1F1" Text="{DynamicResource FullName}" />
-                        <TextBox x:Name="FullNameInput" 
-                                TextAlignment="Left" 
-                                Width="220" 
-                                MaxLength="30"
-                                Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{DynamicResource CustomTextBoxStyle}" />
+         Style="{StaticResource AuthTabItemStyle}">
+                    <StackPanel Margin="30,15,30,15" HorizontalAlignment="Center">
+                        <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,2,0,2"/>
+                        <TextBox x:Name="FullNameInput" Width="220" 
+                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource AuthTextBoxStyle}" Margin="0,0,0,8"/>
 
-                        <TextBlock Text="{DynamicResource Email}" Foreground="#FFF1F1F1" />
-                        <TextBox x:Name="EmailInput" 
-                                TextAlignment="Left" 
-                                Width="220" 
-                                MaxLength="30"
-                                Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{DynamicResource CustomTextBoxStyle}" />
+                        <TextBlock Text="{DynamicResource Email}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,2,0,2"/>
+                        <TextBox x:Name="EmailInput" Width="220" 
+                 Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource AuthTextBoxStyle}" Margin="0,0,0,8"/>
 
-                        <TextBlock Text="{DynamicResource Login}" Foreground="#FFF1F1F1" />
-                        <TextBox x:Name="RegLoginInput" 
-                                TextAlignment="Left" 
-                                Width="220" 
-                                MaxLength="30"
-                                Text="{Binding RegLogin, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{DynamicResource CustomTextBoxStyle}" />
+                        <TextBlock Text="{DynamicResource Login}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,2,0,2"/>
+                        <TextBox x:Name="RegLoginInput" Width="220" 
+                 Text="{Binding RegLogin, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource AuthTextBoxStyle}" Margin="0,0,0,8"/>
 
-                        <TextBlock Text="{DynamicResource Password}" Foreground="#FFF1F1F1" />
-                        <PasswordBox x:Name="RegPasswordInput" 
-                                    Width="220" 
-                                    Style="{StaticResource CustomPasswordBoxStyle}"
-                                    PreviewKeyDown="PasswordBox_PreviewKeyDown" />
+                        <TextBlock Text="{DynamicResource Password}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,2,0,2"/>
+                        <PasswordBox x:Name="RegPasswordInput" Width="220" 
+                     Style="{StaticResource AuthPasswordBoxStyle}"
+                     PreviewKeyDown="PasswordBox_PreviewKeyDown" Margin="0,0,0,8"/>
 
-                        <TextBlock Text="{DynamicResource ConfirmPassword}" Foreground="#FFF1F1F1" />
-                        <PasswordBox x:Name="ConfirmPasswordInput" 
-                                    Width="220" 
-                                    Style="{StaticResource CustomPasswordBoxStyle}"
-                                    Tag="{Binding ElementName=RegPasswordInput}"
-                                    PreviewKeyDown="PasswordBox_PreviewKeyDown" />
+                        <TextBlock Text="{DynamicResource ConfirmPassword}" Style="{StaticResource AuthTextBlockStyle}" Margin="0,2,0,2"/>
+                        <PasswordBox x:Name="ConfirmPasswordInput" Width="220" 
+                     Style="{StaticResource AuthPasswordBoxStyle}"
+                     Tag="{Binding ElementName=RegPasswordInput}"
+                     PreviewKeyDown="PasswordBox_PreviewKeyDown" Margin="0,0,0,8"/>
 
                         <Button x:Name="RegisterButton"
-                                Content="{DynamicResource RegisterButton}"
-                                MinWidth="160"
-                                Margin="0,24,0,0"
-                                Style="{DynamicResource EnterButton}" 
-                                Command="{Binding RegisterCommand}"
-                                CommandParameter="{Binding ElementName=ConfirmPasswordInput}" />
+                Content="{DynamicResource RegisterButton}"
+                MinWidth="160"
+                Margin="0,20,0,0"
+                Style="{DynamicResource EnterButton}" 
+                Command="{Binding RegisterCommand}"
+                CommandParameter="{Binding ElementName=ConfirmPasswordInput}" />
                     </StackPanel>
                 </TabItem>
-
 
             </TabControl>
         </Border>
-
     </Grid>
 </Window>
