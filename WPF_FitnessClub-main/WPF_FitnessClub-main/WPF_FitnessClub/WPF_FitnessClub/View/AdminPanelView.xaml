@@ -64,31 +64,66 @@
                     
                     <!-- DataGrid для отображения пользователей -->
                     <DataGrid x:Name="UsersDataGrid" 
-                              AutoGenerateColumns="False"
-                              IsReadOnly="False"
-                              CanUserAddRows="False"
-                              CanUserDeleteRows="False"
-                              CanUserReorderColumns="True"
-                              CanUserResizeColumns="True"
-                              CanUserSortColumns="True"
-                              AlternatingRowBackground="AliceBlue"
-                              BorderBrush="Gray"
-                              BorderThickness="1"
-                              GridLinesVisibility="All"
-                              HorizontalGridLinesBrush="LightGray"
-                              VerticalGridLinesBrush="LightGray"
-                              Margin="10"
-                              ItemsSource="{Binding UsersTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
-                              CellEditEnding="UsersDataGrid_CellEditEnding"
-                              Style="{StaticResource DefaultDataGridStyle}">
+          AutoGenerateColumns="False"
+          IsReadOnly="False"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          CanUserReorderColumns="True"
+          CanUserResizeColumns="True"
+          CanUserSortColumns="True"
+          AlternatingRowBackground="AliceBlue"
+          BorderBrush="Gray"
+          BorderThickness="1"
+          GridLinesVisibility="All"
+          HorizontalGridLinesBrush="LightGray"
+          VerticalGridLinesBrush="LightGray"
+          Margin="10"
+          ItemsSource="{Binding UsersTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+          SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+          CellEditEnding="UsersDataGrid_CellEditEnding"
+          RowHeight="38" 
+          Style="{StaticResource DefaultDataGridStyle}">
+
+                        <DataGrid.Resources>
+                            <!-- 1. ИСПРАВЛЯЕМ СИНЕЕ ВЫДЕЛЕНИЕ: теперь оно будет серое/темы и БЕЗ скруглений -->
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="DataGridCell">
+                                            <!-- CornerRadius="0" - ГАРАНТИЯ ОСТРЫХ УГЛОВ -->
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="0">
+                                                <ContentPresenter VerticalAlignment="Center" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource LightGrayBrush}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+
+                            <!-- 2. ИСПРАВЛЯЕМ СИНЮЮ РАМКУ ПРИ ПЕЧАТИ: теперь она будет подчеркиванием цвета темы -->
+                            <Style x:Key="ColumnFocusStyle" TargetType="TextBox">
+                                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Style>
+                        </DataGrid.Resources>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="{DynamicResource AdminPanelIdColumn}" Binding="{Binding Id}" IsReadOnly="True" Width="40"/>
-                            <DataGridTextColumn Header="{DynamicResource FullName}" Binding="{Binding FullName}" Width="*"/>
-                            <DataGridTextColumn Header="{DynamicResource Email}" Binding="{Binding Email}" Width="*"/>
-                            <DataGridTextColumn Header="{DynamicResource Login}"  Binding="{Binding Login}" Width="*"/>
 
-                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelRoleColumn}" Width="110">
+                            <!-- Применяем EditingElementStyle, чтобы фокус был оранжевым/зеленым -->
+                            <DataGridTextColumn Header="{DynamicResource FullName}" Binding="{Binding FullName}" Width="*" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
+                            <DataGridTextColumn Header="{DynamicResource Email}" Binding="{Binding Email}" Width="*" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
+                            <DataGridTextColumn Header="{DynamicResource Login}"  Binding="{Binding Login}" Width="*" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
+
+                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelRoleColumn}" Width="120">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Role, Converter={StaticResource RoleToStringConverter}}" VerticalAlignment="Center" Margin="5,0"/>
@@ -96,8 +131,8 @@
                                 </DataGridTemplateColumn.CellTemplate>
                                 <DataGridTemplateColumn.CellEditingTemplate>
                                     <DataTemplate>
-                                        <!-- Используем Tag="1", "2", "3" для связи с C#-кодом -->
-                                        <ComboBox SelectedValue="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag">
+                                        <ComboBox SelectedValue="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              SelectedValuePath="Tag" VerticalContentAlignment="Center" Height="30">
                                             <ComboBoxItem Content="Клиент" Tag="{x:Static models:UserRole.Client}"/>
                                             <ComboBoxItem Content="Тренер" Tag="{x:Static models:UserRole.Coach}"/>
                                             <ComboBoxItem Content="Админ" Tag="{x:Static models:UserRole.Admin}"/>
@@ -106,27 +141,36 @@
                                 </DataGridTemplateColumn.CellEditingTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="{DynamicResource PhoneLabel}" Binding="{Binding Phone}" Width="120"/>
-                            <DataGridTextColumn Header="{DynamicResource WeightLabel}" Binding="{Binding Weight}" Width="60"/>
-                            <DataGridTextColumn Header="{DynamicResource HeightLabel}" Binding="{Binding Height}" Width="60"/>
-                            <DataGridTextColumn Header="{DynamicResource AgeLabel}" Binding="{Binding Age}" Width="60"/>
+                            <DataGridTextColumn Header="{DynamicResource PhoneLabel}" Binding="{Binding Phone}" Width="120" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
+                            <DataGridTextColumn Header="{DynamicResource WeightLabel}" Binding="{Binding Weight}" Width="60" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
+                            <DataGridTextColumn Header="{DynamicResource HeightLabel}" Binding="{Binding Height}" Width="60" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
+                            <DataGridTextColumn Header="{DynamicResource AgeLabel}" Binding="{Binding Age}" Width="60" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
 
-                            <DataGridCheckBoxColumn Header="{DynamicResource AdminPanelBlockedColumn}"  Binding="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+                            <DataGridCheckBoxColumn Header="{DynamicResource AdminPanelBlockedColumn}" Binding="{Binding IsBlocked, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
 
-                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelActionsColumn}"  Width="90">
+                            <DataGridTemplateColumn Header="{DynamicResource AdminPanelActionsColumn}" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
+                                        <!-- КНОПКА: Удалил BorderThickness, убрал CornerRadius, уменьшил отступы -->
                                         <Button Content="{DynamicResource DeleteButton}" 
                             Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
                             CommandParameter="{Binding}"
                             Background="{DynamicResource PrimaryRedBrush}" 
                             Foreground="White"
-                            FontSize="10" 
-                            Padding="2" 
-                            Margin="2"
-                            Height="22" 
-                            Width="70"
-                            Style="{StaticResource DefaultButtonStyle}"/>
+                            BorderThickness="0" 
+                            FontSize="11" 
+                            Padding="0" 
+                            Margin="5,4"
+                            Height="24" 
+                            Width="85"
+                            HorizontalAlignment="Center">
+                                            <Button.Resources>
+                                                <!-- Убираем скругление внутри кнопки -->
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="0"/>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

@@ -64,10 +64,10 @@ namespace WPF_FitnessClub
             {
                 case AppTheme.Light: // === Œ–¿Õ∆≈¬¿ﬂ “≈Ã¿ ===
                     resources["PrimaryRed"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF7A50");
-                    resources["BackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#F4F6F7");
-                    resources["WindowBackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#F4F6F7");
+                    resources["BackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#efeded");
+                    resources["WindowBackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#efeded");
                     resources["TextColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#252727");
-                    resources["SecondaryBackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#E5EDEA");
+                    resources["SecondaryBackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#fdf3f0");
                     resources["MediumGray"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#808080");
                     resources["LightGray"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#D1D9D6");
                     break;

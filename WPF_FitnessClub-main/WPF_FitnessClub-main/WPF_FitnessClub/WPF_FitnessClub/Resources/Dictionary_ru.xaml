@@ -97,6 +97,11 @@
             <s:String x:Key="SubscriptionSignUpTitle">Запись на абонемент</s:String>
             <s:String x:Key="ConfirmSubscriptionButton">Подтвердить</s:String>
 
+            <s:String x:Key="AgeLabel">Возраст</s:String>
+            <s:String x:Key="GenderLabel">Пол</s:String>
+            <s:String x:Key="Male">Мужской</s:String>
+            <s:String x:Key="Female">Женский</s:String>
+            
             <!-- Окно клиентов тренера -->
             <s:String x:Key="CoachClientsTitle">Клиенты тренера</s:String>
             <s:String x:Key="DetailsButton">Подробнее</s:String>

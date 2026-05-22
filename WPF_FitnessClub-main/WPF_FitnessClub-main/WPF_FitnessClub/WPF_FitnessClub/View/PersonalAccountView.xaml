@@ -82,14 +82,14 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="Возраст" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <TextBlock Text="{DynamicResource AgeLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
                                     <TextBox Text="{Binding Age}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Пол" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <TextBlock Text="{DynamicResource GenderLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
                                     <ComboBox SelectedIndex="{Binding GenderIndex}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomComboBoxStyle}">
-                                        <ComboBoxItem Content="Мужской"/>
-                                        <ComboBoxItem Content="Женский"/>
+                                        <ComboBoxItem Content="{DynamicResource Male}"/>
+                                        <ComboBoxItem Content="{DynamicResource Female}"/>
                                     </ComboBox>
                                 </StackPanel>
                             </Grid>

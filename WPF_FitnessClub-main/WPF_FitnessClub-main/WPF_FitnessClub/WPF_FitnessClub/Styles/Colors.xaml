@@ -7,9 +7,9 @@
     <!-- Коралловый акцент -->
     <Color x:Key="DarkRed">#E6643C</Color>
     <!-- Темно-оранжевый для наведения -->
-    <Color x:Key="BackgroundColor">#F4F6F7</Color>
+    <Color x:Key="BackgroundColor">#efeded</Color>
     <!-- Светло-серый фон -->
-    <Color x:Key="SecondaryBackgroundColor">#E5EDEA</Color>
+    <Color x:Key="SecondaryBackgroundColor">#fdf3f0</Color>
     <!-- Цвет карточек -->
     <Color x:Key="TextColor">#252727</Color>
     <!-- Почти черный текст -->
