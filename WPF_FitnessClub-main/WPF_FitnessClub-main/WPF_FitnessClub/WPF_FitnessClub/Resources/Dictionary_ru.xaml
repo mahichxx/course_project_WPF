@@ -368,8 +368,8 @@
 
             <!-- Строки для настроек темы -->
             <s:String x:Key="ThemeSelection">Выбор темы</s:String>
-            <s:String x:Key="LightTheme">Светлая</s:String>
-            <s:String x:Key="DarkTheme">Темная</s:String>
+            <s:String x:Key="LightTheme">Оранжевая</s:String>
+            <s:String x:Key="DarkTheme">Зеленая</s:String>
             
             <!-- Новые строки для экспорта в JSON -->
             <s:String x:Key="AdminPanelExportJson">Экспорт в JSON</s:String>
@@ -524,7 +524,7 @@
             <s:String x:Key="ReplyToReviewPrompt">Введите ваш ответ на отзыв пользователя {0}:</s:String>
             <s:String x:Key="ReplySaved">Ответ успешно сохранен!</s:String>
 
-            <s:String x:Key="PhoneLabel">Телефон (+375 (XX) XXX-XX-XX)</s:String>
+            <s:String x:Key="PhoneLabel">Телефон +375 (XX) XXX-XX-XX</s:String>
 
             <s:String x:Key="WeightLabel">Вес (кг)</s:String>
             <s:String x:Key="HeightLabel">Рост (см)</s:String>

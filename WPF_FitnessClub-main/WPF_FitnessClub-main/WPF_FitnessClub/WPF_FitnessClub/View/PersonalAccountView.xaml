@@ -76,6 +76,16 @@
                             <TextBlock Text="{DynamicResource PhoneLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
                             <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
 
+                            <TextBlock Text="{DynamicResource ClientPlansEmailLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
+                            <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" 
+         IsEnabled="{Binding IsEditMode}" 
+         Style="{StaticResource GeneralTextBoxStyle}"/>
+                            <!-- Красная надпись об ошибке -->
+                            <TextBlock Text="{Binding EmailErrorMessage}" 
+           Foreground="Red" FontSize="11" 
+           Visibility="{Binding IsEmailError, Converter={StaticResource BooleanToVisibilityConverter}}"
+           HorizontalAlignment="Left" Margin="0,2,0,0"/>
+                            
                             <Grid Margin="0,15,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>

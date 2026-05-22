@@ -735,15 +735,21 @@ namespace WPF_FitnessClub.ViewModels
                 // 2. Валидация Email
                 if (string.IsNullOrWhiteSpace(Email))
                 {
-                    validationErrors.Add((string)Application.Current.Resources["EmailRequired"]);
+                    validationErrors.Add("Почта не может быть пустой");
                     IsEmailError = true;
-                    EmailErrorMessage = (string)Application.Current.Resources["EmailRequired"];
+                    EmailErrorMessage = "Введите почту";
                 }
-                else if (!ValidateEmail(Email))
+                else if (!System.Text.RegularExpressions.Regex.IsMatch(Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
                 {
-                    validationErrors.Add(EmailErrorMessage);
+                    validationErrors.Add((string)Application.Current.Resources["InvalidEmailFormat"] ?? "Некорректный формат почты");
+                    IsEmailError = true;
+                    EmailErrorMessage = (string)Application.Current.Resources["InvalidEmailFormat"] ?? "Некорректный формат почты";
                 }
-                else { IsEmailError = false; EmailErrorMessage = string.Empty; }
+                else
+                {
+                    IsEmailError = false;
+                    EmailErrorMessage = string.Empty;
+                }
 
                 // 3. Валидация ФИО (только буквы и 3 слова, кроме admin)
                 if (string.IsNullOrWhiteSpace(FullName))
@@ -791,9 +797,15 @@ namespace WPF_FitnessClub.ViewModels
                 }
 
                 // 5. Телефон (+375...)
-                if (!string.IsNullOrWhiteSpace(Phone) && !System.Text.RegularExpressions.Regex.IsMatch(Phone, @"^[\d\s\(\)\-\+]{10,20}$"))
+                if (!string.IsNullOrWhiteSpace(Phone))
                 {
-                    validationErrors.Add("Неверный формат номера телефона");
+                    // Убираем всё кроме цифр и плюса для проверки реального количества
+                    string cleanPhone = Regex.Replace(Phone, @"[^\d\+]", "");
+
+                    if (!Regex.IsMatch(cleanPhone, @"^\+375\d{9}$"))
+                    {
+                        validationErrors.Add("Номер должен быть в формате +375 (XX) XXX-XX-XX (всего 9 цифр после кода страны)");
+                    }
                 }
 
                 // 6. Возраст (10-100)

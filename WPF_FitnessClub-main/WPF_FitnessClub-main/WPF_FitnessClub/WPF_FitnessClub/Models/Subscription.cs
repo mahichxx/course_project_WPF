@@ -151,7 +151,11 @@ namespace WPF_FitnessClub.Models
         public double Rating
         {
             get => CalculateRating();
-            set { OnPropertyChanged("Rating"); }
+            set { 
+				OnPropertyChanged("Rating");
+                OnPropertyChanged(nameof(Rating));
+
+            }
         }
 
         [NotMapped]

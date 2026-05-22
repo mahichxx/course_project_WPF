@@ -794,37 +794,40 @@ namespace WPF_FitnessClub.ViewModels
                     newReview.Id = reviewId;
                     HasUserReviewed = true;
 
-                    // 1. ОБНОВЛЯЕМ ТЕКУЩЕЕ ОКНО (чтобы звезды в шапке изменились)
+                    // 1. Добавляем отзыв в текущую модель (для этого окна)
                     if (_currentSubscription.Reviews == null) _currentSubscription.Reviews = new List<Review>();
                     _currentSubscription.Reviews.Add(newReview);
 
-                    // Сначала обновляем коллекцию отзывов на экране
-                    if (Reviews == null) Reviews = new ObservableCollection<Review>();
-                    Reviews.Add(newReview);
-
-                    // Считаем новый рейтинг и ГОВОРИМ ОБ ЭТОМ ИНТЕРФЕЙСУ
+                    // Считаем новый рейтинг
                     double newRating = _currentSubscription.CalculateRating();
+
+                    // 2. ОБНОВЛЯЕМ ЗВЕЗДЫ В ТЕКУЩЕМ ОКНЕ
                     _currentSubscription.Rating = newRating;
+                    OnPropertyChanged("Rating");
+                    LoadReviews(); // Обновит список текстом внизу
 
-                    OnPropertyChanged("Rating"); // Уведомляем VM
-                    _currentSubscription.OnPropertyChanged("Rating"); // Уведомляем саму модель (ВАЖНО!)
-                    OnPropertyChanged("Reviews");
-
-                    // 2. ОБНОВЛЯЕМ ГЛАВНЫЙ ЭКРАН
-                    if (_mainWindow != null)
+                    // 3. ОБНОВЛЯЕМ ЗВЕЗДЫ НА ГЛАВНОМ ЭКРАНЕ (БЕЗ ПЕРЕЗАХОДА)
+                    if (_mainWindow != null && _mainWindow.subscriptions != null)
                     {
-                        var mainSub = _mainWindow.subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
-                        if (mainSub != null) { mainSub.Rating = _currentSubscription.CalculateRating(); }
+                        // Находим тот же самый абонемент в списке главного окна
+                        var subInMainList = _mainWindow.subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
+                        if (subInMainList != null)
+                        {
+                            // Обновляем его данные
+                            subInMainList.Reviews = _currentSubscription.Reviews;
+                            // ВАЖНО: вызываем установку рейтинга, которая "пинает" интерфейс
+                            subInMainList.Rating = newRating;
+                        }
+
+                        // Просим главное окно обновить привязки (force refresh)
                         _mainWindow.UpdateUIWithSubscriptions(_mainWindow.subscriptions);
                     }
 
-                    HasUserReviewed = true;
                     ReviewComment = string.Empty;
                     ReviewRating = 0;
+                    OnPropertyChanged("WriteReviewVisible"); // Прячем форму ввода
 
-                    OnPropertyChanged("WriteReviewVisible"); // Скрываем форму ввода
-
-                    MessageBox.Show("Отзыв добавлен!", "Успех");
+                    MessageBox.Show("Отзыв успешно добавлен!", "Успех");
                 }
             }
             catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); }

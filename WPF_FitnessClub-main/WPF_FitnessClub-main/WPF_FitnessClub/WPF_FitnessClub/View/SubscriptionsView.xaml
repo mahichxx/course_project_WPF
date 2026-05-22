@@ -45,7 +45,8 @@
 
         <!-- Панель с подписками -->
         <ScrollViewer Grid.Column="0"
-                      Style="{StaticResource ResponsiveScrollViewerStyle}">
+                      Style="{StaticResource ResponsiveScrollViewerStyle}" 
+                      VerticalScrollBarVisibility="Hidden">
             <ItemsControl ItemsSource="{Binding FilteredSubscriptions}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -80,38 +81,58 @@
                                 </Border>
 
                                 <!-- Текст -->
-                                <StackPanel Grid.Row="1" Margin="8">
-                                    <TextBlock Text="{Binding Name}"
-                           FontWeight="Bold"
-                           FontSize="13"
-                           MaxHeight="35"
-                           TextWrapping="Wrap"
-                           Foreground="{DynamicResource TextBrush}"/>
+                                <Grid Grid.Row="1" Margin="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <!-- Название -->
+                                        <RowDefinition Height="Auto"/>
+                                        <!-- Цена -->
+                                        <RowDefinition Height="Auto"/>
+                                        <!-- Описание -->
+                                        <RowDefinition Height="*"/>
+                                        <!-- ПУСТОЕ МЕСТО (заберет всё свободное пространство) -->
+                                        <RowDefinition Height="Auto"/>
+                                        <!-- ЗВЕЗДЫ (всегда будут внизу) -->
+                                    </Grid.RowDefinitions>
 
-                                    <TextBlock FontSize="14"
-                           FontWeight="Bold"
-                           Foreground="{DynamicResource PrimaryRedBrush}" 
-                           Margin="0,2,0,2"
-                           Text="{Binding Price, StringFormat={}{0:0.00} Br}"/>
+                                    <!-- 1. Название -->
+                                    <TextBlock Grid.Row="0" 
+               Text="{Binding Name}"
+               FontWeight="Bold" FontSize="13"
+               MaxHeight="35" TextWrapping="Wrap"
+               Foreground="{DynamicResource TextBrush}"/>
 
-                                    <TextBlock Text="{Binding Description}"
-                           TextWrapping="Wrap"
-                           Height="45" 
-                           FontSize="10"
-                           Foreground="#666666"/>
+                                    <!-- 2. Цена -->
+                                    <TextBlock Grid.Row="1" 
+               FontSize="14" FontWeight="Bold"
+               Foreground="{StaticResource PrimaryRedBrush}" 
+               Margin="0,2,0,2"
+               Text="{Binding Price, StringFormat={}{0:0.00} Br}"/>
 
-                                    <!-- Рейтинг в самом низу -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <!-- 3. Описание -->
+                                    <TextBlock Grid.Row="2" 
+               Text="{Binding Description}"
+               TextWrapping="Wrap"
+               FontSize="10" Foreground="#666666"
+               MaxHeight="45"/>
+
+                                    <!-- 4. Звезды (ТЕПЕРЬ СТРОГО ВНИЗУ благодаря Grid.Row="4") -->
+                                    <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,0">
                                         <ItemsControl ItemsSource="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                                 ItemTemplate="{StaticResource StarTemplate}">
+                      ItemTemplate="{StaticResource StarTemplate}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal"/>
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
+
+                                        <!-- Цифра рейтинга рядом со звездами для красоты -->
+                                        <TextBlock Text="{Binding Rating, StringFormat='({0:F1})'}" 
+                   FontSize="10" Margin="5,0,0,0" 
+                   VerticalAlignment="Center" Opacity="0.5"/>
                                     </StackPanel>
-                                </StackPanel>
+                                </Grid>
                             </Grid>
                         </Border>
                     </DataTemplate>

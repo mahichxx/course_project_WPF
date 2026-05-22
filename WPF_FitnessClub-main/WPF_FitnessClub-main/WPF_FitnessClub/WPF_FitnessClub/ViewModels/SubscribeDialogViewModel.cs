@@ -22,7 +22,7 @@ namespace WPF_FitnessClub.ViewModels
 
             SubscriptionName = subscription.Name;
             SubscriptionPrice = subscription.Price;
-            SubscriptionDuration = subscription.Duration;
+            SubscriptionDuration = subscription.LocalizedDuration;
             SubscriptionId = subscription.Id;
 
             if (currentUser != null)
@@ -99,7 +99,7 @@ namespace WPF_FitnessClub.ViewModels
                 if (_subscriptionDuration != value)
                 {
                     _subscriptionDuration = value;
-                    OnPropertyChanged(nameof(SubscriptionPrice));
+                    OnPropertyChanged(nameof(SubscriptionDuration));
                 }
             }
         }

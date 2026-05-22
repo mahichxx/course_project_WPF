@@ -306,8 +306,8 @@
 
             <!-- Theme Settings Strings -->
             <s:String x:Key="ThemeSelection">Theme Selection</s:String>
-            <s:String x:Key="LightTheme">Light Theme</s:String>
-            <s:String x:Key="DarkTheme">Dark Theme</s:String>
+            <s:String x:Key="LightTheme">Orange</s:String>
+            <s:String x:Key="DarkTheme">Green</s:String>
             
             <!-- Workout and Nutrition Plans tabs -->
             <s:String x:Key="SelectWorkoutPlan">Select a workout plan:</s:String>
@@ -506,7 +506,7 @@
             <!--#endregion-->
 
             <!-- Personal Account -->
-            <s:String x:Key="PhoneLabel">Phone (+375 (XX) XXX-XX-XX)</s:String>
+            <s:String x:Key="PhoneLabel">Phone +375 (XX) XXX-XX-XX</s:String>
             <s:String x:Key="WeightLabel">Weight (kg)</s:String>
             <s:String x:Key="HeightLabel">Height (cm)</s:String>
             <s:String x:Key="AgeLabel">Age</s:String>

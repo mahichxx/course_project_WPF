@@ -558,7 +558,9 @@ namespace WPF_FitnessClub.ViewModels
 			{
 				IsLoading = false;
 			}
-		}
+            FilteredSubscriptions = new ObservableCollection<Subscription>(_allSubscriptions);
+            OnPropertyChanged("FilteredSubscriptions");
+        }
 		
 		public void ResetFilters()
 		{
