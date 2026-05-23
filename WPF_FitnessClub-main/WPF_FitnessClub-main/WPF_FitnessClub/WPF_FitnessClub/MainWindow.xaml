@@ -34,14 +34,9 @@
                 
                 <!-- Верхние кнопки -->
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,10,0,0">
-                    <Button x:Name="HomeButton" 
-                            Content="⌂"
-                            Style="{StaticResource CircleButtonStyle}" 
-                            Margin="3,3,3,3"
-                            FontSize="24"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Click="HomeButton_Click" />
+                    <Button Style="{StaticResource CircleButtonStyle}" Click="HomeButton_Click">
+                        <Path Data="{StaticResource HomeIcon}" Fill="White" Stretch="Uniform" Width="20" Height="20"/>
+                    </Button>
 
                     <Button x:Name="AddSubscriptionButon" 
                             Content="✚" 
@@ -53,18 +48,12 @@
                             Visibility="{Binding AddSubscriptionVisible}"
                             ToolTip="Добавить абонемент"
                             Click="AddSubscriptionButton_Click" />
-                    
-                    <Button x:Name="DataTableButton" 
-                            Content="🗃" 
-                            Style="{StaticResource CircleButtonStyle}" 
-                            Margin="3,3,3,3"
-                            FontSize="24"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            ToolTip="Просмотр таблиц базы данных"
-                            Visibility="{Binding AdminRoleVisible}"
-                            Click="DataTableButton_Click" />
-                            
+
+                    <Button Style="{StaticResource CircleButtonStyle}" Click="DataTableButton_Click" 
+        Visibility="{Binding AdminRoleVisible}">
+                        <Path Data="{StaticResource AdminIcon}" Fill="White" Stretch="Uniform" Width="20" Height="20"/>
+                    </Button>
+
                     <Button x:Name="CoachClientsButton" 
                             Content="👥" 
                             Style="{StaticResource CircleButtonStyle}" 
@@ -80,24 +69,24 @@
                 <!-- Нижняя панель кнопок -->
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
 
-                    <Button x:Name="LogoutButton" 
-                            Content="🚪"  
-                            Margin="3,3,3,3"
-                            FontSize="20"
-                            FontWeight="Normal"
-                            Foreground="White"
-                            Click="LogoutButton_Click"
-                            Style="{DynamicResource CircleButtonStyle}" />
+                    <Button Style="{StaticResource CircleButtonStyle}" Click="LogoutButton_Click">
+                        <Path Data="{StaticResource LogoutIcon}" Stroke="White" StrokeThickness="2" 
+          Stretch="Uniform" Width="20" Height="20" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                    </Button>
 
 
-                    <Button x:Name="PersonalAccountButon" 
-                            Content="👤" 
-                            Style="{StaticResource CircleButtonStyle}" 
-                            Margin="3,3,3,3"
-                            FontSize="24"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Click="PersonalAccountButon_Click"/>
+                    <Button x:Name="PersonalAccountButton" 
+        Style="{StaticResource CircleButtonStyle}" 
+        Click="PersonalAccountButon_Click"
+        Margin="0,0,0,15">
+                        <!-- Рисуем нашу новую иконку -->
+                        <Path Data="{StaticResource UserIcon}" 
+          Fill="White" 
+          Stretch="Uniform" 
+          Width="22" Height="22" 
+          Stroke="White" 
+          StrokeThickness="0.5"/>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

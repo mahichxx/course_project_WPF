@@ -1,6 +1,25 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Данные взяты из твоего SVG (атрибут d) -->
+    <Geometry x:Key="UserIcon">
+        M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z
+    </Geometry>
+    <!-- Иконка Домика (Главная) -->
+    <Geometry x:Key="HomeIcon">
+        M41.733 160.134v-59.2H21.999L96 31.865l74 69.067h-19.733v59.201H110.8v-44.4H81.2v44.4z
+    </Geometry>
+
+    <!-- Иконка Выхода (Дверь) -->
+    <Geometry x:Key="LogoutIcon">
+        M40,20 V8 H8 V56 H40 V44 M48,40 L56,32 L48,24 M28,32 H56
+    </Geometry>
+
+    <!-- Иконка Таблицы (Админ-панель) -->
+    <Geometry x:Key="AdminIcon">
+        M16,48V464H496V48ZM464,432H48V336H464Zm0-128H48V208H464ZM48,176V80H464v96Z 
+        M80,112h32v32h-32z M80,240h32v32h-32z M80,368h32v32h-32z
+    </Geometry>
     <!-- 1. Стиль для круглых кнопок (меню) -->
     <Style x:Key="CircleButtonStyle" TargetType="Button">
         <Setter Property="Width" Value="40"/>

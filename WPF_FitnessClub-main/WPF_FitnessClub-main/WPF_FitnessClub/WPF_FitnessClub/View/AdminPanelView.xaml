@@ -52,47 +52,64 @@
         
         <!-- TabControl для таблиц базы данных -->
         <TabControl Grid.Row="1" 
-                    Margin="5" 
-                    Style="{StaticResource CustomTabControlStyle}">
+            Margin="5" 
+            Style="{StaticResource CustomTabControlStyle}">
             <!-- Вкладка пользователей -->
             <TabItem Header="{DynamicResource AdminPanelUsersTab}" 
-                     Style="{StaticResource CustomTabItemStyle}">
+             Style="{StaticResource CustomTabItemStyle}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    
                     <!-- DataGrid для отображения пользователей -->
                     <DataGrid x:Name="UsersDataGrid" 
-          AutoGenerateColumns="False"
-          IsReadOnly="False"
-          CanUserAddRows="False"
-          CanUserDeleteRows="False"
-          CanUserReorderColumns="True"
-          CanUserResizeColumns="True"
-          CanUserSortColumns="True"
-          AlternatingRowBackground="AliceBlue"
-          BorderBrush="Gray"
-          BorderThickness="1"
-          GridLinesVisibility="All"
-          HorizontalGridLinesBrush="LightGray"
-          VerticalGridLinesBrush="LightGray"
-          Margin="10"
-          ItemsSource="{Binding UsersTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
-          CellEditEnding="UsersDataGrid_CellEditEnding"
-          RowHeight="38" 
-          Style="{StaticResource DefaultDataGridStyle}">
+                      AutoGenerateColumns="False"
+                      IsReadOnly="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      AlternatingRowBackground="AliceBlue"
+                      BorderBrush="Gray"
+                      BorderThickness="1"
+                      GridLinesVisibility="All"
+                      HorizontalGridLinesBrush="LightGray"
+                      VerticalGridLinesBrush="LightGray"
+                      Margin="10"
+                      ItemsSource="{Binding UsersTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+                      CellEditEnding="UsersDataGrid_CellEditEnding"
+                      RowHeight="38" 
+                      Style="{StaticResource DefaultDataGridStyle}">
 
+                        <!-- РЕСУРСЫ ТАБЛИЦЫ (ЧИНЯТ ВЫЛЕТ И ОКРУГЛЕНИЯ) -->
                         <DataGrid.Resources>
-                            <!-- 1. ИСПРАВЛЯЕМ СИНЕЕ ВЫДЕЛЕНИЕ: теперь оно будет серое/темы и БЕЗ скруглений -->
+                            <!-- 1. Стиль для ввода текста (оранжевое/зеленое подчеркивание без синевы) -->
+                            <Style x:Key="ColumnFocusStyle" TargetType="TextBox">
+                                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TextBox">
+                                            <Border Background="Transparent" 
+                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                            BorderThickness="{TemplateBinding BorderThickness}" 
+                                            CornerRadius="0">
+                                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+
+                            <!-- 2. Стиль ячейки (убирает системное синее скругление) -->
                             <Style TargetType="DataGridCell">
-                                <Setter Property="BorderThickness" Value="0"/>
                                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="BorderThickness" Value="0"/>
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="DataGridCell">
-                                            <!-- CornerRadius="0" - ГАРАНТИЯ ОСТРЫХ УГЛОВ -->
+                                            <!-- CornerRadius="0" делает углы острыми -->
                                             <Border Background="{TemplateBinding Background}" CornerRadius="0">
                                                 <ContentPresenter VerticalAlignment="Center" />
                                             </Border>
@@ -106,19 +123,11 @@
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
-
-                            <!-- 2. ИСПРАВЛЯЕМ СИНЮЮ РАМКУ ПРИ ПЕЧАТИ: теперь она будет подчеркиванием цвета темы -->
-                            <Style x:Key="ColumnFocusStyle" TargetType="TextBox">
-                                <Setter Property="BorderThickness" Value="0,0,0,2"/>
-                                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
-                                <Setter Property="Background" Value="Transparent"/>
-                            </Style>
                         </DataGrid.Resources>
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="{DynamicResource AdminPanelIdColumn}" Binding="{Binding Id}" IsReadOnly="True" Width="40"/>
 
-                            <!-- Применяем EditingElementStyle, чтобы фокус был оранжевым/зеленым -->
                             <DataGridTextColumn Header="{DynamicResource FullName}" Binding="{Binding FullName}" Width="*" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
                             <DataGridTextColumn Header="{DynamicResource Email}" Binding="{Binding Email}" Width="*" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
                             <DataGridTextColumn Header="{DynamicResource Login}"  Binding="{Binding Login}" Width="*" EditingElementStyle="{StaticResource ColumnFocusStyle}"/>
@@ -132,7 +141,7 @@
                                 <DataGridTemplateColumn.CellEditingTemplate>
                                     <DataTemplate>
                                         <ComboBox SelectedValue="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              SelectedValuePath="Tag" VerticalContentAlignment="Center" Height="30">
+                                          SelectedValuePath="Tag" VerticalContentAlignment="Center" Height="30">
                                             <ComboBoxItem Content="Клиент" Tag="{x:Static models:UserRole.Client}"/>
                                             <ComboBoxItem Content="Тренер" Tag="{x:Static models:UserRole.Coach}"/>
                                             <ComboBoxItem Content="Админ" Tag="{x:Static models:UserRole.Admin}"/>
@@ -151,21 +160,20 @@
                             <DataGridTemplateColumn Header="{DynamicResource AdminPanelActionsColumn}" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <!-- КНОПКА: Удалил BorderThickness, убрал CornerRadius, уменьшил отступы -->
+                                        <!-- КНОПКА: Без контура, острые углы, текст влазит -->
                                         <Button Content="{DynamicResource DeleteButton}" 
-                            Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
-                            CommandParameter="{Binding}"
-                            Background="{DynamicResource PrimaryRedBrush}" 
-                            Foreground="White"
-                            BorderThickness="0" 
-                            FontSize="11" 
-                            Padding="0" 
-                            Margin="5,4"
-                            Height="24" 
-                            Width="85"
-                            HorizontalAlignment="Center">
+                                        Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                        CommandParameter="{Binding}"
+                                        Background="{DynamicResource PrimaryRedBrush}" 
+                                        Foreground="White"
+                                        BorderThickness="0" 
+                                        FontSize="11" 
+                                        Padding="0" 
+                                        Margin="5,4"
+                                        Height="24" 
+                                        Width="85"
+                                        HorizontalAlignment="Center">
                                             <Button.Resources>
-                                                <!-- Убираем скругление внутри кнопки -->
                                                 <Style TargetType="Border">
                                                     <Setter Property="CornerRadius" Value="0"/>
                                                 </Style>
@@ -179,7 +187,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        
+
         <!-- Кнопки управления -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <Button Content="{DynamicResource AdminPanelRefreshButton}" 

@@ -136,30 +136,33 @@ namespace WPF_FitnessClub.ViewModels
                 IsLoading = true;
                 List<string> validationErrors = new List<string>();
 
-                // 1. Валидация названия
-                /*string namePattern = @"^[a-zA-Zа-яА-ЯёЁ\s\(\)0-9\-]+$";
-                if (string.IsNullOrEmpty(Name?.Trim()))
-                    validationErrors.Add((string)Application.Current.Resources["NameRequired"]);
-                else if (!Regex.IsMatch(Name, namePattern))
-                    validationErrors.Add((string)Application.Current.Resources["InvalidName"]);
-				*/
+                // 1. Валидация названия (раскомментировал и поправил)
+                if (string.IsNullOrWhiteSpace(Name))
+                {
+                    validationErrors.Add("Введите название абонемента");
+                }
+
                 // 2. Валидация цены
                 decimal priceValue = 0;
                 string normalizedPrice = Price?.Replace(',', '.');
-                if (string.IsNullOrEmpty(Price?.Trim()) || !decimal.TryParse(normalizedPrice, out priceValue) || priceValue < 0)
-                    validationErrors.Add((string)Application.Current.Resources["InvalidPrice"]);
+                if (string.IsNullOrEmpty(Price?.Trim()) || !decimal.TryParse(normalizedPrice, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out priceValue) || priceValue < 0)
+                    validationErrors.Add("Некорректная цена");
 
                 // 3. Валидация описания и картинки
-                if (string.IsNullOrEmpty(Description?.Trim())) validationErrors.Add((string)Application.Current.Resources["EnterDescription"]);
-                if (string.IsNullOrEmpty(ImagePath?.Trim())) validationErrors.Add((string)Application.Current.Resources["EmptyImagePath"]);
+                if (string.IsNullOrEmpty(Description?.Trim())) validationErrors.Add("Введите описание");
+                if (string.IsNullOrEmpty(ImagePath?.Trim())) validationErrors.Add("Выберите изображение");
 
                 // 4. ОЧИСТКА ВЫБОРА (Тип и Длительность)
-                // Если в ComboBox попал объект ComboBoxItem, превращаем его в строку
-                string finalType = SubscriptionType?.ToString().Replace("System.Windows.Controls.ComboBoxItem: ", "").Trim();
-                string finalDuration = Duration?.ToString().Replace("System.Windows.Controls.ComboBoxItem: ", "").Trim();
+                // Используем универсальный метод получения текста из ComboBoxItem
+                string GetValue(string input) => input?.Replace("System.Windows.Controls.ComboBoxItem: ", "").Trim();
 
-                if (string.IsNullOrEmpty(finalDuration)) validationErrors.Add((string)Application.Current.Resources["EmptyDuration"]);
-                if (string.IsNullOrEmpty(finalType)) validationErrors.Add((string)Application.Current.Resources["EmptySubscriptionType"]);
+                string finalType = GetValue(SubscriptionType);
+                string finalDuration = GetValue(Duration);
+
+                if (string.IsNullOrEmpty(finalDuration) || finalDuration == "Все")
+                    validationErrors.Add("Выберите длительность");
+                if (string.IsNullOrEmpty(finalType) || finalType == "Все")
+                    validationErrors.Add("Выберите тип подписки");
 
                 // 5. Вывод ошибок
                 if (validationErrors.Count > 0)
@@ -177,8 +180,8 @@ namespace WPF_FitnessClub.ViewModels
                     Price = priceValue,
                     Description = Description.Trim(),
                     ImagePath = ImagePath,
-                    Duration = finalDuration,      // ТЕПЕРЬ ТУТ ЧИСТАЯ СТРОКА
-                    SubscriptionType = finalType,  // И ТУТ ТОЖЕ
+                    Duration = finalDuration,
+                    SubscriptionType = finalType,
                     Reviews = new List<Review>()
                 };
 
@@ -189,8 +192,7 @@ namespace WPF_FitnessClub.ViewModels
                 {
                     NewSubscription.Id = subscriptionId;
                     MessageBox.Show("Абонемент успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                    
-					CloseRequested?.Invoke(true, NewSubscription);
+                    CloseRequested?.Invoke(true, NewSubscription);
                 }
                 else
                 {

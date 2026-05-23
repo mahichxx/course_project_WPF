@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>shawerma.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\dumbbell.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
@@ -314,8 +314,8 @@
     <Content Include="Images\yoga.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\dumbbell.ico" />
     <Resource Include="Resources\arrow.cur" />
-    <Resource Include="Resources\shawerma.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="shawerma.ico" />

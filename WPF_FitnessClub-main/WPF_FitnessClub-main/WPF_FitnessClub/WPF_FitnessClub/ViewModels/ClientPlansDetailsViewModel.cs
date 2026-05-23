@@ -94,6 +94,7 @@ namespace WPF_FitnessClub.ViewModels
             {
                 _selectedWorkoutPlan = value;
                 OnPropertyChanged("SelectedWorkoutPlan");
+                System.Windows.Input.CommandManager.InvalidateRequerySuggested();
             }
         }
 
@@ -104,6 +105,7 @@ namespace WPF_FitnessClub.ViewModels
             {
                 _selectedNutritionPlan = value;
                 OnPropertyChanged("SelectedNutritionPlan");
+                System.Windows.Input.CommandManager.InvalidateRequerySuggested();
             }
         }
      
@@ -241,8 +243,8 @@ namespace WPF_FitnessClub.ViewModels
             set
             {
                 _isWorkoutPlanEditMode = value;
-                OnPropertyChanged("IsWorkoutPlanEditMode");
-                OnPropertyChanged("IsWorkoutPlanViewMode");
+                OnPropertyChanged(nameof(IsWorkoutPlanEditMode));
+                System.Windows.Input.CommandManager.InvalidateRequerySuggested();
             }
         }
         

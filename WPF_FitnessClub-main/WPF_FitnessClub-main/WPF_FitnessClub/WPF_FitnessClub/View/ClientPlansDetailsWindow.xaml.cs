@@ -26,9 +26,10 @@ namespace WPF_FitnessClub.View
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DataContext is ClientPlansDetailsViewModel viewModel)
+            if (this.DataContext is ClientPlansDetailsViewModel vm)
             {
-                viewModel.LoadClientPlans();
+                vm.LoadClientPlans();
+                MessageBox.Show("Данные успешно обновлены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

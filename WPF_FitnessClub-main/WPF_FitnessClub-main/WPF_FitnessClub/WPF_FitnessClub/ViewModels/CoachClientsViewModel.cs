@@ -25,7 +25,9 @@ namespace WPF_FitnessClub.ViewModels
         private Dictionary<int, DateTime> _clientAssignmentDates;
         
         private SortType _currentSortType = SortType.ByName;
-        
+
+        public bool IsAllClientsTab => SelectedTabIndex == 1;
+
         public enum SortType
         {
             ByName,
@@ -96,11 +98,7 @@ namespace WPF_FitnessClub.ViewModels
             {
                 _selectedTabIndex = value;
                 OnPropertyChanged(nameof(SelectedTabIndex));
-                
-                if (_selectedTabIndex == 1)
-                {
-                    LoadAvailableClients();
-                }
+                OnPropertyChanged(nameof(IsAllClientsTab)); // Чтобы кнопки переключались
             }
         }
         

@@ -165,13 +165,16 @@ namespace WPF_FitnessClub.View
 				_viewModel.CurrentPassword = SecurityCurrentPasswordInput.Text;
 		}
 
-		private void NewPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-		{
-			if (_viewModel != null)
-				_viewModel.NewPassword = SecurityNewPasswordInput.Password;
-		}
+        private void NewPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.NewPassword = SecurityNewPasswordInput.Password;
+                _viewModel.OnPropertyChanged("Password");
+            }
+        }
 
-		private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
 		{
 			if (_viewModel != null)
 				_viewModel.ConfirmPassword = SecurityConfirmPasswordInput.Password;
