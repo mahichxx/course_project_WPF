@@ -26,16 +26,68 @@
 
         <!-- Кнопки смены языка -->
         <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Margin="0,15,15,0">
-            <Button x:Name="RussianButton" Style="{DynamicResource LanguageButton}" 
-                    Click="RussianButton_Click" Content="RU"
-                    ToolTip="Переключить на русский язык" />
-            <Button x:Name="EnglishButton" Style="{DynamicResource LanguageButton}" 
-                    Click="EnglishButton_Click" Content="EN"
-                    ToolTip="Switch to English language" />
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,15,15,0">
+
+            <!-- Кнопка RU -->
+            <Button x:Name="RussianButton" Click="RussianButton_Click" Content="RU" Width="45" Height="30" Margin="5,0" Foreground="White">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="2" CornerRadius="8" BorderBrush="Transparent">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryRedBrush}"/>
+                                            <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                        </Trigger>
+                                        <Trigger Property="Tag" Value="Active">
+                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryRedBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="White"/>
+                                            <Setter TargetName="border" Property="Opacity" Value="1.0"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Кнопка EN -->
+            <Button x:Name="EnglishButton" Click="EnglishButton_Click" Content="EN" Width="45" Height="30" Foreground="White">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="2" CornerRadius="8" BorderBrush="Transparent">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryRedBrush}"/>
+                                            <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                        </Trigger>
+                                        <Trigger Property="Tag" Value="Active">
+                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryRedBrush}"/>
+                                            <Setter TargetName="border" Property="BorderBrush" Value="White"/>
+                                            <Setter TargetName="border" Property="Opacity" Value="1.0"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
 
         <!-- ГЛАВНЫЙ ОРАНЖЕВЫЙ/ЗЕЛЕНЫЙ БОКС -->

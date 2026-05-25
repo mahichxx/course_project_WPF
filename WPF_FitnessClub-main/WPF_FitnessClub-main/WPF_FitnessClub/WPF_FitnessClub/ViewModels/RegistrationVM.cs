@@ -241,124 +241,133 @@ namespace WPF_FitnessClub.ViewModels
 			return defaultUsers;
 		}
 
-		private void ExecuteEnterCommand(object parameter)
-		{
-			PasswordBox passwordBox = parameter as PasswordBox;
-			
-			if (passwordBox == null)
-			{
-				System.Diagnostics.Debug.WriteLine("PasswordBox не найден");
-				return;
-			}
-			
-			if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(passwordBox.Password))
-			{
-				ShowWarning("PleaseEnterLoginPass");
-				return;
-			}
-			
-			User foundUser = null;
-			
-			if (_databaseConnectionService.IsDatabaseExists())
-			{
-				System.Diagnostics.Debug.WriteLine("Ищем пользователя в БД");
-				try
-				{
-					foundUser = _userService.GetByLogin(Login);
-					
-					if (foundUser != null)
-					{
-						System.Diagnostics.Debug.WriteLine($"Пользователь найден в БД: {foundUser.Login}");
-						
-						if (foundUser.IsBlocked)
-						{
-							System.Diagnostics.Debug.WriteLine("Пользователь заблокирован");
-							ShowWarning("UserBlocked");
-							return;
-						}
-						
-						if (foundUser.Password == passwordBox.Password)
-						{
-							System.Diagnostics.Debug.WriteLine("Пароль верный, выполняем вход");
-							
-							string roleName = GetRoleNameInCurrentLanguage(foundUser.Role);
-							string welcomeMessage = string.Format(
-								(string)Application.Current.Resources["WelcomeUser"],
-								foundUser.Login,
-								roleName);
-							
-							MessageBox.Show(
-								welcomeMessage,
-								(string)Application.Current.Resources["SuccessTitle"],
-								MessageBoxButton.OK,
-								MessageBoxImage.Information);
-							
-							OpenMainWindow(foundUser);
-							return;
-						}
-						else
-						{
-							System.Diagnostics.Debug.WriteLine("Неверный пароль");
-							ShowWarning("InvalidLoginCredentials");
-							return;
-						}
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine("Пользователь не найден в БД");
-					}
-				}
-				catch (Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine($"Ошибка при поиске пользователя в БД: {ex.Message}");
-				}
-			}
-			
-			System.Diagnostics.Debug.WriteLine("Ищем пользователя в локальном списке");
-			foundUser = _users.FirstOrDefault(u => u.Login == Login);
-			
-			if (foundUser != null)
-			{
-				System.Diagnostics.Debug.WriteLine($"Пользователь найден в локальном списке: {foundUser.Login}");
-				
+        private void ExecuteEnterCommand(object parameter)
+        {
+            PasswordBox passwordBox = parameter as PasswordBox;
 
-				if (foundUser.IsBlocked)
-				{
-					System.Diagnostics.Debug.WriteLine("Пользователь заблокирован");
-					ShowWarning("UserBlocked");
-					return;
-				}
-				
-				if (foundUser.Password == passwordBox.Password)
-				{
-					System.Diagnostics.Debug.WriteLine("Пароль верный, выполняем вход");
-					
-					roleName = GetRoleNameInCurrentLanguage(foundUser.Role);
-					welcomeMessage = string.Format(
-						(string)Application.Current.Resources["WelcomeUser"],
-						foundUser.Login,
-						roleName);
-					
-					MessageBox.Show(
-						welcomeMessage,
-						(string)Application.Current.Resources["SuccessTitle"],
-						MessageBoxButton.OK,
-						MessageBoxImage.Information);
-					
-					OpenMainWindow(foundUser);
-					return;
-				}
-				else
-				{
-					System.Diagnostics.Debug.WriteLine("Неверный пароль");
-					ShowWarning("InvalidLoginCredentials");
-					return;
-				}
-			}
-			
-			System.Diagnostics.Debug.WriteLine("Пользователь не найден");
-			ShowWarning("UserNotFound");
-		}
+            if (passwordBox == null)
+            {
+                System.Diagnostics.Debug.WriteLine("PasswordBox не найден");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(passwordBox.Password))
+            {
+                ShowWarning("PleaseEnterLoginPass");
+                return;
+            }
+
+            User foundUser = null;
+            string roleName = string.Empty;
+            string welcomeMessage = string.Empty;
+
+            // 1. Поиск в базе данных
+            if (_databaseConnectionService.IsDatabaseExists())
+            {
+                System.Diagnostics.Debug.WriteLine("Ищем пользователя в БД");
+                try
+                {
+                    foundUser = _userService.GetByLogin(Login);
+
+                    if (foundUser != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Пользователь найден в БД: {foundUser.Login}");
+
+                        if (foundUser.IsBlocked)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Пользователь заблокирован");
+                            ShowWarning("UserBlocked");
+                            return;
+                        }
+
+                        if (foundUser.Password == passwordBox.Password)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Пароль верный, выполняем вход");
+
+                            roleName = GetRoleNameInCurrentLanguage(foundUser.Role);
+                            welcomeMessage = string.Format(
+                                (string)Application.Current.Resources["WelcomeUser"],
+                                foundUser.Login,
+                                roleName);
+
+                            MessageBox.Show(
+                                welcomeMessage,
+                                (string)Application.Current.Resources["SuccessTitle"],
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Information);
+
+                            OpenMainWindow(foundUser);
+
+                            // ЗАКРЫВАЕМ ОКНО РЕГИСТРАЦИИ
+                            var regWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w is View.RegistrationView);
+                            regWindow?.Close();
+
+                            return;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Неверный пароль");
+                            ShowWarning("InvalidLoginCredentials");
+                            return;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Ошибка при поиске пользователя в БД: {ex.Message}");
+                }
+            }
+
+            // 2. Поиск в локальном списке (если БД недоступна или пользователь не найден там)
+            System.Diagnostics.Debug.WriteLine("Ищем пользователя в локальном списке");
+            foundUser = _users.FirstOrDefault(u => u.Login == Login);
+
+            if (foundUser != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Пользователь найден в локальном списке: {foundUser.Login}");
+
+                if (foundUser.IsBlocked)
+                {
+                    System.Diagnostics.Debug.WriteLine("Пользователь заблокирован");
+                    ShowWarning("UserBlocked");
+                    return;
+                }
+
+                if (foundUser.Password == passwordBox.Password)
+                {
+                    System.Diagnostics.Debug.WriteLine("Пароль верный, выполняем вход");
+
+                    roleName = GetRoleNameInCurrentLanguage(foundUser.Role);
+                    welcomeMessage = string.Format(
+                        (string)Application.Current.Resources["WelcomeUser"],
+                        foundUser.Login,
+                        roleName);
+
+                    MessageBox.Show(
+                        welcomeMessage,
+                        (string)Application.Current.Resources["SuccessTitle"],
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    OpenMainWindow(foundUser);
+
+                    // ЗАКРЫВАЕМ ОКНО РЕГИСТРАЦИИ
+                    var regWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w is View.RegistrationView);
+                    regWindow?.Close();
+
+                    return;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Неверный пароль");
+                    ShowWarning("InvalidLoginCredentials");
+                    return;
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine("Пользователь не найден");
+            ShowWarning("UserNotFound");
+        }
 
         private void ExecuteRegisterCommand(object parameter)
         {
@@ -369,27 +378,37 @@ namespace WPF_FitnessClub.ViewModels
             RegPassword = passwordBox.Password;
             ConfirmPassword = confirmPasswordBox.Password;
 
-            // Проверка на пустоту
             if (string.IsNullOrEmpty(RegLogin) || string.IsNullOrEmpty(RegPassword) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(FullName))
             {
                 ShowWarning("FillAllFields");
                 return;
             }
 
-            // Пароли должны совпадать
             if (RegPassword != ConfirmPassword) { ShowWarning("PasswordsMismatch"); return; }
 
-            // ВАЛИДАЦИЯ ПАРОЛЯ (мин. 6)
+            // === ИСПРАВЛЕННАЯ ВАЛИДАЦИЯ ПАРОЛЯ (Строго мин. 6) ===
             if (RegPassword.Length < 6) { ShowWarning("PasswordTooShort"); return; }
 
-            // ВАЛИДАЦИЯ ФИО (буквы и 3 слова)
+            // === ИСПРАВЛЕННАЯ ВАЛИДАЦИЯ ФИО (Только буквы и 3 слова) ===
             if (!Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$")) { ShowWarning("FullNameOnlyLetters"); return; }
             string[] nameParts = FullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (RegLogin.ToLower() != "admin" && nameParts.Length != 3) { ShowWarning("FullNameRequireThreeWords"); return; }
 
-            // Дальше твой оригинальный код проверки уникальности в БД...
-            if (!_userService.IsLoginUnique(RegLogin)) { ShowWarning("LoginAlreadyExists"); return; }
-            if (!_userService.IsEmailUnique(Email)) { ShowWarning("EmailAlreadyExists"); return; }
+            // Твой оригинальный код проверки БД
+            bool isLoginUnique = true;
+            bool isEmailUnique = true;
+            if (_databaseConnectionService.IsDatabaseExists())
+            {
+                try
+                {
+                    isLoginUnique = _userService.IsLoginUnique(RegLogin);
+                    isEmailUnique = _userService.IsEmailUnique(Email);
+                }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"Ошибка БД: {ex.Message}"); }
+            }
+
+            if (!isLoginUnique) { ShowWarning("LoginAlreadyExists"); return; }
+            if (!isEmailUnique) { ShowWarning("EmailAlreadyExists"); return; }
 
             var newUser = new User(FullName, Email, RegLogin, RegPassword, UserRole.Client);
             if (_userService.Add(newUser) > 0)
@@ -398,7 +417,6 @@ namespace WPF_FitnessClub.ViewModels
                 OpenMainWindow(newUser);
             }
         }
-
         private bool IsValid(string input, string pattern, string errorKey)
 		{
 			if (!Regex.IsMatch(input, pattern))

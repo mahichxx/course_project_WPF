@@ -25,24 +25,15 @@ namespace WPF_FitnessClub.View
 		private RegistrationVM _viewModel;
 		private const int MaxPasswordLength = 30;
 
-		public RegistrationView()
-		{
-			InitializeComponent();
+        public RegistrationView()
+        {
+            InitializeComponent();
+            _viewModel = new RegistrationVM();
+            this.DataContext = _viewModel;
 
-			_viewModel = new RegistrationVM();
-			DataContext = _viewModel;
+            RussianButton.Tag = "Active";
+        }
 
-			PasswordInput.PasswordChanged += PasswordInput_PasswordChanged;
-			RegPasswordInput.PasswordChanged += RegPasswordInput_PasswordChanged;
-			ConfirmPasswordInput.PasswordChanged += ConfirmPasswordInput_PasswordChanged;
-
-			_viewModel.RequestClose += (s, e) => this.Close();
-            
-            LanguageManager.Instance.LanguageChanged += LanguageManager_LanguageChanged;
-            
-            UpdateLanguageButtonsAppearance();
-		}
-        
         private void LanguageManager_LanguageChanged(object sender, string cultureName)
         {
             UpdateLanguageButtonsAppearance();
@@ -120,12 +111,18 @@ namespace WPF_FitnessClub.View
 		private void RussianButton_Click(object sender, RoutedEventArgs e)
 		{
 			LanguageManager.Instance.ChangeLanguage("ru-RU");
-		}
+
+            RussianButton.Tag = "Active";
+            EnglishButton.Tag = "Inactive";
+        }
 
 		private void EnglishButton_Click(object sender, RoutedEventArgs e)
 		{
 			LanguageManager.Instance.ChangeLanguage("en-US");
-		}
+
+            EnglishButton.Tag = "Active";
+            RussianButton.Tag = "Inactive";
+        }
 
 		private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
@@ -144,5 +141,7 @@ namespace WPF_FitnessClub.View
             LanguageManager.Instance.LanguageChanged -= LanguageManager_LanguageChanged;
             base.OnClosed(e);
         }
+
+
 	}
 }

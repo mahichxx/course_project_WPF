@@ -237,11 +237,89 @@ namespace WPF_FitnessClub.View
 			ThemeManager.Instance.PropertyChanged -= ThemeManager_PropertyChanged;
 			_viewModel.LanguageChanged -= OnLanguageChanged;
 		}
+        // 1. Запрещаем вводить что-либо, кроме букв и пробелов в ФИО
+        private void FullNameTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Разрешаем только буквы (рус/англ) и пробелы
+            Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁ\s]+$");
+            if (!regex.IsMatch(e.Text))
+            {
+                e.Handled = true; // Блокирует ввод цифр
+            }
+        }
+
+        private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(String)))
+            {
+                String text = (String)e.DataObject.GetData(typeof(String));
+                if (new Regex("[^0-9]+").IsMatch(text))
+                {
+                    e.CancelCommand();
+                }
+            }
+            else
+            {
+                e.CancelCommand();
+            }
+        }
+
+        // 3. Запрет вставки (Paste) некорректного текста через Ctrl+V
+        private void TextBox_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Command == ApplicationCommands.Paste)
+            {
+                e.Handled = true; // Отключаем вставку, чтобы не протащили буквы в числа
+            }
+        }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             // Разрешаем только цифры
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+        // 1. Валидация для ВЕСА (разрешаем ОДИН разделитель и 3 знака после него)
+        private void WeightValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // Разрешаем только цифры, точку и запятую
+            Regex regex = new Regex(@"^[0-9]|[.,]$");
+            if (!regex.IsMatch(e.Text))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            string currentText = textBox.Text;
+
+            // Проверка на повторный ввод разделителя
+            if ((e.Text == "." || e.Text == ",") && (currentText.Contains(".") || currentText.Contains(",")))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Ограничение: максимум 3 цифры после разделителя
+            int delimiterIndex = currentText.IndexOf('.') != -1 ? currentText.IndexOf('.') : currentText.IndexOf(',');
+            if (delimiterIndex != -1 && textBox.CaretIndex > delimiterIndex)
+            {
+                string decimals = currentText.Substring(delimiterIndex + 1);
+                if (decimals.Length >= 3)
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        }
+
+        // 2. Валидация для РОСТА и ВОЗРАСТА (Только цифры, без точек)
+        private void IntegerValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+"); // Только цифры 0-9
+            e.Handled = regex.IsMatch(e.Text);
+        }
     }
 }
+

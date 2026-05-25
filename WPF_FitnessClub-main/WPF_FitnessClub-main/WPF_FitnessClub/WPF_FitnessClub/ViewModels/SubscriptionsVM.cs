@@ -95,33 +95,29 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
-		public string MinCost
-		{
-			get => _minCost;
-			set
-			{
-				_minCost = value;
-				OnPropertyChanged(nameof(MinCost));
-				_isFiltersApplied = true;
-				ValidateAndCorrectPrices();
-				ApplyFilters();
-			}
-		}
+        public string MinCost
+        {
+            get => _minCost;
+            set
+            {
+                _minCost = value?.Replace(',', '.');
+                OnPropertyChanged(nameof(MinCost));
+                ApplyFilters();
+            }
+        }
 
-		public string MaxCost
-		{
-			get => _maxCost;
-			set
-			{
-				_maxCost = value;
-				OnPropertyChanged(nameof(MaxCost));
-				_isFiltersApplied = true;
-				ValidateAndCorrectPrices();
-				ApplyFilters();
-			}
-		}
+        public string MaxCost
+        {
+            get => _maxCost;
+            set
+            {
+                _maxCost = value?.Replace(',', '.');
+                OnPropertyChanged(nameof(MaxCost));
+                ApplyFilters();
+            }
+        }
 
-		public ComboBoxItem SelectedType
+        public ComboBoxItem SelectedType
 		{
 			get => _selectedType;
 			set
@@ -289,41 +285,96 @@ namespace WPF_FitnessClub.ViewModels
         {
             try
             {
-                if (_allSubscriptions == null) return;
+                if (_allSubscriptions == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("ApplyFilters: Список всех абонементов пуст (_allSubscriptions == null).");
+                    return;
+                }
 
+                System.Diagnostics.Debug.WriteLine("ApplyFilters: Начало фильтрации...");
+
+                // Создаем запрос на основе всех абонементов
                 var filtered = _allSubscriptions.AsQueryable();
 
-                // 1. Поиск по тексту
+                // 1. Поиск по тексту (названию)
                 if (!string.IsNullOrEmpty(SearchText))
                 {
-                    filtered = filtered.Where(s => s.Name.ToLower().Contains(SearchText.ToLower()));
+                    string searchLower = SearchText.ToLower();
+                    filtered = filtered.Where(s => s.Name != null && s.Name.ToLower().Contains(searchLower));
+                    System.Diagnostics.Debug.WriteLine($"ApplyFilters: Применен поиск по тексту: '{SearchText}'");
                 }
 
-                // 2. Цена
-                if (decimal.TryParse(MinCost, out decimal min)) filtered = filtered.Where(s => s.Price >= min);
-                if (decimal.TryParse(MaxCost, out decimal max)) filtered = filtered.Where(s => s.Price <= max);
+                // 2. Фильтрация по минимальной цене
+                // Используем InvariantCulture, чтобы TryParse всегда понимал точку как разделитель дробной части
+                if (decimal.TryParse(MinCost, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal min))
+                {
+                    filtered = filtered.Where(s => s.Price >= min);
+                    System.Diagnostics.Debug.WriteLine($"ApplyFilters: Применен фильтр 'Цена от': {min}");
+                }
 
-                // 3. ТИП (через прямое сравнение выбранного элемента)
+                // 3. Фильтрация по максимальной цене
+                if (decimal.TryParse(MaxCost, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal max))
+                {
+                    filtered = filtered.Where(s => s.Price <= max);
+                    System.Diagnostics.Debug.WriteLine($"ApplyFilters: Применен фильтр 'Цена до': {max}");
+                }
+
+                // 4. Фильтрация по ТИПУ абонемента
+                // Проверяем, что ключ не пустой и не равен значению по умолчанию "All"
                 if (!string.IsNullOrEmpty(SelectedTypeKey) && SelectedTypeKey != "All")
                 {
-                    // Сравниваем ключ из фильтра (например, "Group") 
-                    // с ключом из базы данных (там тоже должно быть "Group")
                     filtered = filtered.Where(s => s.SubscriptionType == SelectedTypeKey);
+                    System.Diagnostics.Debug.WriteLine($"ApplyFilters: Применен фильтр по типу: '{SelectedTypeKey}'");
                 }
 
-                // 4. ДЛИТЕЛЬНОСТЬ (ГЛАВНЫЙ ИСПРАВЛЕННЫЙ БЛОК)
+                // 5. Фильтрация по ДЛИТЕЛЬНОСТИ
                 if (!string.IsNullOrEmpty(SelectedDurationKey) && SelectedDurationKey != "All")
                 {
-                    // Теперь мы сравниваем КЛЮЧ (Visit32) с тем, что лежит в БД (тоже Visit32)
                     filtered = filtered.Where(s => s.Duration == SelectedDurationKey);
+                    System.Diagnostics.Debug.WriteLine($"ApplyFilters: Применен фильтр по длительности: '{SelectedDurationKey}'");
                 }
 
-                FilteredSubscriptions = new ObservableCollection<Subscription>(filtered.ToList());
+                // Выполняем запрос и обновляем коллекцию для отображения в интерфейсе
+                var result = filtered.ToList();
+                FilteredSubscriptions = new ObservableCollection<Subscription>(result);
+
+                System.Diagnostics.Debug.WriteLine($"ApplyFilters: Фильтрация успешно завершена. Отображено элементов: {FilteredSubscriptions.Count}");
             }
-            catch (Exception ex) { System.Diagnostics.Debug.WriteLine("Ошибка фильтра: " + ex.Message); }
-        } 
+            catch (Exception ex)
+            {
+                // Логируем ошибку, но не прерываем работу приложения
+                System.Diagnostics.Debug.WriteLine("ApplyFilters: Ошибка при выполнении фильтрации: " + ex.Message);
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("ApplyFilters: Внутренняя ошибка: " + ex.InnerException.Message);
+                }
+            }
+        }
 
+        public void ValidatePriceRange()
+        {
+            if (decimal.TryParse(MinCost, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal minVal) &&
+                decimal.TryParse(MaxCost, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal maxVal))
+            {
+                if (minVal > maxVal)
+                {
+                    string errorMsg = Application.Current.FindResource("InvalidPriceRange") as string;
+                    string errorTitle = Application.Current.FindResource("ValidationError") as string;
 
+                    MessageBox.Show(errorMsg, errorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    // Меняем местами
+                    string temp = _minCost;
+                    _minCost = _maxCost;
+                    _maxCost = temp;
+
+                    OnPropertyChanged(nameof(MinCost));
+                    OnPropertyChanged(nameof(MaxCost));
+
+                    ApplyFilters(); // Перефильтруем после перестановки
+                }
+            }
+        }
         private string GetCurrentLanguage()
 		{
 			try

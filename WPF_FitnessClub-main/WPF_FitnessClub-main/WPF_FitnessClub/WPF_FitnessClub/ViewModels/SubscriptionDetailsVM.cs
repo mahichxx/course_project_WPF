@@ -49,6 +49,10 @@ namespace WPF_FitnessClub.ViewModels
 		private bool _canSubscribe;
 		private bool _canReviewSubscription;
 
+        private string _origName, _origDesc, _origImagePath, _origType, _origDuration;
+        private decimal _origPrice;
+
+
         private readonly Dictionary<string, string> _typeTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
 			// { "То, что написано в меню", "То, что лежит в Базе (Ключ)" }
@@ -236,16 +240,20 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
-        public string LocalizedType
-        {
-            get => _currentSubscription?.LocalizedType;
-            set { _currentSubscription.LocalizedType = value; OnPropertyChanged("LocalizedType"); }
-        }
+        public string LocalizedType => _currentSubscription?.LocalizedType;
 
         public string Duration
         {
-            get => _currentSubscription?.Duration; // Привязываем к ключу для ComboBox
-            set { _currentSubscription.Duration = value; OnPropertyChanged("Duration"); OnPropertyChanged("LocalizedDuration"); }
+            get => _currentSubscription?.Duration;
+            set
+            {
+                if (_currentSubscription != null && _currentSubscription.Duration != value)
+                {
+                    _currentSubscription.Duration = value;
+                    OnPropertyChanged(nameof(Duration));
+                    OnPropertyChanged(nameof(LocalizedDuration));
+                }
+            }
         }
 
         public string LocalizedDuration => _currentSubscription?.LocalizedDuration;
@@ -256,12 +264,14 @@ namespace WPF_FitnessClub.ViewModels
             set
             {
                 _isEditMode = value;
-                OnPropertyChanged("IsEditMode");
-                OnPropertyChanged("ViewModeVisible");
-                OnPropertyChanged("EditModeVisible");
-                OnPropertyChanged("AdminEditVisible");
+                OnPropertyChanged(nameof(IsEditMode));
+                OnPropertyChanged(nameof(ViewModeVisible));
+                OnPropertyChanged(nameof(EditModeVisible));
+                OnPropertyChanged(nameof(AdminEditVisible));
+                OnPropertyChanged(nameof(CanSubscribeVisible));
             }
         }
+
 
         public string ReviewComment
 		{
@@ -373,6 +383,21 @@ namespace WPF_FitnessClub.ViewModels
             MessageBox.Show("Для ввода текста ответа нужно создать окно ввода. Пока эта функция просто выводит это сообщение.",
                             "Техническое сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        public string SubscriptionType
+        {
+            get => _currentSubscription?.SubscriptionType;
+            set
+            {
+                if (_currentSubscription != null && _currentSubscription.SubscriptionType != value)
+                {
+                    _currentSubscription.SubscriptionType = value;
+                    OnPropertyChanged(nameof(SubscriptionType));
+                    // Пинкаем LocalizedType, чтобы текст на экране обновился
+                    OnPropertyChanged(nameof(LocalizedType));
+                }
+            }
+        }
         #endregion
 
         #region Команды
@@ -435,16 +460,19 @@ namespace WPF_FitnessClub.ViewModels
         #region Методы команд
         private void ExecuteEdit(object parameter)
         {
-            // 1. Перед началом редактирования синхронизируем поля VM с моделью
+            // 1. Создаем бэкап КЛЮЧЕЙ, а не перевода
+            _origName = _currentSubscription.Name;
+            _origDesc = _currentSubscription.Description;
+            _origPrice = _currentSubscription.Price;
+            _origImagePath = _currentSubscription.ImagePath;
+            _origType = _currentSubscription.SubscriptionType;
+            _origDuration = _currentSubscription.Duration;
+
+            // 2. Переносим данные в поля ввода
             LoadDetails();
 
-            // 2. Включаем режим (это откроет ComboBox и TextBox)
+            // 3. Включаем режим
             IsEditMode = true;
-
-            // 3. Пинкаем кнопки, чтобы они пересчитали свою видимость
-            OnPropertyChanged("EditModeVisible");
-            OnPropertyChanged("ViewModeVisible");
-            OnPropertyChanged("AdminEditVisible");
         }
 
         private string GetTypeResourceKey(string subscriptionType)
@@ -481,58 +509,69 @@ namespace WPF_FitnessClub.ViewModels
 		{
 			return true;
 		}
-
         private void ExecuteSave(object parameter)
         {
             try
             {
                 IsLoading = true;
 
-                // 1. ПЕРЕНОСИМ ДАННЫЕ ИЗ ПОЛЕЙ ВВОДА В МОДЕЛЬ
+                // 1. Синхронизируем данные
                 _currentSubscription.Name = SubscrName;
                 _currentSubscription.Description = Description;
-                _currentSubscription.Price = decimal.Parse(Price.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
-
-                // ОБЯЗАТЕЛЬНО ОБНОВЛЯЕМ ПУТЬ К ФОТО
                 _currentSubscription.ImagePath = ImagePath;
-
-                _currentSubscription.SubscriptionType = LocalizedType;
+                _currentSubscription.SubscriptionType = SubscriptionType;
                 _currentSubscription.Duration = Duration;
 
-                // 2. СОХРАНЯЕМ В БАЗУ
-                bool isSuccess = _subscriptionService.Update(_currentSubscription);
-
-                if (isSuccess)
+                if (decimal.TryParse(Price.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal p))
                 {
-                    IsEditMode = false;
-
-                    // 3. ОБНОВЛЯЕМ ГЛАВНЫЙ ЭКРАН (СИНХРОНИЗАЦИЯ)
-                    if (_mainWindow != null)
-                    {
-                        // Ищем этот же абонемент в списке на главной странице
-                        var mainSub = _mainWindow.subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
-                        if (mainSub != null)
-                        {
-                            // Обновляем данные в объекте, который видит главная страница
-                            mainSub.Name = _currentSubscription.Name;
-                            mainSub.Price = _currentSubscription.Price;
-                            mainSub.ImagePath = _currentSubscription.ImagePath; // ФОТО
-                            mainSub.SubscriptionType = _currentSubscription.SubscriptionType;
-                        }
-
-                        // Даем команду главному окну перерисовать список
-                        _mainWindow.UpdateUIWithSubscriptions(_mainWindow.subscriptions);
-                    }
-
-                    LoadDetails(); // Обновляем текущее окно
-                    MessageBox.Show("Данные успешно сохранены!", "Успех");
+                    _currentSubscription.Price = p;
                 }
+
+                // 2. Просто вызываем обновление. 
+                // Если в БД что-то пойдет не так (ошибка связи, валидация БД), программа уйдет в блок catch.
+                _subscriptionService.Update(_currentSubscription);
+
+                // 3. Обновляем "бэкап" (снимки)
+                _origName = _currentSubscription.Name;
+                _origDesc = _currentSubscription.Description;
+                _origPrice = _currentSubscription.Price;
+                _origImagePath = _currentSubscription.ImagePath;
+                _origType = _currentSubscription.SubscriptionType;
+                _origDuration = _currentSubscription.Duration;
+
+                // 4. Синхронизация с главным окном
+                if (_mainWindow != null && _mainWindow.subscriptions != null)
+                {
+                    var mainSub = _mainWindow.subscriptions.FirstOrDefault(s => s.Id == _currentSubscription.Id);
+                    if (mainSub != null)
+                    {
+                        mainSub.Name = _currentSubscription.Name;
+                        mainSub.Price = _currentSubscription.Price;
+                        mainSub.ImagePath = _currentSubscription.ImagePath;
+                        mainSub.SubscriptionType = _currentSubscription.SubscriptionType;
+                        mainSub.Duration = _currentSubscription.Duration;
+                        mainSub.Description = _currentSubscription.Description;
+                    }
+                    _mainWindow.UpdateUIWithSubscriptions(_mainWindow.subscriptions);
+                }
+
+                // 5. Сначала выключаем индикаторы и режим, чтобы UI "отпустило"
+                IsLoading = false;
+                IsEditMode = false;
+                LoadDetails(); // Обновляем текст на экране
+
+                // 6. Показываем успех (теперь это будет происходить всегда, если не было ошибки)
+                MessageBox.Show("Данные успешно сохранены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка сохранения: " + ex.Message);
+                IsLoading = false;
+                MessageBox.Show("Ошибка сохранения: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            finally { IsLoading = false; }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         private void ExecuteDelete(object parameter)
@@ -612,16 +651,23 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
-		private void ExecuteCancel(object parameter)
-		{
-			IsEditMode = false;
-			LoadDetails();
-			OnPropertyChanged(nameof(ViewModeVisible));
-			OnPropertyChanged(nameof(EditModeVisible));
-			OnPropertyChanged(nameof(AdminEditVisible));
-		}
+        // ОТМЕНА (Теперь возвращает всё назад)
+        private void ExecuteCancel(object parameter)
+        {
+            // Возвращаем ключи в модель
+            _currentSubscription.Name = _origName;
+            _currentSubscription.Description = _origDesc;
+            _currentSubscription.Price = _origPrice;
+            _currentSubscription.ImagePath = _origImagePath;
+            _currentSubscription.SubscriptionType = _origType;
+            _currentSubscription.Duration = _origDuration;
 
-		private void ExecuteClose(object parameter)
+            IsEditMode = false;
+            LoadDetails(); // Обновляем экран
+        }
+
+
+        private void ExecuteClose(object parameter)
 		{
 			CloseWindow();
 		}
@@ -847,78 +893,23 @@ namespace WPF_FitnessClub.ViewModels
 
         private void LoadDetails()
         {
-            try
-            {
-                System.Diagnostics.Debug.WriteLine($"LoadDetails: загрузка абонемента с ID {_currentSubscription.Id}");
-
-                // 1. Получаем свежие данные из базы данных
-                var freshSubscription = _subscriptionService.GetById(_currentSubscription.Id);
-                if (freshSubscription != null)
-                {
-                    bool hadReviews = _currentSubscription.Reviews?.Count > 0;
-                    bool hasNewReviews = freshSubscription.Reviews?.Count > 0;
-
-                    if (hadReviews && !hasNewReviews)
-                    {
-                        var currentReviews = _currentSubscription.Reviews;
-                        _currentSubscription = freshSubscription;
-                        _currentSubscription.Reviews = currentReviews;
-                    }
-                    else
-                    {
-                        _currentSubscription = freshSubscription;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Ошибка при загрузке данных абонемента: {ex.Message}");
-            }
-
-            // 2. ЗАПОЛНЯЕМ СВОЙСТВА ДЛЯ ЭКРАНА (синхронизируем VM с моделью)
+            // Синхронизируем простые текстовые поля
             SubscrName = _currentSubscription.Name;
             ImagePath = _currentSubscription.ImagePath;
-            Price = _currentSubscription.Price.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture);
             Description = _currentSubscription.Description;
+            Price = _currentSubscription.Price.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
 
-            // 3. ОБНОВЛЯЕМ ТИП И ДЛИТЕЛЬНОСТЬ (с учетом перевода)
-            Dictionary<string, string> reverseTypeTranslations = GetReverseTypeTranslations();
-            Dictionary<string, string> reverseDurationTranslations = GetReverseDurationTranslations();
+            // Уведомляем UI о том, что нужно перечитать данные из модели
+            OnPropertyChanged(nameof(SubscrName));
+            OnPropertyChanged(nameof(Price));
+            OnPropertyChanged(nameof(Description));
+            OnPropertyChanged(nameof(ImagePath));
 
-            if (!IsEditMode)
-            {
-                // В режиме просмотра превращаем ключ (Unlimited) в слово (Безлимит)
-                LocalizedType = GetLocalizedValue(_currentSubscription.SubscriptionType, reverseTypeTranslations);
-                Duration = GetLocalizedValue(_currentSubscription.Duration, reverseDurationTranslations);
-            }
-            else
-            {
-                // В режиме редактирования берем ресурсы
-                LocalizedType = (string)Application.Current.Resources[GetTypeResourceKey(_currentSubscription.SubscriptionType)];
-                Duration = (string)Application.Current.Resources[GetDurationResourceKey(_currentSubscription.Duration)];
-            }
-
-            // 4. РАБОТА С ОТЗЫВАМИ И РЕЙТИНГОМ
-            if (_currentSubscription.Reviews == null || _currentSubscription.Reviews.Count == 0)
-            {
-                LoadReviews();
-            }
-            else
-            {
-                Reviews = new ObservableCollection<Review>(_currentSubscription.Reviews);
-                CheckIfUserHasReviewed();
-                RecalculateRating();
-            }
-
-            // 5. САМОЕ ВАЖНОЕ: Пинкаем интерфейс, чтобы он всё перерисовал
-            OnPropertyChanged("SubscrName");
-            OnPropertyChanged("Price");
-            LocalizedType = _currentSubscription.SubscriptionType;
-            Duration = _currentSubscription.Duration;
-            OnPropertyChanged("LocalizedType"); // Название в XAML должно быть таким же!
-            OnPropertyChanged("Duration");
-            OnPropertyChanged("Description");
-            OnPropertyChanged("Rating");
+            // ВАЖНО: уведомляем о ключах и их локализованных версиях
+            OnPropertyChanged(nameof(SubscriptionType));
+            OnPropertyChanged(nameof(Duration));
+            OnPropertyChanged(nameof(LocalizedType));
+            OnPropertyChanged(nameof(LocalizedDuration));
         }
 
         private void LoadReviews()
@@ -1062,22 +1053,21 @@ namespace WPF_FitnessClub.ViewModels
                 if (subscribeDialog.ShowDialog() == true && subscribeDialog.Result != null)
                 {
                     var userSub = subscribeDialog.Result;
-                    _canReviewSubscription = true; // Сразу даем право писать отзыв
 
-                    // Пробуем взять текст из ресурсов
+                    // 1. Устанавливаем флаг. Теперь логика свойств видимости изменилась в памяти.
+                    _canReviewSubscription = true;
+
+                    // Логика локализации сообщения (сохраняем твой блок без изменений)
                     string resourceMsg = (string)Application.Current.Resources["SubscriptionSuccessMessage"];
                     string message;
-
                     if (!string.IsNullOrEmpty(resourceMsg))
                     {
-                        // Если ресурс найден, форматируем его
                         message = string.Format(resourceMsg, _currentSubscription.Name,
                                   userSub.PurchaseDate.ToString("dd.MM.yyyy"),
                                   userSub.ExpiryDate.ToString("dd.MM.yyyy"));
                     }
                     else
                     {
-                        // ЗАПАСНОЙ ВАРИАНТ (если окно было пустым)
                         message = $"Успех! Вы записались на абонемент \"{_currentSubscription.Name}\".\n" +
                                   $"Срок: с {userSub.PurchaseDate:dd.MM.yyyy} по {userSub.ExpiryDate:dd.MM.yyyy}.\n" +
                                   $"Теперь вы можете оставить отзыв!";
@@ -1085,8 +1075,18 @@ namespace WPF_FitnessClub.ViewModels
 
                     MessageBox.Show(message, "Запись подтверждена", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    CheckCanSubscribe();
+                    // 2. УВЕДОМЛЯЕМ ИНТЕРФЕЙС ОБ ИЗМЕНЕНИЯХ:
+
+                    // Появится блок "Ваше мнение очень важно"
                     OnPropertyChanged("WriteReviewVisible");
+
+                    // ИСЧЕЗНЕТ блок "Для оставления отзыва необходимо приобрести..." (ЭТОГО НЕ ХВАТАЛО)
+                    OnPropertyChanged("SubscribeToReviewVisible");
+
+                    // Обновляем состояние кнопки "Записаться" внизу окна
+                    CheckCanSubscribe();
+
+                    // Обновляем список в главном окне
                     if (_mainWindow != null) _mainWindow.RefreshUserSubscriptions();
                 }
             }

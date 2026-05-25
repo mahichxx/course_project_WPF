@@ -530,7 +530,11 @@
 
             <!-- Личный кабинет (чтобы не было русских слов) -->
             <s:String x:Key="DailyCaloriesLabel">Daily calorie intake:</s:String>
-    
+
+            <s:String x:Key="InvalidPriceRange">The 'from' value cannot be greater than the 'to' value. Prices have been automatically swapped.</s:String>
+
+            <s:String x:Key="ReviewWillBePostedAsCurrentUser">The review will be posted as the current user</s:String>
+            
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
     

@@ -182,40 +182,50 @@
                              Margin="0,0,0,5" 
                              Style="{StaticResource HeaderTextBlockStyle}" />
 
-                    <Grid>
+                    <Grid Margin="10,5,10,10">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="27*" />
-                            <ColumnDefinition Width="147*" />
-                            <ColumnDefinition Width="16*"/>
+                            <ColumnDefinition Width="30" />
+                            <!-- Для текста "от" и "до" -->
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
+                        <!-- Цена ОТ -->
                         <TextBlock Text="{DynamicResource From}" 
-           HorizontalAlignment="Left" 
-           Foreground="{DynamicResource TextBrush}"
-           Style="{StaticResource CustomTextBlockStyle}"/>
+               Grid.Row="0" Grid.Column="0"
+               HorizontalAlignment="Left" VerticalAlignment="Center"
+               Foreground="{DynamicResource TextBrush}"
+               Style="{StaticResource CustomTextBlockStyle}"/>
 
-                        <TextBox Grid.Column="1" 
-         Margin="10,0,0,10" 
-         Text="{Binding MinCost}" 
-         Style="{StaticResource GeneralTextBoxStyle}"/>
+                        <TextBox x:Name="MinCostInput"
+             Grid.Row="0" Grid.Column="1" 
+             Margin="5,0,0,10" 
+             Text="{Binding MinCost, UpdateSourceTrigger=PropertyChanged}" 
+             PreviewTextInput="PriceTextBox_PreviewTextInput"
+             PreviewKeyDown="PriceTextBox_PreviewKeyDown"
+             TextChanged="PriceTextBox_TextChanged"
+             LostFocus="PriceTextBox_LostFocus"
+             Style="{StaticResource GeneralTextBoxStyle}"/>
 
+                        <!-- Цена ДО -->
                         <TextBlock Text="{DynamicResource To}" 
-           Grid.Row="1" 
-           Foreground="{DynamicResource TextBrush}"
-           HorizontalAlignment="Left" 
-           Style="{StaticResource CustomTextBlockStyle}"/>
+               Grid.Row="1" Grid.Column="0"
+               HorizontalAlignment="Left" VerticalAlignment="Center"
+               Foreground="{DynamicResource TextBrush}"
+               Style="{StaticResource CustomTextBlockStyle}"/>
 
-                        <TextBox Grid.Column="1" 
-         Grid.Row="1" 
-         Margin="10,0,0,10"
-         Text="{Binding MaxCost}" 
-         Style="{StaticResource GeneralTextBoxStyle}"/>
-                    
+                        <TextBox x:Name="MaxCostInput"
+             Grid.Row="1" Grid.Column="1" 
+             Margin="5,0,0,10"
+             Text="{Binding MaxCost, UpdateSourceTrigger=PropertyChanged}" 
+             PreviewTextInput="PriceTextBox_PreviewTextInput"
+             PreviewKeyDown="PriceTextBox_PreviewKeyDown"
+             TextChanged="PriceTextBox_TextChanged"         
+             LostFocus="PriceTextBox_LostFocus"                  
+             Style="{StaticResource GeneralTextBoxStyle}"/>
                     </Grid>
                     <TextBlock Text="{DynamicResource Type}" 
                              Padding="20,20,0,0" 

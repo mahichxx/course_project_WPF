@@ -103,14 +103,10 @@ namespace WPF_FitnessClub.Models
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(SubscriptionType)) return "Обычный";
+                if (string.IsNullOrWhiteSpace(SubscriptionType)) return "---";
+                // Ищем ключ в словаре (Unlimited -> Безлимит)
                 object translated = Application.Current.TryFindResource(SubscriptionType);
                 return translated != null ? translated.ToString() : SubscriptionType;
-            }
-            set
-            {
-                SubscriptionType = value;
-                OnPropertyChanged("LocalizedType");
             }
         }
 
@@ -131,7 +127,12 @@ namespace WPF_FitnessClub.Models
         public string SubscriptionType
         {
             get => subscriptionType;
-            set { subscriptionType = value; OnPropertyChanged(); OnPropertyChanged("LocalizedType"); }
+            set
+            {
+                subscriptionType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(LocalizedType)); // Важно для перерисовки текста
+            }
         }
 
         public virtual List<Review> Reviews
@@ -163,14 +164,9 @@ namespace WPF_FitnessClub.Models
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Duration)) return "1 занятие";
+                if (string.IsNullOrWhiteSpace(Duration)) return "---";
                 object translated = Application.Current.TryFindResource(Duration);
                 return translated != null ? translated.ToString() : Duration;
-            }
-            set
-            {
-                Duration = value;
-                OnPropertyChanged("LocalizedDuration");
             }
         }
 

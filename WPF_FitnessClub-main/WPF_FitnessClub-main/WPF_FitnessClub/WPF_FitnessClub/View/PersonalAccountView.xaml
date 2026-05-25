@@ -69,68 +69,82 @@
 
                     <!-- Вкладка 1: Личная информация -->
                     <TabItem Header="{DynamicResource PersonalInfoTab}" Style="{StaticResource CustomTabItemStyle}">
-                        <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
-                            <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource CustomTextBlockStyle}" />
-                            <TextBox Text="{Binding FullName}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
+                        <StackPanel Width="500" HorizontalAlignment="Center" Margin="0,30,0,30">
 
+                            <!-- ФИО -->
+                            <TextBlock Text="{DynamicResource FullName}" Style="{StaticResource CustomTextBlockStyle}" />
+                            <TextBox Text="{Binding FullName, UpdateSourceTrigger=LostFocus}" 
+                 IsEnabled="{Binding IsEditMode}" 
+                 Style="{StaticResource GeneralTextBoxStyle}"
+                 PreviewTextInput="FullNameTextBox_PreviewTextInput" 
+                 CommandManager.PreviewExecuted="TextBox_PreviewExecuted"/>
+
+                            <!-- ТЕЛЕФОН -->
                             <TextBlock Text="{DynamicResource PhoneLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
                             <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
 
+                            <!-- EMAIL -->
                             <TextBlock Text="{DynamicResource ClientPlansEmailLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
                             <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" 
-         IsEnabled="{Binding IsEditMode}" 
-         Style="{StaticResource GeneralTextBoxStyle}"/>
-                            <!-- Красная надпись об ошибке -->
+                 IsEnabled="{Binding IsEditMode}" 
+                 Style="{StaticResource GeneralTextBoxStyle}"/>
                             <TextBlock Text="{Binding EmailErrorMessage}" 
-           Foreground="Red" FontSize="11" 
-           Visibility="{Binding IsEmailError, Converter={StaticResource BooleanToVisibilityConverter}}"
-           HorizontalAlignment="Left" Margin="0,2,0,0"/>
-                            
-                            <Grid Margin="0,15,0,0">
+                   Foreground="Red" FontSize="11" 
+                   Visibility="{Binding IsEmailError, Converter={StaticResource BooleanToVisibilityConverter}}"
+                   HorizontalAlignment="Left" Margin="0,2,0,0"/>
+
+                            <!-- ПОЛ (вынесен отдельно над физическими данными) -->
+                            <TextBlock Text="{DynamicResource GenderLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
+                            <ComboBox SelectedIndex="{Binding GenderIndex}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomComboBoxStyle}" Height="35">
+                                <ComboBoxItem Content="{DynamicResource Male}"/>
+                                <ComboBoxItem Content="{DynamicResource Female}"/>
+                            </ComboBox>
+                            <!-- СЕТКА: Возраст, Вес, Рост -->
+                            <Grid Margin="0,15,0,0" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Margin="0,0,10,0">
+
+                                <!-- ВОЗРАСТ (Строго целое) -->
+                                <StackPanel Margin="0,0,5,0">
                                     <TextBlock Text="{DynamicResource AgeLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                    <TextBox Text="{Binding Age}" PreviewTextInput="NumberValidationTextBox"  IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
+                                    <TextBox Text="{Binding Age, UpdateSourceTrigger=LostFocus}" 
+                 PreviewTextInput="IntegerValidationTextBox"
+                 IsEnabled="{Binding IsEditMode}" 
+                 Style="{StaticResource GeneralTextBoxStyle}"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{DynamicResource GenderLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                    <ComboBox SelectedIndex="{Binding GenderIndex}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomComboBoxStyle}">
-                                        <ComboBoxItem Content="{DynamicResource Male}"/>
-                                        <ComboBoxItem Content="{DynamicResource Female}"/>
-                                    </ComboBox>
+
+                                <!-- ВЕС (Дробное, до 3 знаков) -->
+                                <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                                    <TextBlock Text="{DynamicResource WeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <TextBox Text="{Binding Weight, UpdateSourceTrigger=LostFocus, StringFormat=\{0:F3\}}" 
+                 PreviewTextInput="WeightValidationTextBox"
+                 IsEnabled="{Binding IsEditMode}" 
+                 Style="{StaticResource GeneralTextBoxStyle}"/>
+                                </StackPanel>
+
+                                <!-- РОСТ (Строго целое, как просили) -->
+                                <StackPanel Grid.Column="2" Margin="5,0,0,0">
+                                    <TextBlock Text="{DynamicResource HeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <TextBox Text="{Binding Height, UpdateSourceTrigger=LostFocus}" 
+                 PreviewTextInput="IntegerValidationTextBox"
+                 IsEnabled="{Binding IsEditMode}" 
+                 Style="{StaticResource GeneralTextBoxStyle}"/>
                                 </StackPanel>
                             </Grid>
 
-                            <StackPanel Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid Margin="0,15,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Margin="0,0,10,0">
-                                        <!-- ИСПРАВЛЕНО: привязка к словарю -->
-                                        <TextBlock Text="{DynamicResource WeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBox Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1">
-                                        <!-- ИСПРАВЛЕНО: привязка к словарю -->
-                                        <TextBlock Text="{DynamicResource HeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBox Text="{Binding Height}" PreviewTextInput="NumberValidationTextBox" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
-                                    </StackPanel>
-                                </Grid>
+                            <!-- КБЖУ (только для клиентов) -->
+                            <Border Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Style="{StaticResource CustomTextBlockStyle}"/>
+                                    <TextBlock Text="{Binding DailyCalories}" Style="{StaticResource CustomTextBlockStyle}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </Border>
 
-                                <Border Background="{DynamicResource SecondaryBackgroundBrush}" CornerRadius="10" Margin="0,30,0,0" Padding="20" Effect="{StaticResource CardShadow}">
-                                    <StackPanel>
-                                        <!-- ИСПРАВЛЕНО: привязка к словарю -->
-                                        <TextBlock Text="{DynamicResource DailyCaloriesLabel}" FontWeight="Bold" HorizontalAlignment="Center" Style="{StaticResource CustomTextBlockStyle}"/>
-                                        <TextBlock Text="{Binding DailyCalories}" Style="{StaticResource CustomTextBlockStyle}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0"/>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-
+                            <!-- КНОПКИ -->
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
                                 <Button Content="{DynamicResource EditButton}" Command="{Binding EditCommand}" Visibility="{Binding ViewModeVisible}" Style="{StaticResource DefaultButtonStyle}" Margin="0,0,10,0" Width="120"/>
                                 <Button Content="{DynamicResource SaveButton}" Command="{Binding SaveCommand}" Visibility="{Binding EditModeVisible}" Style="{StaticResource DefaultButtonStyle}" Margin="0,0,10,0" Width="100"/>

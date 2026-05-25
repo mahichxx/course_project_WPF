@@ -529,7 +529,11 @@
             <s:String x:Key="WeightLabel">Вес (кг)</s:String>
             <s:String x:Key="HeightLabel">Рост (см)</s:String>
             <s:String x:Key="DailyCaloriesLabel">Ваша норма калорий:</s:String>
-        
+
+            <s:String x:Key="InvalidPriceRange">Значение 'от' не может быть больше значения 'до'. Цены были автоматически поменяны местами.</s:String>
+
+            <s:String x:Key="ReviewWillBePostedAsCurrentUser">Отзыв будет опубликован от имени текущего пользователя</s:String>
+            
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 

@@ -22,7 +22,8 @@ namespace WPF_FitnessClub.View
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             List<string> validationErrors = new List<string>();
-            
+
+            // 1. ВАЛИДАЦИЯ ФИО
             if (string.IsNullOrWhiteSpace(FullNameTextBox.Text))
             {
                 validationErrors.Add((string)Application.Current.Resources["FullNameRequired"]);
@@ -41,13 +42,15 @@ namespace WPF_FitnessClub.View
             else
             {
                 string[] nameParts = FullNameTextBox.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (nameParts.Length != 3)
+                // ПРАВИЛО: Если логин не admin - строго 3 слова
+                if (LoginTextBox.Text.ToLower() != "admin" && nameParts.Length != 3)
                 {
                     validationErrors.Add((string)Application.Current.Resources["FullNameRequireThreeWords"]);
                     FullNameTextBox.Focus();
                 }
             }
-            
+
+            // 2. ВАЛИДАЦИЯ EMAIL
             if (string.IsNullOrWhiteSpace(EmailTextBox.Text))
             {
                 validationErrors.Add((string)Application.Current.Resources["EmailRequired"]);
@@ -58,7 +61,8 @@ namespace WPF_FitnessClub.View
                 validationErrors.Add((string)Application.Current.Resources["InvalidEmail"]);
                 if (validationErrors.Count == 1) EmailTextBox.Focus();
             }
-            
+
+            // 3. ВАЛИДАЦИЯ ЛОГИНА
             if (string.IsNullOrWhiteSpace(LoginTextBox.Text))
             {
                 validationErrors.Add((string)Application.Current.Resources["UsernameRequired"]);
@@ -69,12 +73,8 @@ namespace WPF_FitnessClub.View
                 validationErrors.Add((string)Application.Current.Resources["UsernameTooShort"]);
                 if (validationErrors.Count == 1) LoginTextBox.Focus();
             }
-            else if (!Regex.IsMatch(LoginTextBox.Text, @"^[a-zA-Z0-9_]{3,20}$"))
-            {
-                validationErrors.Add((string)Application.Current.Resources["UsernameInvalidFormat"]);
-                if (validationErrors.Count == 1) LoginTextBox.Focus();
-            }
-            
+
+            // 4. ВАЛИДАЦИЯ ПАРОЛЯ (УПРОЩЕННАЯ: СТРОГО ОТ 6 ЛЮБЫХ СИМВОЛОВ)
             if (string.IsNullOrWhiteSpace(PasswordBox.Password))
             {
                 validationErrors.Add((string)Application.Current.Resources["PasswordRequired"]);
@@ -82,42 +82,33 @@ namespace WPF_FitnessClub.View
             }
             else if (PasswordBox.Password.Length < 6)
             {
-                validationErrors.Add((string)Application.Current.Resources["PasswordTooShort"]);
+                validationErrors.Add("Пароль должен быть не менее 6 символов");
                 if (validationErrors.Count == 1) PasswordBox.Focus();
             }
-            else if (!Regex.IsMatch(PasswordBox.Password, @"[A-Za-z]"))
-            {
-                validationErrors.Add((string)Application.Current.Resources["PasswordRequireLetter"]);
-                if (validationErrors.Count == 1) PasswordBox.Focus();
-            }
-            else if (!Regex.IsMatch(PasswordBox.Password, @"\d"))
-            {
-                validationErrors.Add((string)Application.Current.Resources["PasswordRequireDigit"]);
-                if (validationErrors.Count == 1) PasswordBox.Focus();
-            }
-            
+            // Проверки на обязательные буквы и цифры удалены по твоему требованию (любые символы)
+
+            // 5. ВЫВОД ВСЕХ НАЙДЕННЫХ ОШИБОК
             if (validationErrors.Count > 0)
             {
                 StringBuilder errorMessageBuilder = new StringBuilder();
                 errorMessageBuilder.AppendLine((string)Application.Current.Resources["ValidationErrorsHeader"]);
-                
+
                 foreach (var error in validationErrors)
                 {
                     errorMessageBuilder.AppendLine("- " + error);
                 }
-                
-                string message = errorMessageBuilder.ToString();
-                
+
                 MessageBox.Show(
-                    message,
+                    errorMessageBuilder.ToString(),
                     (string)Application.Current.Resources["ValidationErrorTitle"],
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
                 return;
             }
 
+            // 6. ЕСЛИ ОШИБОК НЕТ - СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ
             UserRole selectedRole = UserRole.Client;
-            if (RoleComboBox.SelectedItem is ComboBoxItem selectedItem && 
+            if (RoleComboBox.SelectedItem is ComboBoxItem selectedItem &&
                 int.TryParse(selectedItem.Tag?.ToString(), out int roleValue))
             {
                 selectedRole = (UserRole)roleValue;

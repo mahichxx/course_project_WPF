@@ -95,84 +95,62 @@
     <Border Background="{DynamicResource WindowBackgroundBrush}" Padding="15">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="10">
-                <!-- Заголовок -->
-                <Border Style="{StaticResource ModernCardStyle}" Background="{DynamicResource PrimaryRedBrush}">
+                <!-- 1. ЗАГОЛОВОК: Теперь БЕЗ ModernCardStyle, чтобы углы точно были острыми -->
+                <Border Background="{DynamicResource PrimaryRedBrush}" 
+        CornerRadius="10,10,0,0" 
+        BorderThickness="0"
+        Padding="20,10"
+        Margin="0,0,0,0">
+                    <!-- Убрали отступ снизу, чтобы "слить" со следующим блоком -->
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        
-                        <TextBlock x:Name="SubscriptionName"
-                               Text="{Binding SubscrName}"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"
-                               Visibility="{Binding ViewModeVisible}" 
-                               Foreground="White"
-                               Grid.Row="0"/>
 
-                        <TextBox x:Name="EditSubscriptionName"
-                             Text="{Binding SubscrName, UpdateSourceTrigger=PropertyChanged}"
-                             FontSize="24"
-                             FontWeight="Bold"
-                             HorizontalAlignment="Center"
-                             Visibility="{Binding EditModeVisible}" 
-                             Foreground="{DynamicResource TextBrush}"
-                             Height="50"
-                             MaxLength="30"
-                             Grid.Row="0"/>
-                             
-                        <!-- Отображение рейтинга -->
-                        <StackPanel Grid.Row="1" 
-                                  HorizontalAlignment="Center" 
-                                  Orientation="Horizontal" 
-                                  Margin="0,10,0,0"
-                                  Visibility="{Binding ViewModeVisible}">
+                        <!-- Название: Просмотр -->
+                        <TextBlock Text="{Binding SubscrName}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"
+                   Visibility="{Binding ViewModeVisible}" Foreground="White" Grid.Row="0"/>
+
+                        <!-- Название: Редактирование (БЕЛОЕ и без лишних линий) -->
+                        <TextBox Text="{Binding SubscrName, UpdateSourceTrigger=PropertyChanged}"
+                 FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"
+                 Visibility="{Binding EditModeVisible}" 
+                 Foreground="White" Background="Transparent" 
+                 BorderThickness="0,0,0,1" BorderBrush="White" CaretBrush="White"
+                 Height="50" MaxLength="30" Grid.Row="0"/>
+
+                        <!-- Рейтинг -->
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5,0,0" Visibility="{Binding ViewModeVisible}">
                             <ItemsControl ItemsSource="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                                        ItemTemplate="{StaticResource StarTemplate}">
+                          ItemTemplate="{StaticResource StarTemplate}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <TextBlock Text="{Binding Rating, StringFormat=({0:F1})}" 
-                                     Foreground="White" 
-                                     Margin="5,0,0,0" 
-                                     VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Rating, StringFormat=({0:F1})}" Foreground="White" Margin="5,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Изображение -->
-                <Border Style="{StaticResource ImageBorderStyle}">
+                <!-- 2. ИЗОБРАЖЕНИЕ (Углы сверху - 0, чтобы стыковалось с заголовком) -->
+                <Border Style="{StaticResource ImageBorderStyle}" CornerRadius="0,0,8,8" BorderThickness="1,0,1,1" Margin="0,0,0,15">
                     <Grid>
-                        <Image x:Name="SubscriptionImage"
-                            Source="{Binding ImagePath, Converter={StaticResource ImagePathConverter}}"
-                            Height="300"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center"/>
-
-                        <Button Content="{DynamicResource SelectImage}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Margin="0,0,0,10"
-                            Command="{Binding ChooseImageCommand}"
-                            Visibility="{Binding EditModeVisible}" 
-                            Style="{StaticResource ModernButtonStyle}"/>
+                        <Image Source="{Binding ImagePath, Converter={StaticResource ImagePathConverter}}" Height="300" Stretch="Uniform" HorizontalAlignment="Center"/>
+                        <Button Content="{DynamicResource SelectImage}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10"
+                Command="{Binding ChooseImageCommand}" Visibility="{Binding EditModeVisible}" Style="{StaticResource ModernButtonStyle}"/>
                     </Grid>
                 </Border>
 
-                <!-- Основная информация об абонементе -->
+                <!-- БЛОК ОСНОВНОЙ ИНФОРМАЦИИ -->
                 <Border Style="{StaticResource ModernCardStyle}">
                     <StackPanel>
                         <TextBlock Text="{DynamicResource SubscriptionInfo}" Style="{StaticResource SectionHeaderStyle}"/>
-
                         <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="135"/>
-                                <!-- Фиксированная ширина для надписей -->
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -181,46 +159,46 @@
                                 <RowDefinition Height="45"/>
                             </Grid.RowDefinitions>
 
-                            <!-- 1. ЦЕНА -->
-                            <TextBlock Text="{DynamicResource Price}" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            <!-- ЦЕНА -->
+                            <TextBlock Text="{DynamicResource Price}" Grid.Row="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
                             <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                                <TextBlock Text="{Binding Price, StringFormat={}{0:0.00} Br}" Visibility="{Binding ViewModeVisible}" Foreground="{DynamicResource TextBrush}"/>
+                                <TextBlock Text="{Binding Price, StringFormat={}{0:0.00} Br}" Visibility="{Binding ViewModeVisible}"/>
                                 <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding EditModeVisible}" Width="150" HorizontalAlignment="Left" Style="{StaticResource CustomTextBoxStyle}"/>
                             </StackPanel>
 
-                            <!-- 2. ТИП -->
-                            <TextBlock Text="{DynamicResource Type}" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            <!-- ТИП (Важно: биндинг к SubscriptionType) -->
+                            <TextBlock Text="{DynamicResource Type}" Grid.Row="1" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
                             <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                                <!-- Отображение -->
-                                <TextBlock Text="{Binding LocalizedType}" Visibility="{Binding ViewModeVisible}" Foreground="{DynamicResource TextBrush}"/>
-                                <!-- Редактирование -->
+                                <TextBlock Text="{Binding LocalizedType}" Visibility="{Binding ViewModeVisible}"/>
                                 <ComboBox Visibility="{Binding EditModeVisible}" Width="180" HorizontalAlignment="Left" Style="{StaticResource CustomComboBoxStyle}"
-                          SelectedValuePath="Tag" SelectedValue="{Binding LocalizedType}">
-                                    <ComboBoxItem Content="Одиночная" Tag="Single"/>
-                                    <ComboBoxItem Content="Групповая" Tag="Group"/>
-                                    <ComboBoxItem Content="Безлимит" Tag="Unlimited"/>
-                                    <ComboBoxItem Content="Утренний" Tag="Morning"/>
+                          SelectedValuePath="Tag" 
+                          SelectedValue="{Binding SubscriptionType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBoxItem Content="{DynamicResource Single}" Tag="Single"/>
+                                    <ComboBoxItem Content="{DynamicResource Group}" Tag="Group"/>
+                                    <ComboBoxItem Content="{DynamicResource Unlimited}" Tag="Unlimited"/>
+                                    <ComboBoxItem Content="{DynamicResource Morning}" Tag="Morning"/>
+                                    <ComboBoxItem Content="{DynamicResource Evening}" Tag="Evening"/>
+                                    <ComboBoxItem Content="{DynamicResource Standard}" Tag="Standard"/>
                                 </ComboBox>
                             </StackPanel>
 
-                            <!-- 3. ДЛИТЕЛЬНОСТЬ -->
-                            <TextBlock Text="{DynamicResource Duration}" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                            <!-- ДЛИТЕЛЬНОСТЬ (Важно: биндинг к Duration) -->
+                            <TextBlock Text="{DynamicResource Duration}" Grid.Row="2" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
                             <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                                <!-- Отображение -->
-                                <TextBlock Text="{Binding LocalizedDuration}" Visibility="{Binding ViewModeVisible}" Foreground="{DynamicResource TextBrush}"/>
-                                <!-- Редактирование -->
+                                <TextBlock Text="{Binding LocalizedDuration}" Visibility="{Binding ViewModeVisible}"/>
                                 <ComboBox Visibility="{Binding EditModeVisible}" Width="180" HorizontalAlignment="Left" Style="{StaticResource CustomComboBoxStyle}"
-                          SelectedValuePath="Tag" SelectedValue="{Binding Duration}">
-                                    <ComboBoxItem Content="1 занятие" Tag="Visit1"/>
-                                    <ComboBoxItem Content="8 занятий" Tag="Visit8"/>
-                                    <ComboBoxItem Content="16 занятий" Tag="Visit16"/>
-                                    <ComboBoxItem Content="32 занятия" Tag="Visit32"/>
+                          SelectedValuePath="Tag" 
+                          SelectedValue="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBoxItem Content="{DynamicResource Visit1}" Tag="Visit1"/>
+                                    <ComboBoxItem Content="{DynamicResource Visit4}" Tag="Visit4"/>
+                                    <ComboBoxItem Content="{DynamicResource Visit8}" Tag="Visit8"/>
+                                    <ComboBoxItem Content="{DynamicResource Visit16}" Tag="Visit16"/>
+                                    <ComboBoxItem Content="{DynamicResource Visit32}" Tag="Visit32"/>
                                 </ComboBox>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </Border>
-
                 <!-- Описание -->
                 <Border Style="{StaticResource ModernCardStyle}">
                     <StackPanel>
