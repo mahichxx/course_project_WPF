@@ -13,7 +13,7 @@
 
     <Window.Resources>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
-
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <!-- Стиль для текста статуса (переводной) -->
         <Style x:Key="StatusTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
@@ -83,11 +83,22 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
+                    <!-- ИСПРАВЛЕННЫЙ БЛОК КНОПОК ТРЕНИРОВОК -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10" 
-            Visibility="{Binding IsWorkoutPlanViewMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Button Content="{DynamicResource AddButton}" Command="{Binding AddWorkoutPlanCommand}" Style="{StaticResource DefaultButtonStyle}" Width="100"/>
-                        <Button Content="{DynamicResource EditButton}" Command="{Binding EditWorkoutPlanCommand}" Style="{StaticResource DefaultButtonStyle}" Width="100"/>
-                        <Button Content="{DynamicResource DeleteButton}" Command="{Binding DeleteWorkoutPlanCommand}" Style="{StaticResource DefaultButtonStyle}" Background="#FF4C4C" Width="100"/>
+                    Visibility="{Binding IsWorkoutPlanViewMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                        <!-- Команды должны быть WorkoutPlan, а не NutritionPlan! -->
+                        <Button Content="{DynamicResource AddButton}" 
+                    Command="{Binding AddWorkoutPlanCommand}" 
+                    Style="{StaticResource DefaultButtonStyle}" Width="100"/>
+
+                        <Button Content="{DynamicResource EditButton}" 
+                    Command="{Binding EditWorkoutPlanCommand}" 
+                    Style="{StaticResource DefaultButtonStyle}" Width="100"/>
+
+                        <Button Content="{DynamicResource DeleteButton}" 
+                    Command="{Binding DeleteWorkoutPlanCommand}" 
+                    Style="{StaticResource DefaultButtonStyle}" Background="#FF4C4C" Width="100"/>
                     </StackPanel>
 
                     <!-- Список -->
@@ -128,12 +139,13 @@
                         <Button Content="{DynamicResource DeleteButton}" Command="{Binding DeleteNutritionPlanCommand}" Style="{StaticResource DefaultButtonStyle}" Background="#FF4C4C" Width="100"/>
                     </StackPanel>
 
-                    <ListBox Grid.Row="1" ItemsSource="{Binding NutritionPlans}" ItemTemplate="{StaticResource PlanItemTemplate}" 
-                             Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             Visibility="{Binding IsNutritionPlanViewMode, Converter={StaticResource BooleanToVisibilityConverter}}"
-                             SelectedItem="{Binding SelectedWorkoutPlan, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <!-- Редактор планов питания -->
+                    <ListBox Grid.Row="1" 
+         ItemsSource="{Binding NutritionPlans}" 
+         ItemTemplate="{StaticResource PlanItemTemplate}" 
+         Background="Transparent" BorderThickness="0" 
+         ScrollViewer.VerticalScrollBarVisibility="Auto"
+         Visibility="{Binding IsNutritionPlanViewMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+         SelectedItem="{Binding SelectedNutritionPlan, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Border Grid.Row="1" Visibility="{Binding IsNutritionPlanEditMode, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource SecondaryBackgroundBrush}" Padding="20">
                         <StackPanel MaxWidth="500">
                             <TextBlock Text="{DynamicResource Title}" Style="{StaticResource CustomTextBlockStyle}"/>

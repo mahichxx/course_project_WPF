@@ -79,6 +79,12 @@
                  PreviewTextInput="FullNameTextBox_PreviewTextInput" 
                  CommandManager.PreviewExecuted="TextBox_PreviewExecuted"/>
 
+                            <!-- ЛОГИН -->
+                            <TextBlock Text="{DynamicResource Login}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
+                            <TextBox Text="{Binding Username, UpdateSourceTrigger=LostFocus}" 
+                 IsEnabled="{Binding IsEditMode}" 
+                 Style="{StaticResource GeneralTextBoxStyle}"/>
+                            
                             <!-- ТЕЛЕФОН -->
                             <TextBlock Text="{DynamicResource PhoneLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
                             <TextBox Text="{Binding Phone}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource GeneralTextBoxStyle}"/>
@@ -173,12 +179,23 @@
                     <TabItem Header="{DynamicResource SecurityTab}" Style="{StaticResource CustomTabItemStyle}">
                         <StackPanel Width="450" HorizontalAlignment="Center" Margin="0,30,0,30">
                             <TextBlock Text="{DynamicResource ChangePasswordTitle}" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBlock Text="{DynamicResource Password}" Style="{StaticResource CustomTextBlockStyle}"/>
-                            <TextBox x:Name="SecurityCurrentPasswordInput" Style="{StaticResource GeneralTextBoxStyle}" Text="{Binding Password}" IsReadOnly="true" Margin="0,5,0,15"/>
+
+                            <TextBlock Text="{DynamicResource YourCurrentPassword}"  Style="{StaticResource CustomTextBlockStyle}"/>
+                            <!-- Файл: PersonalAccountView.xaml -->
+                            <TextBox x:Name="SecurityCurrentPasswordInput" 
+         Style="{StaticResource GeneralTextBoxStyle}" 
+         Text="{Binding DisplayPassword, UpdateSourceTrigger=PropertyChanged}" 
+         IsReadOnly="True" 
+         Margin="0,5,0,15" 
+         Background="#F0F0F0"
+         Cursor="Arrow"/>
+
                             <TextBlock Text="{DynamicResource NewPassword}" Style="{StaticResource CustomTextBlockStyle}"/>
                             <PasswordBox x:Name="SecurityNewPasswordInput" Style="{StaticResource GeneralPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+
                             <TextBlock Text="{DynamicResource ConfirmPassword}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,5"/>
                             <PasswordBox x:Name="SecurityConfirmPasswordInput" Style="{StaticResource GeneralPasswordBoxStyle}" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+
                             <Button Content="{DynamicResource ChangePasswordButton}" Command="{Binding ChangePasswordCommand}" Style="{StaticResource DefaultButtonStyle}" Margin="0,30,0,0" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </TabItem>

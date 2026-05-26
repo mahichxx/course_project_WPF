@@ -99,6 +99,7 @@
     <Compile Include="Data\DatabaseBackupService.cs" />
     <Compile Include="Data\DatabaseConnectionService.cs" />
     <Compile Include="Data\DatabaseInitializer.cs" />
+    <Compile Include="Data\PasswordHasher.cs" />
     <Compile Include="Data\Repositories\BaseRepository.cs" />
     <Compile Include="Data\Repositories\CoachClientRepository.cs" />
     <Compile Include="Data\Repositories\IRepository.cs" />

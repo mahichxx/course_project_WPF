@@ -60,41 +60,25 @@ namespace WPF_FitnessClub.View
                 }
             }
         }
-        
+
         private void AddClientButton_Click(object sender, RoutedEventArgs e)
         {
+            // 1. Проверяем, что ViewModel инициализирована
             if (_viewModel == null)
             {
-                MessageBox.Show(
-                    (string)Application.Current.FindResource("ViewModelNotInitialized"),
-                    (string)Application.Current.FindResource("ErrorTitle"),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Ошибка: ViewModel не инициализирована", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            
-            if (sender is Button button)
+
+            // 2. Достаем кнопку и клиента из параметра
+            if (sender is Button button && button.CommandParameter is User client)
             {
-                if (button.CommandParameter is User client)
-                {
-                    try 
-                    {
-                        _viewModel.AddClientToCoach(client);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(
-                            string.Format((string)Application.Current.FindResource("ErrorAddingClient"), ex.Message),
-                            (string)Application.Current.FindResource("ErrorTitle"),
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                else 
-                {
-                    MessageBox.Show(
-                        (string)Application.Current.FindResource("ErrorGettingClientData"),
-                        (string)Application.Current.FindResource("ErrorTitle"),
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                // 3. Просто вызываем команду добавления
+                _viewModel.AddClientCommand.Execute(client);
+            }
+            else
+            {
+                MessageBox.Show("Не удалось получить данные клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -34,7 +34,9 @@ namespace WPF_FitnessClub
 	public partial class MainWindow : Window, INotifyPropertyChanged, IDisposable
 	{
 		public User _user;
-		public readonly UserRole currentUserRole;
+        private string _storedPassword;
+
+        public readonly UserRole currentUserRole;
 		public List<Subscription> subscriptions = new List<Subscription>();
 		private SubscriptionService _subscriptionService;
 		private UserService _userService;
@@ -50,7 +52,8 @@ namespace WPF_FitnessClub
 		private Visibility clientRoleVisible = Visibility.Collapsed;
 		private Visibility addSubscriptionVisible = Visibility.Collapsed;
 
-		public User CurrentUser => _user;
+
+        public User CurrentUser => _user;
 		
 		public Visibility EditModeVisible
 		{
@@ -111,12 +114,17 @@ namespace WPF_FitnessClub
 
 		private SubscriptionsView _homePageView;
 
-		public MainWindow(User user)
+        private string _plainPassword;
+        public MainWindow(User user, string plainPassword)
 		{
-			_user = user;
-			currentUserRole = user.Role;
+            InitializeComponent();
+            _user = user;
+            _storedPassword = plainPassword;
+            currentUserRole = user.Role;
 
-			_subscriptionService = new SubscriptionService();
+            _plainPassword = plainPassword;
+
+            _subscriptionService = new SubscriptionService();
 			_userService = new UserService();
 			_workoutPlanService = new WorkoutPlanService();
 			_nutritionPlanService = new NutritionPlanService();
@@ -124,7 +132,7 @@ namespace WPF_FitnessClub
             
 			UserService.SetCurrentUser(user);
 
-			InitializeComponent();
+			
 			DataContext = this;
 
 			this.WindowState = WindowState.Maximized;
@@ -348,14 +356,14 @@ namespace WPF_FitnessClub
 			}
 		}
 
+        private void PersonalAccountButon_Click(object sender, RoutedEventArgs e)
+        {
+            var personalAccountView = new PersonalAccountView(_user, _storedPassword);
+            NavigationManager.Instance.NavigateTo(personalAccountView);
+        }
 
-		private void PersonalAccountButon_Click(object sender, RoutedEventArgs e)
-		{
-			var personalAccountView = new PersonalAccountView(_user);
-			NavigationManager.Instance.NavigateTo(personalAccountView);
-		}
 
-		private void HomeButton_Click(object sender, RoutedEventArgs e)
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
 		{
             LoadSubscriptions();
             ShowHomePage();

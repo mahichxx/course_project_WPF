@@ -28,50 +28,44 @@ namespace WPF_FitnessClub.View
 		private User _user;
 		private const int MaxPasswordLength = 30;
 
-		public PersonalAccountView(User user)
-		{
-			InitializeComponent();
+        public PersonalAccountView(User user, string plainPassword)
+        {
+            InitializeComponent();
             this.Focusable = true;
             this.MouseDown += (s, e) => this.Focus();
-            
-			var workoutPlanService = new WorkoutPlanService();
-			var nutritionPlanService = new NutritionPlanService();
-			
-			_viewModel = new PersonalAccountVM(user, workoutPlanService, nutritionPlanService);
-			_viewModel.LanguageChanged += OnLanguageChanged;
-			DataContext = _viewModel;
-			
-			SecurityCurrentPasswordInput.TextChanged += CurrentPasswordBox_PasswordChanged;
-			SecurityNewPasswordInput.PasswordChanged += NewPasswordBox_PasswordChanged;
-			SecurityConfirmPasswordInput.PasswordChanged += ConfirmPasswordBox_PasswordChanged;
 
-			_user = user;
+            var workoutPlanService = new WorkoutPlanService();
+            var nutritionPlanService = new NutritionPlanService();
 
-			ThemeManager.Instance.PropertyChanged += ThemeManager_PropertyChanged;
-			
-			this.Unloaded += PersonalAccountView_Unloaded;
+            _viewModel = new PersonalAccountVM(user, workoutPlanService, nutritionPlanService, plainPassword);
+            _viewModel.LanguageChanged += OnLanguageChanged;
+            DataContext = _viewModel;
 
-			string currentLanguage = LanguageManager.Instance.CurrentLanguage;
-			if (currentLanguage.StartsWith("ru"))
-			{
-				LanguageSelectionComboBox.SelectedIndex = 0;  
-			}
-			else
-			{
-				LanguageSelectionComboBox.SelectedIndex = 1;  
-			}
+            if (SecurityCurrentPasswordInput != null)
+                SecurityCurrentPasswordInput.TextChanged += CurrentPasswordBox_PasswordChanged;
+            if (SecurityNewPasswordInput != null)
+                SecurityNewPasswordInput.PasswordChanged += NewPasswordBox_PasswordChanged;
+            if (SecurityConfirmPasswordInput != null)
+                SecurityConfirmPasswordInput.PasswordChanged += ConfirmPasswordBox_PasswordChanged;
 
-			if (ThemeManager.Instance.CurrentTheme == ThemeManager.AppTheme.Light)
-			{
-				ThemeSelectionComboBox.SelectedIndex = 0;   
-			}
-			else
-			{
-				ThemeSelectionComboBox.SelectedIndex = 1;   
-			}
-		}
+            _user = user;
+            ThemeManager.Instance.PropertyChanged += ThemeManager_PropertyChanged;
+            this.Unloaded += PersonalAccountView_Unloaded;
 
-		private void EmailTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+            // Логика языка и темы (оставляем как есть)
+            string currentLanguage = LanguageManager.Instance.CurrentLanguage;
+            if (currentLanguage.StartsWith("ru"))
+                LanguageSelectionComboBox.SelectedIndex = 0;
+            else
+                LanguageSelectionComboBox.SelectedIndex = 1;
+
+            if (ThemeManager.Instance.CurrentTheme == ThemeManager.AppTheme.Light)
+                ThemeSelectionComboBox.SelectedIndex = 0;
+            else
+                ThemeSelectionComboBox.SelectedIndex = 1;
+        }
+
+        private void EmailTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
 			if (sender is TextBox textBox)
 			{

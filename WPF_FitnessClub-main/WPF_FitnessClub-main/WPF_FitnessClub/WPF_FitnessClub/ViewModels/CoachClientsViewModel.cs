@@ -7,6 +7,8 @@ using System.Linq;
 using WPF_FitnessClub.Data.Services;
 using WPF_FitnessClub.Models;
 using System.Collections.Generic;
+using System.Windows.Input;
+using static WPF_FitnessClub.Commands;
 
 namespace WPF_FitnessClub.ViewModels
 {
@@ -101,7 +103,11 @@ namespace WPF_FitnessClub.ViewModels
                 OnPropertyChanged(nameof(IsAllClientsTab)); // Чтобы кнопки переключались
             }
         }
-        
+
+        public ICommand AddClientCommand {
+            get; 
+            private set; 
+        }
         public DateTime GetClientAssignmentDate(int clientId)
         {
             if (_clientAssignmentDates != null && _clientAssignmentDates.ContainsKey(clientId))
@@ -121,6 +127,8 @@ namespace WPF_FitnessClub.ViewModels
             _clientAssignmentDates = new Dictionary<int, DateTime>();
             SelectedTabIndex = 0;      
             CurrentCoach = coach;
+
+            AddClientCommand = new RelayCommand(ExecuteAddClientCommand);
         }
 
         public void LoadClients()
@@ -355,6 +363,13 @@ namespace WPF_FitnessClub.ViewModels
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                 });
+            }
+        }
+        private void ExecuteAddClientCommand(object parameter)
+        {
+            if (parameter is User client)
+            {               
+             AddClientToCoach(client);
             }
         }
     }

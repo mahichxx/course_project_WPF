@@ -534,7 +534,8 @@
             <s:String x:Key="InvalidPriceRange">The 'from' value cannot be greater than the 'to' value. Prices have been automatically swapped.</s:String>
 
             <s:String x:Key="ReviewWillBePostedAsCurrentUser">The review will be posted as the current user</s:String>
-            
+
+            <s:String x:Key="YourCurrentPassword">Your current password:</s:String>
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
     

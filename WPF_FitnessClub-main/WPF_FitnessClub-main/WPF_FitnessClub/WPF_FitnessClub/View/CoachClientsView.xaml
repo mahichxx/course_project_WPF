@@ -13,42 +13,67 @@
         Style="{StaticResource WindowStyle}">
 
     <Window.Resources>
-        <!-- Шаблон для отображения карточки клиента (и для Моих, и для Всех) -->
+        <!-- 1. ШАБЛОН ДЛЯ МОИХ КЛИЕНТОВ (с кнопками Подробнее и Удалить) -->
         <DataTemplate x:Key="ClientItemTemplate">
-            <Border BorderBrush="{DynamicResource LightGrayBrush}" BorderThickness="0,0,0,1" Padding="10,10">
+            <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
+                BorderBrush="{DynamicResource LightGrayBrush}" 
+                BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,10" Effect="{StaticResource CardShadow}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
-                        <!-- Аватар -->
+                        <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="*"/>
-                        <!-- Имя и Email (растягивается) -->
                         <ColumnDefinition Width="Auto"/>
-                        <!-- Кнопки (прижаты вправо) -->
                     </Grid.ColumnDefinitions>
 
-                    <!-- Иконка -->
-                    <Ellipse Width="40" Height="40" Fill="{DynamicResource SecondaryBackgroundBrush}"/>
-                    <Path Data="{StaticResource UserIcon}" Fill="{DynamicResource PrimaryRedBrush}" 
-                  Stretch="Uniform" Width="18" Height="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Grid Grid.Column="0">
+                        <Ellipse Width="45" Height="45" Fill="{DynamicResource BackgroundBrush}"/>
+                        <Path Data="{StaticResource UserIcon}" Fill="{DynamicResource PrimaryRedBrush}" 
+                          Stretch="Uniform" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
 
-                    <!-- Инфо (Column 1) -->
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                        <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource TextBrush}"/>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                        <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextBrush}"/>
                         <TextBlock Text="{Binding Email}" FontSize="12" Opacity="0.6" Foreground="{DynamicResource TextBrush}"/>
                     </StackPanel>
 
-                    <!-- Кнопки (Column 2 - Всегда справа) -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Content="{DynamicResource DetailsButton}" 
-                        Style="{StaticResource DefaultButtonStyle}" 
-                        FontSize="11" Height="28" MinWidth="100" Margin="5,0"
-                        Click="ShowClientPlansButton_Click" CommandParameter="{Binding}"/>
-
-                        <Button Content="{DynamicResource RemoveButton}" 
-                        Style="{StaticResource DefaultButtonStyle}" 
-                        Background="#FF4C4C" FontSize="11" Height="28" MinWidth="90"
-                        Click="RemoveClientButton_Click" CommandParameter="{Binding}"/>
+                        <Button Content="{DynamicResource DetailsButton}" Style="{StaticResource DefaultButtonStyle}" 
+                            Width="110" Height="32" Margin="0,0,10,0" Click="ShowClientPlansButton_Click" CommandParameter="{Binding}"/>
+                        <Button Content="{DynamicResource RemoveButton}" Style="{StaticResource DefaultButtonStyle}" 
+                            Background="#FF4C4C" Width="100" Height="32" Click="RemoveClientButton_Click" CommandParameter="{Binding}"/>
                     </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- 2. ШАБЛОН ДЛЯ ДОСТУПНЫХ КЛИЕНТОВ (ТОЛЬКО КНОПКА ДОБАВИТЬ) -->
+        <DataTemplate x:Key="AvailableClientItemTemplate">
+            <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
+                BorderBrush="{DynamicResource LightGrayBrush}" 
+                BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,10" Effect="{StaticResource CardShadow}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Ellipse Width="45" Height="45" Fill="{DynamicResource BackgroundBrush}"/>
+                        <Path Data="{StaticResource UserIcon}" Fill="{DynamicResource PrimaryRedBrush}" 
+                          Stretch="Uniform" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                        <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="{Binding Email}" FontSize="12" Opacity="0.6" Foreground="{DynamicResource TextBrush}"/>
+                    </StackPanel>
+
+                    <!-- Тут только одна кнопка -->
+                    <Button Grid.Column="2" Content="{DynamicResource AddButton}" 
+                        Style="{StaticResource DefaultButtonStyle}" 
+                        Width="120" Height="32"
+                        Click="AddClientButton_Click" CommandParameter="{Binding}"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -81,18 +106,40 @@
         <!-- Вкладки (Центрированные и стильные) -->
         <TabControl Grid.Row="1" Margin="10" Style="{StaticResource CustomTabControlStyle}">
 
+            <!-- Вкладка: Мои клиенты -->
             <TabItem Header="{DynamicResource MyClients}" Style="{StaticResource CustomTabItemStyle}">
                 <ListBox ItemsSource="{Binding Clients}" 
-                         ItemTemplate="{StaticResource ClientItemTemplate}"
-                         Background="Transparent" BorderThickness="0"/>
+                 ItemTemplate="{StaticResource ClientItemTemplate}" 
+                 Background="Transparent" BorderThickness="0"
+                 HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,0,10"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
             </TabItem>
 
+            <!-- Вкладка: Доступные клиенты -->
             <TabItem Header="{DynamicResource AllClients}" Style="{StaticResource CustomTabItemStyle}">
+                <!-- ИСПОЛЬЗУЕМ AvailableClientItemTemplate -->
                 <ListBox ItemsSource="{Binding AvailableClients}" 
-                         ItemTemplate="{StaticResource ClientItemTemplate}"
-                         Background="Transparent" BorderThickness="0"/>
+                 ItemTemplate="{StaticResource AvailableClientItemTemplate}"
+                 Background="Transparent" BorderThickness="0"
+                 HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,0,10"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
             </TabItem>
-
         </TabControl>
     </Grid>
 </Window>

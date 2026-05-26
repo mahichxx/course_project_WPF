@@ -47,34 +47,35 @@ namespace WPF_FitnessClub.Data.Services
         {
             try
             {
-                // Используем новый контекст для операции обновления
                 using (var context = new AppDbContext())
                 {
-                    // Находим план в базе данных
+                    // Находим реальный объект в базе по ID
                     var planToUpdate = context.NutritionPlans.Find(nutritionPlan.Id);
-                    
+
                     if (planToUpdate == null)
                     {
-                        throw new Exception($"План питания с ID {nutritionPlan.Id} не найден");
+                        throw new Exception($"План питания с ID {nutritionPlan.Id} не найден в базе данных.");
                     }
-                    
-                    // Обновляем только необходимые поля
+
+                    // ПЕРЕНОСИМ ВСЕ ИЗМЕНЕННЫЕ ДАННЫЕ (Этого у вас не было!)
+                    planToUpdate.Title = nutritionPlan.Title;
+                    planToUpdate.Description = nutritionPlan.Description;
+                    planToUpdate.StartDate = nutritionPlan.StartDate;
+                    planToUpdate.EndDate = nutritionPlan.EndDate;
                     planToUpdate.IsCompleted = nutritionPlan.IsCompleted;
                     planToUpdate.UpdatedDate = DateTime.Now;
-                    
-                    // Сохраняем изменения непосредственно через контекст
+
+                    // Сохраняем физически в SQL Server
                     context.SaveChanges();
-                    
-                    System.Diagnostics.Debug.WriteLine($"План питания с ID {nutritionPlan.Id} успешно обновлен. IsCompleted = {planToUpdate.IsCompleted}");
-                    
-                    // Возвращаем обновленный план
+
+                    System.Diagnostics.Debug.WriteLine($"План питания ID {planToUpdate.Id} успешно обновлен.");
                     return planToUpdate;
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка при обновлении плана питания: {ex.Message}");
-                throw; // Передаем исключение дальше для обработки в ViewModel
+                System.Diagnostics.Debug.WriteLine($"Ошибка в NutritionPlanService.Update: {ex.Message}");
+                throw;
             }
         }
 

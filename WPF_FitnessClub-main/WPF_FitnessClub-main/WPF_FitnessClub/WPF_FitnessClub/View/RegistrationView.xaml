@@ -32,7 +32,7 @@
             Margin="0,15,15,0">
 
             <!-- Кнопка RU -->
-            <Button x:Name="RussianButton" Click="RussianButton_Click" Content="RU" Width="45" Height="30" Margin="5,0" Foreground="White">
+            <Button x:Name="RussianButton" Click="RussianButton_Click" Content="RU" Width="45" Height="30" Margin="5,0" Foreground="Black">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="Transparent"/>
@@ -61,7 +61,7 @@
             </Button>
 
             <!-- Кнопка EN -->
-            <Button x:Name="EnglishButton" Click="EnglishButton_Click" Content="EN" Width="45" Height="30" Foreground="White">
+            <Button x:Name="EnglishButton" Click="EnglishButton_Click" Content="EN" Width="45" Height="30" Foreground="Black">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="Transparent"/>

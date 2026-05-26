@@ -265,32 +265,35 @@ namespace WPF_FitnessClub.ViewModels
                     IsLoading = true;
                     User u = addUserDialog.NewUser;
 
-                    // ПРОВЕРКА ПО ЕДИНОМУ СТАНДАРТУ
-                    if (u.Password.Length < 6) { MessageBox.Show("Пароль: мин. 6 символов"); IsLoading = false; return; }
-
-                    string[] parts = u.FullName?.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (u.Login.ToLower() != "admin" && (parts == null || parts.Length != 3))
-                    {
-                        MessageBox.Show((string)Application.Current.Resources["FullNameRequireThreeWords"]); IsLoading = false; return;
-                    }
-
+                    // 1. ПРОВЕРКА УНИКАЛЬНОСТИ ЛОГИНА В БАЗЕ (Твой код)
                     if (!_userService.IsLoginUnique(u.Login))
                     {
-                        MessageBox.Show((string)Application.Current.Resources["LoginAlreadyTaken"]); IsLoading = false; return;
+                        MessageBox.Show((string)Application.Current.Resources["LoginAlreadyTaken"], "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        IsLoading = false; return;
                     }
 
+                    // === ВАЖНЫЙ ШАГ: ХЕШИРОВАНИЕ ===
+                    // Хешируем пароль перед сохранением в БД
+                    u.Password = WPF_FitnessClub.Data.PasswordHasher.HashPassword(u.Password);
+
+                    // 2. ДОБАВЛЕНИЕ В БД
                     int userId = _userService.Add(u);
                     if (userId > 0)
                     {
-                        // Очистка кэша EF (твой оригинальный важный код)
+                        // Очистка кэша EF, чтобы в таблице сразу появились верные данные
                         _context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
-                        LoadUsersData();
+
+                        LoadUsersData(); // Обновляем таблицу
                         MessageBox.Show((string)Application.Current.Resources["AdminPanelUserAdded"], (string)Application.Current.Resources["AdminPanelSuccess"]);
                     }
                     IsLoading = false;
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); IsLoading = false; }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при добавлении пользователя: " + ex.Message);
+                IsLoading = false;
+            }
         }
 
         #endregion

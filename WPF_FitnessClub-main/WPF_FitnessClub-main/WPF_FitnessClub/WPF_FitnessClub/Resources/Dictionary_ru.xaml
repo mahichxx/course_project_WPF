@@ -533,6 +533,8 @@
             <s:String x:Key="InvalidPriceRange">Значение 'от' не может быть больше значения 'до'. Цены были автоматически поменяны местами.</s:String>
 
             <s:String x:Key="ReviewWillBePostedAsCurrentUser">Отзыв будет опубликован от имени текущего пользователя</s:String>
+
+            <s:String x:Key="YourCurrentPassword">Ваш текущий пароль:</s:String>
             
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>

@@ -225,7 +225,19 @@ namespace WPF_FitnessClub.ViewModels
                 OnPropertyChanged("NewWorkoutPlanStartDate");
             }
         }
-        
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                if (_isLoading != value)
+                {
+                    _isLoading = value;
+                    OnPropertyChanged(nameof(IsLoading));
+                }
+            }
+        }
         public DateTime NewWorkoutPlanEndDate
         {
             get => _newWorkoutPlanEndDate;
@@ -374,78 +386,62 @@ namespace WPF_FitnessClub.ViewModels
                 }
             }
         }
-        
+
         private void ExecuteSaveNutritionPlan(object parameter)
         {
-            if (NewNutritionPlanEndDate < NewNutritionPlanStartDate)
+            // Валидация (сохраняем твою логику)
+            if (string.IsNullOrWhiteSpace(NewNutritionPlanTitle) || NewNutritionPlanTitle.Length < 3)
             {
-                MessageBox.Show(
-                    Application.Current.FindResource("DateEndBeforeDateStart") as string,
-                    Application.Current.FindResource("ValidationErrorDate") as string,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                MessageBox.Show("Введите корректное название (мин. 3 символа)");
                 return;
             }
-            
+
             try
             {
-                
-                if (IsEditingExistingNutritionPlan)
+                IsLoading = true;
+
+                if (IsEditingExistingNutritionPlan) // РЕДАКТИРОВАНИЕ
                 {
-                    SelectedNutritionPlan.Title = NewNutritionPlanTitle;
-                    SelectedNutritionPlan.Description = NewNutritionPlanDescription;
-                    SelectedNutritionPlan.StartDate = NewNutritionPlanStartDate;
-                    SelectedNutritionPlan.EndDate = NewNutritionPlanEndDate;
-                    SelectedNutritionPlan.UpdatedDate = DateTime.Now;
-                    
-                    _nutritionPlanService.Update(SelectedNutritionPlan);
-                    
-                    MessageBox.Show(
-                        Application.Current.FindResource("NutritionPlanUpdateSuccess") as string,
-                        Application.Current.FindResource("Success") as string,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                else
-                {
-                    var coach = _userService.GetCurrentUser();       
-                    
-                    NutritionPlan newPlan = new NutritionPlan
+                    if (SelectedNutritionPlan != null)
                     {
-                        Title = NewNutritionPlanTitle,
-                        Description = NewNutritionPlanDescription,
+                        // Заполняем объект данными из текстовых полей
+                        SelectedNutritionPlan.Title = NewNutritionPlanTitle.Trim();
+                        SelectedNutritionPlan.Description = NewNutritionPlanDescription.Trim();
+                        SelectedNutritionPlan.StartDate = NewNutritionPlanStartDate;
+                        SelectedNutritionPlan.EndDate = NewNutritionPlanEndDate;
+
+                        // Отправляем в сервис
+                        _nutritionPlanService.Update(SelectedNutritionPlan);
+                        MessageBox.Show("Изменения сохранены!", "Успех");
+                    }
+                }
+                else // СОЗДАНИЕ
+                {
+                    var coach = _userService.GetCurrentUser();
+                    var newPlan = new NutritionPlan
+                    {
+                        Title = NewNutritionPlanTitle.Trim(),
+                        Description = NewNutritionPlanDescription.Trim(),
                         ClientId = Client.Id,
                         CoachId = coach.Id,
                         StartDate = NewNutritionPlanStartDate,
                         EndDate = NewNutritionPlanEndDate,
                         CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        UpdatedDate = DateTime.Now,
+                        IsCompleted = false
                     };
-                    
-                    var createdPlan = _nutritionPlanService.Create(newPlan);
-                    
-                    NutritionPlans.Add(createdPlan);
-                    
-                    MessageBox.Show(
-                        Application.Current.FindResource("NutritionPlanCreateSuccess") as string,
-                        Application.Current.FindResource("Success") as string,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                
-                IsNutritionPlanEditMode = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    string.Format(Application.Current.FindResource("NutritionPlanSaveError") as string, ex.Message),
-                    Application.Current.FindResource("Error") as string,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
 
+                    _nutritionPlanService.Create(newPlan);
+                    MessageBox.Show("План создан!", "Успех");
+                }
+
+                IsNutritionPlanEditMode = false;
+                LoadClientPlans(); // Принудительно обновляем список на экране
+            }
+            catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); }
+            finally { IsLoading = false; }
         }
-        
+
         private void ExecuteCancelNutritionPlanEdit(object parameter)
         {
             IsNutritionPlanEditMode = false;
@@ -461,12 +457,12 @@ namespace WPF_FitnessClub.ViewModels
         {
             return SelectedNutritionPlan != null && !IsNutritionPlanEditMode;
         }
-        
+
         private bool CanExecuteSaveNutritionPlan(object parameter)
         {
-            return !string.IsNullOrWhiteSpace(NewNutritionPlanTitle) &&
-                   NewNutritionPlanEndDate > NewNutritionPlanStartDate;
+            return IsNutritionPlanEditMode;
         }
+
 
         public void LoadClientPlans()
         {
@@ -574,42 +570,45 @@ namespace WPF_FitnessClub.ViewModels
                 }
             }
         }
-        
+
         private void ExecuteSaveWorkoutPlan(object parameter)
         {
-            if (NewWorkoutPlanEndDate < NewWorkoutPlanStartDate)
+            // 1. Валидация на пустые поля и длину (минимум 3 символа)
+            if (string.IsNullOrWhiteSpace(NewWorkoutPlanTitle) || NewWorkoutPlanTitle.Length < 3 ||
+                string.IsNullOrWhiteSpace(NewWorkoutPlanDescription) || NewWorkoutPlanDescription.Length < 3)
             {
-                MessageBox.Show(
-                    Application.Current.FindResource("DateEndBeforeDateStart") as string,
-                    Application.Current.FindResource("ValidationErrorDate") as string,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                MessageBox.Show("Пожалуйста, заполните все поля! Название и описание должны быть не менее 3 символов.",
+                                "Ошибка заполнения", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            
+
+            if (NewWorkoutPlanEndDate < NewWorkoutPlanStartDate)
+            {
+                MessageBox.Show("Дата окончания не может быть раньше даты начала!", "Ошибка даты");
+                return;
+            }
+
             try
             {
-                
-                if (IsEditingExistingWorkoutPlan)
+                IsLoading = true;
+
+                if (IsEditingExistingWorkoutPlan) // РЕДАКТИРОВАНИЕ
                 {
-                    SelectedWorkoutPlan.Title = NewWorkoutPlanTitle;
-                    SelectedWorkoutPlan.Description = NewWorkoutPlanDescription;
-                    SelectedWorkoutPlan.StartDate = NewWorkoutPlanStartDate;
-                    SelectedWorkoutPlan.EndDate = NewWorkoutPlanEndDate;
-                    SelectedWorkoutPlan.UpdatedDate = DateTime.Now;
-                    
-                    _workoutPlanService.Update(SelectedWorkoutPlan);
-                    
-                    MessageBox.Show(
-                        Application.Current.FindResource("WorkoutPlanUpdateSuccess") as string,
-                        Application.Current.FindResource("Success") as string,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                    if (SelectedWorkoutPlan != null)
+                    {
+                        SelectedWorkoutPlan.Title = NewWorkoutPlanTitle;
+                        SelectedWorkoutPlan.Description = NewWorkoutPlanDescription;
+                        SelectedWorkoutPlan.StartDate = NewWorkoutPlanStartDate;
+                        SelectedWorkoutPlan.EndDate = NewWorkoutPlanEndDate;
+                        SelectedWorkoutPlan.UpdatedDate = DateTime.Now;
+
+                        _workoutPlanService.Update(SelectedWorkoutPlan);
+                        MessageBox.Show("План тренировок успешно обновлен!", "Успех");
+                    }
                 }
-                else
+                else // СОЗДАНИЕ НОВОГО
                 {
-                    var coach = _userService.GetCurrentUser();       
-                    
+                    var coach = _userService.GetCurrentUser();
                     WorkoutPlan newPlan = new WorkoutPlan
                     {
                         Title = NewWorkoutPlanTitle,
@@ -619,33 +618,21 @@ namespace WPF_FitnessClub.ViewModels
                         StartDate = NewWorkoutPlanStartDate,
                         EndDate = NewWorkoutPlanEndDate,
                         CreatedDate = DateTime.Now,
-                        UpdatedDate = DateTime.Now
+                        UpdatedDate = DateTime.Now,
+                        IsCompleted = false
                     };
-                    
-                    var createdPlan = _workoutPlanService.Create(newPlan);
-                    
-                    WorkoutPlans.Add(createdPlan);
-                    
-                    MessageBox.Show(
-                        Application.Current.FindResource("WorkoutPlanCreateSuccess") as string,
-                        Application.Current.FindResource("Success") as string,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                
-                IsWorkoutPlanEditMode = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    string.Format(Application.Current.FindResource("WorkoutPlanSaveError") as string, ex.Message),
-                    Application.Current.FindResource("Error") as string,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
 
+                    _workoutPlanService.Create(newPlan);
+                    MessageBox.Show("Новый план тренировок создан!", "Успех");
+                }
+
+                IsWorkoutPlanEditMode = false;
+                LoadClientPlans(); // Принудительно обновляем список на экране
+            }
+            catch (Exception ex) { MessageBox.Show("Ошибка сохранения: " + ex.Message); }
+            finally { IsLoading = false; }
         }
-        
+
         private void ExecuteCancelWorkoutPlanEdit(object parameter)
         {
             IsWorkoutPlanEditMode = false;
@@ -661,13 +648,13 @@ namespace WPF_FitnessClub.ViewModels
         {
             return SelectedWorkoutPlan != null && !IsWorkoutPlanEditMode;
         }
-        
+
         private bool CanExecuteSaveWorkoutPlan(object parameter)
         {
-            return !string.IsNullOrWhiteSpace(NewWorkoutPlanTitle) &&
-                   NewWorkoutPlanEndDate > NewWorkoutPlanStartDate;
+            // Разрешаем нажать всегда в режиме редактирования, чтобы сработал наш MessageBox с ошибкой
+            return IsWorkoutPlanEditMode;
         }
-        
+
         private void ResetNewWorkoutPlanFields()
         {
             NewWorkoutPlanTitle = string.Empty;

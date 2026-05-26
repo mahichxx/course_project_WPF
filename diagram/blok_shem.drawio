@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="890" dy="-1401" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="-621" dy="-2219" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -52,13 +52,13 @@
         <mxCell id="DR_rWH7iAZZxHhWdZTWf-102" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rhombus;whiteSpace=wrap;html=1;" value="Данные введены верно?" vertex="1">
           <mxGeometry height="90" width="210" x="990.05" y="2978" as="geometry" />
         </mxCell>
-        <mxCell id="DR_rWH7iAZZxHhWdZTWf-110" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="DR_rWH7iAZZxHhWdZTWf-103" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.077;entryY=0.381;entryDx=0;entryDy=0;entryPerimeter=0;" target="DR_rWH7iAZZxHhWdZTWf-100">
+        <mxCell id="DR_rWH7iAZZxHhWdZTWf-110" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="DR_rWH7iAZZxHhWdZTWf-103" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="840" y="3143" />
-              <mxPoint x="840" y="2900" />
-              <mxPoint x="1012" y="2900" />
+              <mxPoint x="840" y="2860" />
             </Array>
+            <mxPoint x="1095" y="2860" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="DR_rWH7iAZZxHhWdZTWf-103" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Сообщение:&lt;br style=&quot;padding: 0px; margin: 0px;&quot;&gt;&#39;Неверные данные&#39;" vertex="1">
@@ -83,7 +83,7 @@
         <mxCell id="DR_rWH7iAZZxHhWdZTWf-114" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rhombus;whiteSpace=wrap;html=1;" value="Есть активный&lt;br style=&quot;padding: 0px; margin: 0px;&quot;&gt;абонемент?" vertex="1">
           <mxGeometry height="100" width="150" x="1390.05" y="2762" as="geometry" />
         </mxCell>
-        <mxCell id="DR_rWH7iAZZxHhWdZTWf-128" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="DR_rWH7iAZZxHhWdZTWf-116" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;">
+        <mxCell id="DR_rWH7iAZZxHhWdZTWf-128" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="DR_rWH7iAZZxHhWdZTWf-116" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;startArrow=none;startFill=0;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1580.05" y="3320" />
