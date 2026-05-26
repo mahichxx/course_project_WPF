@@ -28,6 +28,8 @@ namespace WPF_FitnessClub.ViewModels
 		string roleName;
 		string welcomeMessage;
 
+
+
 		private List<User> _users;
 		private readonly UserService _userService;
 		private readonly DatabaseConnectionService _databaseConnectionService;
@@ -130,7 +132,6 @@ namespace WPF_FitnessClub.ViewModels
 		
 		#endregion
 
-
 		#region Комманды
 
 		public ICommand EnterCommand { get; set; }
@@ -140,6 +141,7 @@ namespace WPF_FitnessClub.ViewModels
 
 		#region События
 		public event EventHandler RequestClose;
+
 		#endregion
 
 		#region Методы команд
@@ -298,7 +300,7 @@ namespace WPF_FitnessClub.ViewModels
             RegPassword = passwordBox.Password;
             ConfirmPassword = confirmPasswordBox.Password;
 
-            // 1. Проверка на пустые поля
+            // 1. Проверка на пустые поля (Твой блок)
             if (string.IsNullOrEmpty(RegLogin) || string.IsNullOrEmpty(RegPassword) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(FullName))
             {
                 ShowWarning("FillAllFields");
@@ -308,10 +310,15 @@ namespace WPF_FitnessClub.ViewModels
             // 2. Проверка совпадения паролей
             if (RegPassword != ConfirmPassword) { ShowWarning("PasswordsMismatch"); return; }
 
-            // 3. ВАЛИДАЦИЯ ПАРОЛЯ (Строго мин. 6 символов)
-            if (RegPassword.Length < 6) { ShowWarning("PasswordTooShort"); return; }
+            // Это правило заменяет собой старую проверку на 6 символов.
+            if (!Regex.IsMatch(RegPassword, @"^(?=.*[a-zA-Zа-яА-ЯёЁ])(?=.*\d)[a-zA-Zа-яА-ЯёЁ0-9]{8,}$"))
+            {
+                MessageBox.Show("Пароль должен быть не менее 8 символов и содержать как буквы, так и цифры. Пробелы, запятые и спецсимволы запрещены.",
+                                "Ошибка безопасности", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-            // 4. ВАЛИДАЦИЯ ФИО (Только буквы и строго 3 слова)
+            // 3. ВАЛИДАЦИЯ ФИО (Только буквы и строго 3 слова)
             if (!Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$")) { ShowWarning("FullNameOnlyLetters"); return; }
 
             string[] nameParts = FullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -321,7 +328,7 @@ namespace WPF_FitnessClub.ViewModels
                 return;
             }
 
-            // 5. ПРОВЕРКА УНИКАЛЬНОСТИ В БД
+            // 4. ПРОВЕРКА УНИКАЛЬНОСТИ В БД (Твой оригинальный код)
             bool isLoginUnique = true;
             bool isEmailUnique = true;
             if (_databaseConnectionService.IsDatabaseExists())
@@ -337,11 +344,8 @@ namespace WPF_FitnessClub.ViewModels
             if (!isLoginUnique) { ShowWarning("LoginAlreadyExists"); return; }
             if (!isEmailUnique) { ShowWarning("EmailAlreadyExists"); return; }
 
-            // === ШАГ ХЕШИРОВАНИЯ ===
-            // Хешируем пароль перед созданием объекта пользователя
+            // 5. ХЕШИРОВАНИЕ И СОХРАНЕНИЕ
             string hashedPassword = WPF_FitnessClub.Data.PasswordHasher.HashPassword(RegPassword);
-
-            // Создаем пользователя уже с ХЕШЕМ в поле Password
             var newUser = new User(FullName, Email, RegLogin, hashedPassword, UserRole.Client);
 
             if (_userService.Add(newUser) > 0)
@@ -351,9 +355,10 @@ namespace WPF_FitnessClub.ViewModels
                     (string)Application.Current.Resources["SuccessTitle"],
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
+                // Передаем пользователя и пароль словами для отображения в кабинете
                 OpenMainWindow(newUser, RegPassword);
 
-                // ЗАКРЫВАЕМ ОКНО РЕГИСТРАЦИИ ПОСЛЕ УСПЕХА
+                // Закрываем окно
                 var regWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w is View.RegistrationView);
                 regWindow?.Close();
             }

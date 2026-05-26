@@ -11,7 +11,8 @@
         Height="450" 
         Width="800" 
         WindowState="Maximized"
-        Style="{StaticResource WindowStyle}">
+        Style="{StaticResource WindowStyle}"
+        Icon="Resources/dumbbell_1.ico">
 
     <Window.InputBindings>
         <KeyBinding Key="L" Modifiers="Control" Command="{Binding LogoutCommand}"/>

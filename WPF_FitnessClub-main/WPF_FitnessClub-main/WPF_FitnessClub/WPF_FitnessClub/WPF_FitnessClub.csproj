@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\dumbbell.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\dumbbell_1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
@@ -303,6 +303,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="dumbbell_1.ico" />
     <Content Include="Images\gym2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -315,6 +316,7 @@
     <Content Include="Images\yoga.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\dumbbell_1.ico" />
     <Resource Include="Resources\dumbbell.ico" />
     <Resource Include="Resources\arrow.cur" />
   </ItemGroup>

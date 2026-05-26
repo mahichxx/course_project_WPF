@@ -22,32 +22,51 @@
 
         <!-- Шаблоны планов -->
         <DataTemplate x:Key="WorkoutPlanTemplate">
-            <Border Background="{DynamicResource SecondaryBackgroundBrush}" Margin="0,5" Padding="10" CornerRadius="5">
+            <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
+                Width="380" Height="140" Margin="10" Padding="15" 
+                CornerRadius="10" Effect="{StaticResource CardShadow}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Style="{StaticResource CustomTextBlockStyle}" />
-                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" />
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="15" 
+                               Style="{StaticResource CustomTextBlockStyle}" MaxHeight="25" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" 
+                               Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" 
+                               Margin="0,5,0,0" Height="60" TextTrimming="CharacterEllipsis"/>
                     </StackPanel>
-                    <CheckBox Grid.Column="1" IsChecked="{Binding IsCompleted, Mode=TwoWay}" Command="{Binding DataContext.MarkWorkoutPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" VerticalAlignment="Center"/>
+
+                    <!-- Чек-бокс выполнения -->
+                    <CheckBox Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"
+                          IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                          Command="{Binding DataContext.MarkWorkoutPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                          CommandParameter="{Binding}"/>
                 </Grid>
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="NutritionPlanTemplate">
-            <Border Background="{DynamicResource SecondaryBackgroundBrush}" Margin="0,5" Padding="10" CornerRadius="5">
+            <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
+                Width="380" Height="140" Margin="10" Padding="15" 
+                CornerRadius="10" Effect="{StaticResource CardShadow}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold" Style="{StaticResource CustomTextBlockStyle}" />
-                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" />
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="15" 
+                               Style="{StaticResource CustomTextBlockStyle}" MaxHeight="25" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" 
+                               Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" 
+                               Margin="0,5,0,0" Height="60" TextTrimming="CharacterEllipsis"/>
                     </StackPanel>
-                    <CheckBox Grid.Column="1" IsChecked="{Binding IsCompleted, Mode=TwoWay}" Command="{Binding DataContext.MarkNutritionPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" VerticalAlignment="Center"/>
+
+                    <CheckBox Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"
+                          IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                          Command="{Binding DataContext.MarkNutritionPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                          CommandParameter="{Binding}"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -116,7 +135,7 @@
                                 <!-- ВОЗРАСТ (Строго целое) -->
                                 <StackPanel Margin="0,0,5,0">
                                     <TextBlock Text="{DynamicResource AgeLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                    <TextBox Text="{Binding Age, UpdateSourceTrigger=LostFocus}" 
+                                    <TextBox Text="{Binding AgeText, UpdateSourceTrigger=LostFocus}" 
                  PreviewTextInput="IntegerValidationTextBox"
                  IsEnabled="{Binding IsEditMode}" 
                  Style="{StaticResource GeneralTextBoxStyle}"/>
@@ -125,7 +144,7 @@
                                 <!-- ВЕС (Дробное, до 3 знаков) -->
                                 <StackPanel Grid.Column="1" Margin="5,0,5,0">
                                     <TextBlock Text="{DynamicResource WeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                    <TextBox Text="{Binding Weight, UpdateSourceTrigger=LostFocus, StringFormat=\{0:F3\}}" 
+                                    <TextBox Text="{Binding WeightText, UpdateSourceTrigger=LostFocus, StringFormat=\{0:F3\}}" 
                  PreviewTextInput="WeightValidationTextBox"
                  IsEnabled="{Binding IsEditMode}" 
                  Style="{StaticResource GeneralTextBoxStyle}"/>
@@ -134,7 +153,7 @@
                                 <!-- РОСТ (Строго целое, как просили) -->
                                 <StackPanel Grid.Column="2" Margin="5,0,0,0">
                                     <TextBlock Text="{DynamicResource HeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
-                                    <TextBox Text="{Binding Height, UpdateSourceTrigger=LostFocus}" 
+                                    <TextBox Text="{Binding HeightText, UpdateSourceTrigger=LostFocus}" 
                  PreviewTextInput="IntegerValidationTextBox"
                  IsEnabled="{Binding IsEditMode}" 
                  Style="{StaticResource GeneralTextBoxStyle}"/>
@@ -202,16 +221,30 @@
 
                     <!-- Вкладки Планов -->
                     <TabItem Header="{DynamicResource WorkoutPlansTab}" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource CustomTabItemStyle}">
-                        <StackPanel MaxWidth="800" HorizontalAlignment="Center" Margin="0,30,0,30">
+                        <StackPanel MaxWidth="850" HorizontalAlignment="Center" Margin="0,30,0,30">
                             <TextBlock Text="{DynamicResource YourWorkoutPlans}" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20" HorizontalAlignment="Center"/>
-                            <ListBox ItemsSource="{Binding WorkoutPlans}" ItemTemplate="{StaticResource WorkoutPlanTemplate}" Style="{StaticResource CustomListBoxStyle}" Background="Transparent" BorderThickness="0"/>
+
+                            <ItemsControl ItemsSource="{Binding WorkoutPlans}" ItemTemplate="{StaticResource WorkoutPlanTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </StackPanel>
                     </TabItem>
 
                     <TabItem Header="{DynamicResource NutritionPlansTab}" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource CustomTabItemStyle}">
-                        <StackPanel MaxWidth="800" HorizontalAlignment="Center" Margin="0,30,0,30">
+                        <StackPanel MaxWidth="850" HorizontalAlignment="Center" Margin="0,30,0,30">
                             <TextBlock Text="{DynamicResource YourNutritionPlans}" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20" HorizontalAlignment="Center"/>
-                            <ListBox ItemsSource="{Binding NutritionPlans}" ItemTemplate="{StaticResource NutritionPlanTemplate}" Style="{StaticResource CustomListBoxStyle}" Background="Transparent" BorderThickness="0"/>
+
+                            <ItemsControl ItemsSource="{Binding NutritionPlans}" ItemTemplate="{StaticResource NutritionPlanTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </StackPanel>
                     </TabItem>
 

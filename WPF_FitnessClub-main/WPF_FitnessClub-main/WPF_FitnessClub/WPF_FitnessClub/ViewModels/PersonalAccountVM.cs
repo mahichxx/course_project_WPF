@@ -508,6 +508,66 @@ namespace WPF_FitnessClub.ViewModels
             set { _user.Age = value; OnPropertyChanged(nameof(Age)); OnPropertyChanged(nameof(DailyCalories)); }
         }
 
+        // Строковая обертка для Веса
+        public string WeightText
+        {
+            get => _user.Weight == 0 ? "" : _user.Weight.ToString();
+            set
+            {
+                // Позволяем вводить точку или запятую, преобразуем в число
+                if (double.TryParse(value.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double res))
+                {
+                    _user.Weight = res;
+                    OnPropertyChanged(nameof(Weight)); // Уведомляем числовое свойство
+                }
+                else if (string.IsNullOrEmpty(value))
+                {
+                    _user.Weight = 0;
+                }
+                OnPropertyChanged(nameof(WeightText));
+                OnPropertyChanged(nameof(DailyCalories));
+            }
+        }
+
+        // Строковая обертка для Роста
+        public string HeightText
+        {
+            get => _user.Height == 0 ? "" : _user.Height.ToString();
+            set
+            {
+                if (double.TryParse(value, out double res))
+                {
+                    _user.Height = Math.Floor(res); // Сохраняем целым
+                    OnPropertyChanged(nameof(Height));
+                }
+                else if (string.IsNullOrEmpty(value))
+                {
+                    _user.Height = 0;
+                }
+                OnPropertyChanged(nameof(HeightText));
+                OnPropertyChanged(nameof(DailyCalories));
+            }
+        }
+
+        // Строковая обертка для Возраста
+        public string AgeText
+        {
+            get => _user.Age == 0 ? "" : _user.Age.ToString();
+            set
+            {
+                if (int.TryParse(value, out int res))
+                {
+                    _user.Age = res;
+                    OnPropertyChanged(nameof(Age));
+                }
+                else if (string.IsNullOrEmpty(value))
+                {
+                    _user.Age = 0;
+                }
+                OnPropertyChanged(nameof(AgeText));
+                OnPropertyChanged(nameof(DailyCalories));
+            }
+        }
         private string _displayPasswordValue;
         public string DisplayPassword
         {
@@ -537,7 +597,6 @@ namespace WPF_FitnessClub.ViewModels
                 OnPropertyChanged(nameof(GenderIndex));
             }
         }
-        // Расчет нормы калорий (КБЖУ)
         public string DailyCalories
         {
             get
@@ -549,6 +608,14 @@ namespace WPF_FitnessClub.ViewModels
                 return Math.Round(bmr * 1.2).ToString() + " ккал"; // Умножили на 1.2
             }
         }
+
+        private readonly string _passwordPattern = @"^(?=.*[a-zA-Zа-яА-ЯёЁ])(?=.*\d)[a-zA-Zа-яА-ЯёЁ0-9]{8,}$";
+
+        private string _weightErrorMessage;
+        public string WeightErrorMessage { get => _weightErrorMessage; set { _weightErrorMessage = value; OnPropertyChanged(nameof(WeightErrorMessage)); } }
+        private bool _isWeightError;
+        public bool IsWeightError { get => _isWeightError; set { _isWeightError = value; OnPropertyChanged(nameof(IsWeightError)); } }
+
         #endregion
 
         #region Методы загрузки данных
@@ -757,7 +824,14 @@ namespace WPF_FitnessClub.ViewModels
             {
                 List<string> validationErrors = new List<string>();
 
-                // 1. Валидация Логина (с проверкой на уникальность)
+                // 1. ВАЛИДАЦИЯ ПУСТЫХ ПОЛЕЙ (Строковые данные)
+                if (string.IsNullOrWhiteSpace(FullName))
+                {
+                    validationErrors.Add((string)Application.Current.Resources["FullNameRequired"]);
+                    IsFullNameError = true;
+                    FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequired"];
+                }
+
                 if (string.IsNullOrWhiteSpace(Username))
                 {
                     validationErrors.Add((string)Application.Current.Resources["UsernameRequired"]);
@@ -770,36 +844,31 @@ namespace WPF_FitnessClub.ViewModels
                     IsUsernameError = true;
                     UsernameErrorMessage = (string)Application.Current.Resources["UsernameTooShort"];
                 }
-                else
+                else if (Username != _originalUsername) // Проверка уникальности при смене логина
                 {
-                    // ПРОВЕРКА УНИКАЛЬНОСТИ: Если логин изменили, проверяем, не занят ли он
-                    if (Username != _originalUsername)
+                    if (!_userService.IsLoginUnique(Username))
                     {
-                        if (!_userService.IsLoginUnique(Username))
-                        {
-                            validationErrors.Add("Данный логин уже занят другим пользователем!");
-                            IsUsernameError = true;
-                            UsernameErrorMessage = "Логин занят";
-                        }
-                        else { IsUsernameError = false; UsernameErrorMessage = string.Empty; }
+                        validationErrors.Add("Данный логин уже занят другим пользователем!");
+                        IsUsernameError = true;
+                        UsernameErrorMessage = "Логин занят";
                     }
-                    else { IsUsernameError = false; UsernameErrorMessage = string.Empty; }
                 }
 
-                // 2. Валидация ФИО (строго 3 слова)
-                if (string.IsNullOrWhiteSpace(FullName))
+                if (string.IsNullOrWhiteSpace(Email))
                 {
-                    validationErrors.Add((string)Application.Current.Resources["FullNameRequired"]);
-                    IsFullNameError = true;
-                    FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequired"];
+                    validationErrors.Add("Email не может быть пустым");
+                    IsEmailError = true;
                 }
-                else
+
+                // 2. ВАЛИДАЦИЯ ФИО (строго 3 слова, кроме admin)
+                if (!string.IsNullOrWhiteSpace(FullName))
                 {
                     string trimmedName = FullName.Trim();
                     if (!Regex.IsMatch(trimmedName, @"^[а-яА-Яa-zA-ZёЁ\s]+$"))
                     {
                         validationErrors.Add("ФИО может содержать только буквы");
                         IsFullNameError = true;
+                        FullNameErrorMessage = "Только буквы";
                     }
                     else
                     {
@@ -810,47 +879,49 @@ namespace WPF_FitnessClub.ViewModels
                             IsFullNameError = true;
                             FullNameErrorMessage = (string)Application.Current.Resources["FullNameRequireThreeWords"];
                         }
-                        else { IsFullNameError = false; FullNameErrorMessage = string.Empty; }
                     }
                 }
 
-                // 3. Валидация Email (чтобы не был пустым)
-                if (string.IsNullOrWhiteSpace(Email))
+                // 3. ВАЛИДАЦИЯ ПАРАМЕТРОВ ТЕЛА (Защита от пустых ячеек)
+                // Если пользователь стер текст, в модели будет 0. Мы это блокируем.
+                if (_user.Age < 10 || _user.Age > 100)
                 {
-                    validationErrors.Add("Email не может быть пустым");
-                    IsEmailError = true;
+                    validationErrors.Add("Возраст должен быть от 10 до 100 лет. Поле не может быть пустым.");
                 }
 
-                // 4. Валидация Телефона (+375 и 9 цифр)
+                if (_user.Role == UserRole.Client)
+                {
+                    if (_user.Weight <= 30 || _user.Weight > 300)
+                        validationErrors.Add("Укажите корректный вес (от 30 до 300 кг). Поле не может быть пустым.");
+
+                    if (_user.Height <= 100 || _user.Height > 250)
+                        validationErrors.Add("Укажите корректный рост (от 100 до 250 см). Поле не может быть пустым.");
+                }
+
+                // 4. ВАЛИДАЦИЯ ТЕЛЕФОНА
                 if (!string.IsNullOrWhiteSpace(Phone))
                 {
                     string cleanPhone = Regex.Replace(Phone, @"[^\d\+]", "");
                     if (!Regex.IsMatch(cleanPhone, @"^\+375\d{9}$"))
                     {
-                        validationErrors.Add("Номер должен быть: +375 (XX) XXX-XX-XX");
+                        validationErrors.Add("Номер должен быть в формате: +375 (XX) XXX-XX-XX");
                     }
                 }
 
-                // 5. Параметры тела и возраста
-                if (Age < 10 || Age > 100) validationErrors.Add("Возраст должен быть от 10 до 100 лет");
-                if (_user.Role == UserRole.Client)
-                {
-                    if (Weight <= 30 || Weight > 300) validationErrors.Add("Укажите реальный вес (от 30 до 300 кг)");
-                    if (Height <= 100 || Height > 250) validationErrors.Add("Укажите реальный рост (от 100 до 250 см)");
-                }
-
-                // Вывод ошибок
+                // ВЫВОД ВСЕХ ОШИБОК
                 if (validationErrors.Count > 0)
                 {
                     MessageBox.Show("Ошибки при сохранении:\n- " + string.Join("\n- ", validationErrors),
-                                    "Валидация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    "Валидация данных", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Сохранение
+                // 5. СОХРАНЕНИЕ В БАЗУ ДАННЫХ
+                IsLoading = true;
                 if (_userService.Update(_user))
                 {
-                    // Обновляем "бэкап" для корректной работы кнопки Отмена в будущем
+                    // ОБНОВЛЯЕМ БЭКАП (оригинальные значения)
+                    // Это нужно, чтобы если вы нажмете Редактировать СНОВА, кнопка Отмена знала новые данные
                     _originalUsername = Username;
                     _originalFullName = FullName;
                     _originalEmail = Email;
@@ -861,12 +932,26 @@ namespace WPF_FitnessClub.ViewModels
                     _originalGender = Gender;
 
                     IsEditMode = false;
-                    MessageBox.Show("Данные успешно обновлены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Пинкаем строковые обертки, чтобы они обновили текст (убрали лишние точки и т.д.)
+                    OnPropertyChanged("WeightText");
+                    OnPropertyChanged("HeightText");
+                    OnPropertyChanged("AgeText");
+
+                    MessageBox.Show("Данные профиля успешно обновлены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось обновить данные в базе. Проверьте соединение.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Критическая ошибка сохранения: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
         private bool ValidateUsername(string username)
@@ -972,56 +1057,56 @@ namespace WPF_FitnessClub.ViewModels
         {
             try
             {
-                // 1. ГИБРИДНАЯ ПРОВЕРКА ТЕКУЩЕГО ПАРОЛЯ
-                bool isCurrentCorrect = false;
-                // Проверяем как хеш
-                if (WPF_FitnessClub.Data.PasswordHasher.VerifyPassword(CurrentPassword, _user.Password))
-                {
-                    isCurrentCorrect = true;
-                }
-                // Если не совпало — проверяем как текст (для миграции старых юзеров)
-                else if (_user.Password == CurrentPassword)
-                {
-                    isCurrentCorrect = true;
-                }
+                // 1. ПРОВЕРКА ТЕКУЩЕГО ПАРОЛЯ
+                // Мы сравниваем то, что сейчас в поле ввода (CurrentPassword), с тем, что в объекте пользователя
+                bool isCurrentCorrect = WPF_FitnessClub.Data.PasswordHasher.VerifyPassword(CurrentPassword, _user.Password)
+                                         || _user.Password == CurrentPassword;
 
                 if (!isCurrentCorrect)
                 {
-                    MessageBox.Show("Текущий пароль введен неверно!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Текущий пароль для подтверждения введен неверно!", "Ошибка");
                     return;
                 }
 
-                // 2. ВАЛИДАЦИЯ НОВОГО ПАРОЛЯ
-                if (string.IsNullOrEmpty(NewPassword) || NewPassword.Length < 6)
+                // 2. ВАЛИДАЦИЯ НОВОГО ПАРОЛЯ (8+ символов, буквы + цифры)
+                string passPattern = @"^(?=.*[a-zA-Zа-яА-ЯёЁ])(?=.*\d)[a-zA-Zа-яА-ЯёЁ0-9]{8,}$";
+                if (string.IsNullOrEmpty(NewPassword) || !Regex.IsMatch(NewPassword, passPattern))
                 {
-                    MessageBox.Show("Новый пароль должен содержать минимум 6 символов", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Новый пароль не соответствует требованиям безопасности (8+ символов, буквы и цифры)!", "Ошибка");
                     return;
                 }
 
                 if (NewPassword != ConfirmPassword)
                 {
-                    MessageBox.Show("Пароли не совпадают", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Пароли не совпадают!", "Ошибка");
                     return;
                 }
 
-                // 3. ХЕШИРОВАНИЕ НОВОГО ПАРОЛЯ ПЕРЕД СОХРАНЕНИЕМ
+                // 3. ХЕШИРОВАНИЕ И СОХРАНЕНИЕ
                 string hashedPass = WPF_FitnessClub.Data.PasswordHasher.HashPassword(NewPassword);
+                string plainWord = NewPassword; // Запоминаем "слово" перед очисткой полей
+
                 _user.Password = hashedPass;
 
                 if (_userService.Update(_user))
                 {
-                    // ВАЖНО: Обновляем отображаемое слово в ячейке
-                    DisplayPassword = NewPassword;
 
-                    // По желанию: обновить пароль и в MainWindow, чтобы при перезаходе во вкладку он не сбросился
-                    if (Application.Current.MainWindow is MainWindow main)
-                    {
-                        // Нужно будет создать в MainWindow публичный метод или свойство для этого
-                        // main.UpdateStoredPassword(NewPassword); 
-                    }
+                    // Обновляем бэкап пароля, чтобы кнопка "Отмена" не вернула старый
+                    _originalPassword = hashedPass;
 
-                    ClearPasswordFields();
-                    MessageBox.Show("Пароль успешно изменен!", "Успех");
+                    // Обновляем отображаемое слово (DisplayPassword), которое видит пользователь
+                    DisplayPassword = plainWord;
+
+                    // Обновляем CurrentPassword, чтобы при следующей попытке система знала актуальное "слово"
+                    CurrentPassword = plainWord;
+
+                    // Очищаем только поля НОВОГО пароля
+                    NewPassword = string.Empty;
+                    ConfirmPassword = string.Empty;
+                    OnPropertyChanged(nameof(NewPassword));
+                    OnPropertyChanged(nameof(ConfirmPassword));
+
+                    MessageBox.Show("Пароль успешно изменен! Вы можете сменить его снова, если потребуется.", "Успех");
                 }
             }
             catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); }
