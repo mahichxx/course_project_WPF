@@ -28,14 +28,16 @@ namespace WPF_FitnessClub.Data.Repositories
 
         public List<WorkoutPlan> GetByUser(int userId)
         {
-            return _dbSet.Where(wp => wp.ClientId == userId)
-                         .ToList();
+            return _dbSet.Include(wp => wp.Coach)
+                 .Where(wp => wp.ClientId == userId)
+                 .ToList();
         }
 
         public List<WorkoutPlan> GetByTrainer(int trainerId)
         {
-            return _dbSet.Where(wp => wp.CoachId == trainerId)
-                         .ToList();
+            return _dbSet.Include(wp => wp.Client)
+                 .Where(wp => wp.CoachId == trainerId)
+                 .ToList();
         }
     }
 } 

@@ -36,14 +36,12 @@ namespace WPF_FitnessClub.ViewModels
 
         private readonly Dictionary<string, string> _durationTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			// Связываем то, что в выпадающем списке, с тем, что лежит в базе
 			{ "1 занятие", "Visit1" },
 			{ "4 занятия", "Visit4" },
 			{ "8 занятий", "Visit8" },
 			{ "16 занятий", "Visit16" },
 			{ "32 занятия", "Visit32" },
     
-			// Оставляем старые варианты на случай, если в базе еще есть "месяцы"
 			{ "1 месяц", "Visit1" },
 			{ "3 месяца", "Visit8" },
 			{ "12 месяцев", "Visit32" }

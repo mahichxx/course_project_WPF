@@ -266,14 +266,12 @@ namespace WPF_FitnessClub.ViewModels
                     IsLoading = true;
                     User u = addUserDialog.NewUser;
 
-                    // 1. ПРОВЕРКА УНИКАЛЬНОСТИ ЛОГИНА (Твой код)
                     if (!_userService.IsLoginUnique(u.Login))
                     {
                         MessageBox.Show((string)Application.Current.Resources["LoginAlreadyTaken"], "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         IsLoading = false; return;
                     }
 
-                    // === НОВЫЙ БЛОК: СТРОГАЯ ВАЛИДАЦИЯ ПАРОЛЯ (8+ символов, буквы + цифры) ===
                     string passPattern = @"^(?=.*[a-zA-Zа-яА-ЯёЁ])(?=.*\d)[a-zA-Zа-яА-ЯёЁ0-9]{8,}$";
                     if (!Regex.IsMatch(u.Password, passPattern))
                     {
@@ -286,10 +284,8 @@ namespace WPF_FitnessClub.ViewModels
                         return;
                     }
 
-                    // Теперь, когда мы уверены, что пароль сложный, превращаем его в хеш
                     u.Password = WPF_FitnessClub.Data.PasswordHasher.HashPassword(u.Password);
 
-                    // 2. ДОБАВЛЕНИЕ В БД
                     int userId = _userService.Add(u);
                     if (userId > 0)
                     {

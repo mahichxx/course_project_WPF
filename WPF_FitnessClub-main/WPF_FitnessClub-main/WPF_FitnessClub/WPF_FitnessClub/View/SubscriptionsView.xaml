@@ -231,7 +231,7 @@
                              Padding="20,20,0,0" 
                              Style="{StaticResource HeaderTextBlockStyle}"/>
 
-                    <!-- Блок ТИП -->
+                    <!-- Блок тип -->
                     <ComboBox SelectedValuePath="Tag" 
           SelectedValue="{Binding SelectedTypeKey, UpdateSourceTrigger=PropertyChanged}" 
           Style="{StaticResource CustomComboBoxStyle}" Height="30">
@@ -247,7 +247,7 @@
                              Margin="20,20,0,0" 
                              Style="{StaticResource HeaderTextBlockStyle}" Height="29" />
 
-                    <!-- Блок ДЛИТЕЛЬНОСТЬ -->
+                    <!-- Блок длит -->
                     <ComboBox SelectedValuePath="Tag" 
           SelectedValue="{Binding SelectedDurationKey, UpdateSourceTrigger=PropertyChanged}" 
           Style="{StaticResource CustomComboBoxStyle}" Height="30">

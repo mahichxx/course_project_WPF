@@ -20,60 +20,106 @@
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:NonZeroToVisibilityConverter x:Key="NonZeroToVisibilityConverter"/>
 
-        <!-- Шаблоны планов -->
+        <!-- Шаблон карточки ПЛАНА ТРЕНИРОВОК -->
         <DataTemplate x:Key="WorkoutPlanTemplate">
             <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
-                Width="380" Height="140" Margin="10" Padding="15" 
+                BorderBrush="{DynamicResource LightGrayBrush}"
+                BorderThickness="1"
+                Width="380" Height="160" Margin="10" Padding="15" 
                 CornerRadius="10" Effect="{StaticResource CardShadow}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="15" 
-                               Style="{StaticResource CustomTextBlockStyle}" MaxHeight="25" TextTrimming="CharacterEllipsis"/>
+                        <!-- Название -->
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16" 
+                               Foreground="{DynamicResource TextBrush}"
+                               Style="{StaticResource CustomTextBlockStyle}" 
+                               MaxHeight="25" TextTrimming="CharacterEllipsis"/>
+
+                        <!-- Блок с тренером -->
+                        <StackPanel Orientation="Horizontal" Margin="0,3,0,10">
+                            <TextBlock Text="{DynamicResource CoachRole}" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="11" Opacity="0.5" VerticalAlignment="Center" Margin="0"/>
+                            <TextBlock Text=":" Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="11" Opacity="0.5" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Coach.FullName}" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="11" FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource PrimaryRedBrush}" VerticalAlignment="Center" Margin="0"/>
+                        </StackPanel>
+
+                        <!-- Описание -->
                         <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" 
                                Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" 
-                               Margin="0,5,0,0" Height="60" TextTrimming="CharacterEllipsis"/>
+                               Height="60" TextTrimming="CharacterEllipsis" VerticalAlignment="Top"/>
                     </StackPanel>
 
-                    <!-- Чек-бокс выполнения -->
+                    <!-- Кнопка отметки -->
                     <CheckBox Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"
                           IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
                           Command="{Binding DataContext.MarkWorkoutPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                          CommandParameter="{Binding}"/>
+                          CommandParameter="{Binding}" 
+                          Style="{StaticResource CustomCheckBoxStyle}"/>
                 </Grid>
             </Border>
         </DataTemplate>
+
+        <!-- ЕДИНЫЙ ШАБЛОН ДЛЯ ПЛАНА ПИТАНИЯ (Идентичен тренировкам) -->
         <DataTemplate x:Key="NutritionPlanTemplate">
             <Border Background="{DynamicResource SecondaryBackgroundBrush}" 
-                Width="380" Height="140" Margin="10" Padding="15" 
+                BorderBrush="{DynamicResource LightGrayBrush}"
+                BorderThickness="1"
+                Width="380" Height="160" Margin="10" Padding="15" 
                 CornerRadius="10" Effect="{StaticResource CardShadow}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="15" 
-                               Style="{StaticResource CustomTextBlockStyle}" MaxHeight="25" TextTrimming="CharacterEllipsis"/>
+                        <!-- Название -->
+                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16" 
+                               Foreground="{DynamicResource TextBrush}"
+                               Style="{StaticResource CustomTextBlockStyle}" 
+                               MaxHeight="25" TextTrimming="CharacterEllipsis"/>
+
+                        <!-- Блок с тренером -->
+                        <StackPanel Orientation="Horizontal" Margin="0,3,0,10">
+                            <TextBlock Text="{DynamicResource CoachRole}" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="11" Opacity="0.5" VerticalAlignment="Center" Margin="0"/>
+                            <TextBlock Text=":" Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="11" Opacity="0.5" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Coach.FullName}" 
+                                   Style="{StaticResource CustomTextBlockStyle}"
+                                   FontSize="11" FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource PrimaryRedBrush}" VerticalAlignment="Center" Margin="0"/>
+                        </StackPanel>
+
+                        <!-- Описание -->
                         <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" 
                                Opacity="0.7" Style="{StaticResource CustomTextBlockStyle}" 
-                               Margin="0,5,0,0" Height="60" TextTrimming="CharacterEllipsis"/>
+                               Height="60" TextTrimming="CharacterEllipsis" VerticalAlignment="Top"/>
                     </StackPanel>
 
+                    <!-- Кнопка отметки -->
                     <CheckBox Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"
                           IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
                           Command="{Binding DataContext.MarkNutritionPlanCompletedCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                          CommandParameter="{Binding}"/>
+                          CommandParameter="{Binding}" 
+                          Style="{StaticResource CustomCheckBoxStyle}"/>
                 </Grid>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource BackgroundBrush}">
-        <!-- ОДИН ГЛАВНЫЙ СКРОЛЛЕР НА ВСЁ ОКНО -->
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Margin="0,0,0,50">
 
@@ -81,7 +127,6 @@
                            Style="{StaticResource CustomTextBlockStyle}"
                            Margin="20,40,20,20" HorizontalAlignment="Center"/>
 
-                <!-- TabControl теперь растянут, центрируем содержимое внутри вкладок -->
                 <TabControl SelectedIndex="{Binding SelectedTabIndex}" 
                             Style="{StaticResource CustomTabControlStyle}"
                             HorizontalAlignment="Stretch">
@@ -118,13 +163,13 @@
                    Visibility="{Binding IsEmailError, Converter={StaticResource BooleanToVisibilityConverter}}"
                    HorizontalAlignment="Left" Margin="0,2,0,0"/>
 
-                            <!-- ПОЛ (вынесен отдельно над физическими данными) -->
+                            <!-- ПОЛ -->
                             <TextBlock Text="{DynamicResource GenderLabel}" Style="{StaticResource CustomTextBlockStyle}" Margin="0,15,0,0"/>
                             <ComboBox SelectedIndex="{Binding GenderIndex}" IsEnabled="{Binding IsEditMode}" Style="{StaticResource CustomComboBoxStyle}" Height="35">
                                 <ComboBoxItem Content="{DynamicResource Male}"/>
                                 <ComboBoxItem Content="{DynamicResource Female}"/>
                             </ComboBox>
-                            <!-- СЕТКА: Возраст, Вес, Рост -->
+                            <!--  Возраст, Вес, Рост -->
                             <Grid Margin="0,15,0,0" Visibility="{Binding IsClientRole, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -141,7 +186,7 @@
                  Style="{StaticResource GeneralTextBoxStyle}"/>
                                 </StackPanel>
 
-                                <!-- ВЕС (Дробное, до 3 знаков) -->
+                                <!-- ВЕС -->
                                 <StackPanel Grid.Column="1" Margin="5,0,5,0">
                                     <TextBlock Text="{DynamicResource WeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
                                     <TextBox Text="{Binding WeightText, UpdateSourceTrigger=LostFocus, StringFormat=\{0:F3\}}" 
@@ -150,7 +195,7 @@
                  Style="{StaticResource GeneralTextBoxStyle}"/>
                                 </StackPanel>
 
-                                <!-- РОСТ (Строго целое, как просили) -->
+                                <!-- РОСТ  -->
                                 <StackPanel Grid.Column="2" Margin="5,0,0,0">
                                     <TextBlock Text="{DynamicResource HeightLabel}" Style="{StaticResource CustomTextBlockStyle}"/>
                                     <TextBox Text="{Binding HeightText, UpdateSourceTrigger=LostFocus}" 
@@ -200,7 +245,7 @@
                             <TextBlock Text="{DynamicResource ChangePasswordTitle}" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
                             <TextBlock Text="{DynamicResource YourCurrentPassword}"  Style="{StaticResource CustomTextBlockStyle}"/>
-                            <!-- Файл: PersonalAccountView.xaml -->
+
                             <TextBox x:Name="SecurityCurrentPasswordInput" 
          Style="{StaticResource GeneralTextBoxStyle}" 
          Text="{Binding DisplayPassword, UpdateSourceTrigger=PropertyChanged}" 

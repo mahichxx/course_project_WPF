@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WPF_FitnessClub">
 
-    <!-- ЦВЕТОВАЯ ПАЛИТРА: ОРАНЖЕВАЯ ТЕМА -->
     <Color x:Key="PrimaryRed">#FF7A50</Color>
     <!-- Коралловый акцент -->
     <Color x:Key="DarkRed">#E6643C</Color>
@@ -16,7 +15,7 @@
     <Color x:Key="MediumGray">#808080</Color>
     <Color x:Key="LightGray">#D1D9D6</Color>
 
-    <!-- Кисти (используем DynamicResource, чтобы они могли меняться) -->
+    <!-- DynamicResource -->
     <SolidColorBrush x:Key="PrimaryRedBrush" Color="{DynamicResource PrimaryRed}"/>
     <SolidColorBrush x:Key="DarkRedBrush" Color="{DynamicResource DarkRed}"/>
     <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource BackgroundColor}"/>
@@ -25,8 +24,6 @@
     <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="{DynamicResource SecondaryBackgroundColor}"/>
     <SolidColorBrush x:Key="LightGrayBrush" Color="{DynamicResource LightGray}"/>
     <SolidColorBrush x:Key="MediumGrayBrush" Color="{DynamicResource MediumGray}"/>
-
-    <!-- СТИЛИ ЭЛЕМЕНТОВ -->
 
     <!-- Текстовые поля -->
     <Style TargetType="{x:Type TextBox}">

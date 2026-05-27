@@ -218,7 +218,7 @@ namespace WPF_FitnessClub.ViewModels
 
             if (openFileDialog.ShowDialog() == true)
             {
-                // Берем ТОЛЬКО имя файла (например, "yoga.jpg"), а не весь путь к диску C:
+                // Берем имя файла (например, "yoga.jpg"), а не весь путь к диску C:
                 string fileName = System.IO.Path.GetFileName(openFileDialog.FileName);
 
                 // Сохраняем только имя. Конвертер сам подставит папку Images/

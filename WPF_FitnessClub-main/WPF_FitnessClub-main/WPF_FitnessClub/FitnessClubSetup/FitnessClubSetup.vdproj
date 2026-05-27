@@ -296,6 +296,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -1189,15 +1197,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FitnessClubSetup"
-        "ProductCode" = "8:{D332825D-F2A2-4F57-9E98-9680D7A31A80}"
-        "PackageCode" = "8:{E9C3907B-13FB-4271-8E48-CF8284599EC3}"
+        "ProductCode" = "8:{A7689576-53DC-4432-988C-D9CAF32CD4E2}"
+        "PackageCode" = "8:{B7B3C6B2-423F-4D0D-A747-870C28640D8F}"
         "UpgradeCode" = "8:{2788A768-4F3B-4D6F-8354-399640484C29}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.1"
+        "ProductVersion" = "8:1.0.2"
         "Manufacturer" = "8:Default Company Name"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

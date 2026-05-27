@@ -400,7 +400,7 @@ namespace WPF_FitnessClub.ViewModels
             {
                 IsLoading = true;
 
-                if (IsEditingExistingNutritionPlan) // РЕДАКТИРОВАНИЕ
+                if (IsEditingExistingNutritionPlan)
                 {
                     if (SelectedNutritionPlan != null)
                     {
@@ -415,7 +415,7 @@ namespace WPF_FitnessClub.ViewModels
                         MessageBox.Show("Изменения сохранены!", "Успех");
                     }
                 }
-                else // СОЗДАНИЕ
+                else 
                 {
                     var coach = _userService.GetCurrentUser();
                     var newPlan = new NutritionPlan
@@ -651,7 +651,6 @@ namespace WPF_FitnessClub.ViewModels
 
         private bool CanExecuteSaveWorkoutPlan(object parameter)
         {
-            // Разрешаем нажать всегда в режиме редактирования, чтобы сработал наш MessageBox с ошибкой
             return IsWorkoutPlanEditMode;
         }
 

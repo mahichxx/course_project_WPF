@@ -109,7 +109,7 @@
                         Style="{StaticResource CustomTabControlStyle}" 
                         SelectionChanged="MainTabControl_SelectionChanged" >
 
-                <!-- ВКЛАДКА: АВТОРИЗАЦИЯ -->
+                <!-- авт -->
                 <TabItem Header="{DynamicResource LoginTitle}"
                          Style="{StaticResource AuthTabItemStyle}">
                     <StackPanel Margin="30,45,30,30" HorizontalAlignment="Center">
@@ -136,7 +136,7 @@
                     </StackPanel>
                 </TabItem>
 
-                <!-- ВКЛАДКА: РЕГИСТРАЦИЯ -->
+                <!-- гестис -->
                 <TabItem Header="{DynamicResource RegistrationTitle}"
          Style="{StaticResource AuthTabItemStyle}">
                     <StackPanel Margin="30,15,30,15" HorizontalAlignment="Center">

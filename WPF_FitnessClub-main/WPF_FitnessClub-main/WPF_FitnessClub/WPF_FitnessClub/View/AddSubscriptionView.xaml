@@ -103,7 +103,7 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- ТИП -->
+                                <!-- тип -->
                                 <StackPanel Grid.Column="0" Margin="0,0,5,0">
                                     <TextBlock Text="{DynamicResource Type}" Style="{StaticResource ModernTextBlockStyle}"/>
                                     <ComboBox SelectedValuePath="Content" 
@@ -117,7 +117,7 @@
                                     </ComboBox>
                                 </StackPanel>
 
-                                <!-- ДЛИТЕЛЬНОСТЬ -->
+                                <!-- длит -->
                                 <StackPanel Grid.Column="1" Margin="5,0,0,0">
                                     <TextBlock Text="{DynamicResource Duration}" Style="{StaticResource ModernTextBlockStyle}"/>
                                     <ComboBox SelectedValuePath="Content"

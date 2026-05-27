@@ -63,12 +63,10 @@
                          PreviewKeyDown="PasswordBox_PreviewKeyDown"
                          Style="{StaticResource CustomPasswordBoxStyle}"/>
 
-            <!-- В AddUserDialog.xaml блок с Ролью -->
             <TextBlock Text="{DynamicResource AddUserRole}" Margin="0,5"
            Style="{StaticResource CustomTextBlockStyle}"/>
             <ComboBox x:Name="RoleComboBox" Margin="0,5" 
           Style="{StaticResource CustomComboBoxStyle}" Height="30">
-                <!-- Используем числовые значения ролей: 1-Client, 2-Coach, 3-Admin -->
                 <ComboBoxItem Content="{DynamicResource ClientRole}" Tag="1" IsSelected="True"/>
                 <ComboBoxItem Content="{DynamicResource CoachRole}" Tag="2"/>
                 <ComboBoxItem Content="{DynamicResource AdminRole}" Tag="3"/>

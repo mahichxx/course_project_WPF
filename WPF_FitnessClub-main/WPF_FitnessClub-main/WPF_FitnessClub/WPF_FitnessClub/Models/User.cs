@@ -14,12 +14,11 @@ namespace WPF_FitnessClub.Models
         private UserRole role;
         private bool isBlocked;
 
-        // Новые поля
         private string phone;
         private double weight;
         private double height;
         private int age;
-        private string gender; // "Male" / "Female"
+        private string gender; 
 
         public User() { }
 
@@ -79,7 +78,6 @@ namespace WPF_FitnessClub.Models
             set { isBlocked = value; OnPropertyChanged(); }
         }
 
-        // Реализация новых свойств
         public string Phone { get => phone; set { phone = value; OnPropertyChanged(); } }
         public double Weight { get => weight; set { weight = value; OnPropertyChanged(); } }
         public double Height { get => height; set { height = value; OnPropertyChanged(); } }

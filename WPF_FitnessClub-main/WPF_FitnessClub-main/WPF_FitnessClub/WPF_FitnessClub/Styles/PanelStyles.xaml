@@ -4,7 +4,6 @@
     <!-- Минималистичная тень -->
     <DropShadowEffect x:Key="CardShadow" BlurRadius="4" ShadowDepth="1" Direction="270" Color="Black" Opacity="0.1"/>
 
-    <!-- Стиль для прокрутки (Scroll), который вызывал ошибку -->
     <Style x:Key="ResponsiveScrollViewerStyle" TargetType="ScrollViewer">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -23,7 +22,6 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{DynamicResource LightGrayBrush}"/>
         <Setter Property="CornerRadius" Value="0"/>
-        <!-- ОСТРЫЕ УГЛЫ -->
         <Setter Property="Padding" Value="10"/>
         <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
         <Setter Property="Effect" Value="{StaticResource CardShadow}"/>

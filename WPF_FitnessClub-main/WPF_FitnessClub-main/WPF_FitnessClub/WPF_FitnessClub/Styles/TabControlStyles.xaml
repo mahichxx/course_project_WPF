@@ -1,7 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- 1. ГЛАВНЫЙ СТИЛЬ (Центрирует вкладки) -->
     <Style x:Key="CustomTabControlStyle" TargetType="TabControl">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -13,7 +12,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <!-- Панель заголовков строго по центру -->
                         <Border Grid.Row="0" Background="Transparent" HorizontalAlignment="Center">
                             <TabPanel IsItemsHost="True" />
                         </Border>
@@ -23,8 +21,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!-- 2. СТИЛЬ ВКЛАДОК ДЛЯ ЛИЧНОГО КАБИНЕТА (Темный текст, цветная линия) -->
+    
     <Style x:Key="CustomTabItemStyle" TargetType="TabItem">
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
         <Setter Property="FontSize" Value="14"/>
@@ -32,15 +29,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <!-- CornerRadius="0" - убираем округление -->
                     <Border x:Name="Border" BorderThickness="0,0,0,3" BorderBrush="Transparent" Background="Transparent" CornerRadius="0">
                         <ContentPresenter x:Name="ContentSite" ContentSource="Header" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="ContentSite" Property="TextBlock.FontWeight" Value="Bold"/>
-                            <!-- Прямая цветная линия под вкладкой -->
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource PrimaryRedBrush}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="Black"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -48,7 +43,6 @@
         </Setter>
     </Style>
 
-    <!-- 3. СТИЛЬ ВКЛАДОК ДЛЯ ВХОДА (Белый текст, белая линия) -->
     <Style x:Key="AuthTabItemStyle" TargetType="TabItem">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="14"/>
@@ -62,7 +56,6 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="ContentSite" Property="TextBlock.FontWeight" Value="Bold"/>
-                            <!-- Прямая белая линия под вкладкой -->
                             <Setter TargetName="Border" Property="BorderBrush" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -71,7 +64,6 @@
         </Setter>
     </Style>
 
-    <!-- Запасные ссылки для совместимости (без BasedOn) -->
     <Style x:Key="DefaultTabControlStyle" TargetType="TabControl" BasedOn="{StaticResource CustomTabControlStyle}"/>
     <Style x:Key="DefaultTabItemStyle" TargetType="TabItem" BasedOn="{StaticResource CustomTabItemStyle}"/>
 

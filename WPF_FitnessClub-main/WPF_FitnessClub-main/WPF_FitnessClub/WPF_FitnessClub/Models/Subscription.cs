@@ -104,7 +104,6 @@ namespace WPF_FitnessClub.Models
             get
             {
                 if (string.IsNullOrWhiteSpace(SubscriptionType)) return "---";
-                // Ищем ключ в словаре (Unlimited -> Безлимит)
                 object translated = Application.Current.TryFindResource(SubscriptionType);
                 return translated != null ? translated.ToString() : SubscriptionType;
             }
@@ -113,7 +112,7 @@ namespace WPF_FitnessClub.Models
         [StringLength(50)]
         public string Duration
         {
-            get => duration; // ТЕПЕРЬ ОН ОТДАЕТ ЧИСТЫЙ КЛЮЧ (например, Visit8)
+            get => duration; 
             set
             {
                 duration = value;
@@ -123,7 +122,6 @@ namespace WPF_FitnessClub.Models
         }
 
         [StringLength(50)]
-        // В файле Subscription.cs
         public string SubscriptionType
         {
             get => subscriptionType;
@@ -131,7 +129,7 @@ namespace WPF_FitnessClub.Models
             {
                 subscriptionType = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(LocalizedType)); // Важно для перерисовки текста
+                OnPropertyChanged(nameof(LocalizedType)); //  для перерисовки текста
             }
         }
 

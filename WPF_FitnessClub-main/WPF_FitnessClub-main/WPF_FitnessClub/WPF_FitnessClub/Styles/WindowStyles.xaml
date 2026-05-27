@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WPF_FitnessClub">
 
-    <!-- Базовый стиль для окон (Window) -->
+    <!-- Базовый стиль для окон -->
     <Style x:Key="WindowStyle" TargetType="Window">
         <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
         <!-- Используем Segoe UI или чистый Sans-Serif для современного вида -->
@@ -15,7 +15,7 @@
         <Setter Property="MinHeight" Value="300"/>
     </Style>
 
-    <!-- Базовый стиль для страниц (UserControl) -->
+    <!-- Базовый стиль для страниц  -->
     <Style x:Key="UserControlStyle" TargetType="UserControl">
         <Setter Property="Background" Value="Transparent"/>
         <!-- Прозрачный, чтобы видеть фон окна -->

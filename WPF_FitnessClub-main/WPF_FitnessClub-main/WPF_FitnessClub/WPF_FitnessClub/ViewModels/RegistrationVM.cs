@@ -300,7 +300,7 @@ namespace WPF_FitnessClub.ViewModels
             RegPassword = passwordBox.Password;
             ConfirmPassword = confirmPasswordBox.Password;
 
-            // 1. Проверка на пустые поля (Твой блок)
+            // 1. Проверка на пустые поля
             if (string.IsNullOrEmpty(RegLogin) || string.IsNullOrEmpty(RegPassword) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(FullName))
             {
                 ShowWarning("FillAllFields");
@@ -310,7 +310,6 @@ namespace WPF_FitnessClub.ViewModels
             // 2. Проверка совпадения паролей
             if (RegPassword != ConfirmPassword) { ShowWarning("PasswordsMismatch"); return; }
 
-            // Это правило заменяет собой старую проверку на 6 символов.
             if (!Regex.IsMatch(RegPassword, @"^(?=.*[a-zA-Zа-яА-ЯёЁ])(?=.*\d)[a-zA-Zа-яА-ЯёЁ0-9]{8,}$"))
             {
                 MessageBox.Show("Пароль должен быть не менее 8 символов и содержать как буквы, так и цифры. Пробелы, запятые и спецсимволы запрещены.",
@@ -318,7 +317,7 @@ namespace WPF_FitnessClub.ViewModels
                 return;
             }
 
-            // 3. ВАЛИДАЦИЯ ФИО (Только буквы и строго 3 слова)
+            // 3.Только буквы и строго 3 слова
             if (!Regex.IsMatch(FullName, @"^[а-яА-Яa-zA-ZёЁ\s]+$")) { ShowWarning("FullNameOnlyLetters"); return; }
 
             string[] nameParts = FullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -328,7 +327,7 @@ namespace WPF_FitnessClub.ViewModels
                 return;
             }
 
-            // 4. ПРОВЕРКА УНИКАЛЬНОСТИ В БД (Твой оригинальный код)
+            // 4. Проверка уникальности
             bool isLoginUnique = true;
             bool isEmailUnique = true;
             if (_databaseConnectionService.IsDatabaseExists())
@@ -344,7 +343,7 @@ namespace WPF_FitnessClub.ViewModels
             if (!isLoginUnique) { ShowWarning("LoginAlreadyExists"); return; }
             if (!isEmailUnique) { ShowWarning("EmailAlreadyExists"); return; }
 
-            // 5. ХЕШИРОВАНИЕ И СОХРАНЕНИЕ
+            // 5. хешированиие
             string hashedPassword = WPF_FitnessClub.Data.PasswordHasher.HashPassword(RegPassword);
             var newUser = new User(FullName, Email, RegLogin, hashedPassword, UserRole.Client);
 

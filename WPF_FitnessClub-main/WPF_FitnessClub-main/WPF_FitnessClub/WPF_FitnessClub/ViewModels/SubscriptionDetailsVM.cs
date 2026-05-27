@@ -55,7 +55,6 @@ namespace WPF_FitnessClub.ViewModels
 
         private readonly Dictionary<string, string> _typeTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			// { "То, что написано в меню", "То, что лежит в Базе (Ключ)" }
 			{ "Безлимит", "Unlimited" },
 			{ "Обычный", "Standard" },
 			{ "Групповая", "Group" },
@@ -63,7 +62,6 @@ namespace WPF_FitnessClub.ViewModels
 			{ "Вечерний", "Evening" },
 			{ "Одиночная", "Single" },
     
-			// Оставляем английские варианты для совместимости (если язык переключен)
 			{ "Unlimited", "Unlimited" },
 			{ "Standard", "Standard" },
 			{ "Group", "Group" },
@@ -74,14 +72,12 @@ namespace WPF_FitnessClub.ViewModels
 
         private readonly Dictionary<string, string> _durationTranslations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			// { "То, что в меню", "То, что в Базе" }
 			{ "1 занятие", "Visit1" },
 			{ "4 занятия", "Visit4" },
 			{ "8 занятий", "Visit8" },
 			{ "16 занятий", "Visit16" },
 			{ "32 занятия", "Visit32" },
     
-			// Старые варианты из месяцев для страховки
 			{ "1 месяц", "Visit1" },
 			{ "3 месяца", "Visit8" },
 			{ "6 месяцев", "Visit16" },
@@ -528,10 +524,9 @@ namespace WPF_FitnessClub.ViewModels
                 }
 
                 // 2. Просто вызываем обновление. 
-                // Если в БД что-то пойдет не так (ошибка связи, валидация БД), программа уйдет в блок catch.
                 _subscriptionService.Update(_currentSubscription);
 
-                // 3. Обновляем "бэкап" (снимки)
+                // 3. Обновляем "бэкап" 
                 _origName = _currentSubscription.Name;
                 _origDesc = _currentSubscription.Description;
                 _origPrice = _currentSubscription.Price;
@@ -558,7 +553,7 @@ namespace WPF_FitnessClub.ViewModels
                 // 5. Сначала выключаем индикаторы и режим, чтобы UI "отпустило"
                 IsLoading = false;
                 IsEditMode = false;
-                LoadDetails(); // Обновляем текст на экране
+                LoadDetails(); 
 
                 // 6. Показываем успех (теперь это будет происходить всегда, если не было ошибки)
                 MessageBox.Show("Данные успешно сохранены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -651,7 +646,6 @@ namespace WPF_FitnessClub.ViewModels
 			}
 		}
 
-        // ОТМЕНА (Теперь возвращает всё назад)
         private void ExecuteCancel(object parameter)
         {
             // Возвращаем ключи в модель
@@ -840,14 +834,13 @@ namespace WPF_FitnessClub.ViewModels
                     newReview.Id = reviewId;
                     HasUserReviewed = true;
 
-                    // 1. Добавляем отзыв в текущую модель (для этого окна)
+                    // Добавляем отзыв в текущую модель (для этого окна)
                     if (_currentSubscription.Reviews == null) _currentSubscription.Reviews = new List<Review>();
                     _currentSubscription.Reviews.Add(newReview);
 
-                    // Считаем новый рейтинг
                     double newRating = _currentSubscription.CalculateRating();
 
-                    // 2. ОБНОВЛЯЕМ ЗВЕЗДЫ В ТЕКУЩЕМ ОКНЕ
+                    // звезды
                     _currentSubscription.Rating = newRating;
                     OnPropertyChanged("Rating");
                     LoadReviews(); // Обновит список текстом внизу
@@ -1075,12 +1068,8 @@ namespace WPF_FitnessClub.ViewModels
 
                     MessageBox.Show(message, "Запись подтверждена", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // 2. УВЕДОМЛЯЕМ ИНТЕРФЕЙС ОБ ИЗМЕНЕНИЯХ:
-
-                    // Появится блок "Ваше мнение очень важно"
                     OnPropertyChanged("WriteReviewVisible");
 
-                    // ИСЧЕЗНЕТ блок "Для оставления отзыва необходимо приобрести..." (ЭТОГО НЕ ХВАТАЛО)
                     OnPropertyChanged("SubscribeToReviewVisible");
 
                     // Обновляем состояние кнопки "Записаться" внизу окна

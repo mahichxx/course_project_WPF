@@ -1057,8 +1057,7 @@ namespace WPF_FitnessClub.ViewModels
         {
             try
             {
-                // 1. ПРОВЕРКА ТЕКУЩЕГО ПАРОЛЯ
-                // Мы сравниваем то, что сейчас в поле ввода (CurrentPassword), с тем, что в объекте пользователя
+                // пароль
                 bool isCurrentCorrect = WPF_FitnessClub.Data.PasswordHasher.VerifyPassword(CurrentPassword, _user.Password)
                                          || _user.Password == CurrentPassword;
 
@@ -1068,7 +1067,7 @@ namespace WPF_FitnessClub.ViewModels
                     return;
                 }
 
-                // 2. ВАЛИДАЦИЯ НОВОГО ПАРОЛЯ (8+ символов, буквы + цифры)
+                // новый пароль
                 string passPattern = @"^(?=.*[a-zA-Zа-яА-ЯёЁ])(?=.*\d)[a-zA-Zа-яА-ЯёЁ0-9]{8,}$";
                 if (string.IsNullOrEmpty(NewPassword) || !Regex.IsMatch(NewPassword, passPattern))
                 {
@@ -1082,7 +1081,7 @@ namespace WPF_FitnessClub.ViewModels
                     return;
                 }
 
-                // 3. ХЕШИРОВАНИЕ И СОХРАНЕНИЕ
+                // хэш
                 string hashedPass = WPF_FitnessClub.Data.PasswordHasher.HashPassword(NewPassword);
                 string plainWord = NewPassword; // Запоминаем "слово" перед очисткой полей
 
@@ -1094,13 +1093,13 @@ namespace WPF_FitnessClub.ViewModels
                     // Обновляем бэкап пароля, чтобы кнопка "Отмена" не вернула старый
                     _originalPassword = hashedPass;
 
-                    // Обновляем отображаемое слово (DisplayPassword), которое видит пользователь
+                    // Обновляем отображаемое слово, которое видит пользователь
                     DisplayPassword = plainWord;
 
                     // Обновляем CurrentPassword, чтобы при следующей попытке система знала актуальное "слово"
                     CurrentPassword = plainWord;
 
-                    // Очищаем только поля НОВОГО пароля
+                    // Очищаем только поля  пароля
                     NewPassword = string.Empty;
                     ConfirmPassword = string.Empty;
                     OnPropertyChanged(nameof(NewPassword));

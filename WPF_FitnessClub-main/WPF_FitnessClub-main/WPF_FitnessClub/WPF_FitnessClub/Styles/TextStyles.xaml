@@ -129,7 +129,6 @@
         <Setter Property="Margin" Value="0,15,0,10"/>
     </Style>
 
-    <!-- ССЫЛКИ ДЛЯ СОВМЕСТИМОСТИ (чтобы ничего не вылетало) -->
     <Style x:Key="CustomTextBoxStyle" BasedOn="{StaticResource GeneralTextBoxStyle}" TargetType="TextBox"/>
     <Style x:Key="CustomPasswordBoxStyle" BasedOn="{StaticResource GeneralPasswordBoxStyle}" TargetType="PasswordBox"/>
 

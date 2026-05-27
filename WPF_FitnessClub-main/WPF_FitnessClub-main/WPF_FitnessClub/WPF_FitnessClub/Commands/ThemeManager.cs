@@ -62,7 +62,7 @@ namespace WPF_FitnessClub
 
             switch (theme)
             {
-                case AppTheme.Light: // === ОРАНЖЕВАЯ ТЕМА ===
+                case AppTheme.Light: 
                     resources["PrimaryRed"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF7A50");
                     resources["BackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#efeded");
                     resources["WindowBackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#efeded");
@@ -72,7 +72,7 @@ namespace WPF_FitnessClub
                     resources["LightGray"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#D1D9D6");
                     break;
 
-                case AppTheme.Dark: // === ЗЕЛЕНАЯ ТЕМА ===
+                case AppTheme.Dark: 
                     resources["PrimaryRed"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#83AF3B");
                     resources["BackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#F5F5F8");
                     resources["WindowBackgroundColor"] = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#F5F5F8");
@@ -92,7 +92,6 @@ namespace WPF_FitnessClub
         private void UpdateBrushes()
         {
             var resources = Application.Current.Resources;
-            // Список ключей цветов и соответствующих им кистей
             string[] colorKeys = { "PrimaryRed", "BackgroundColor", "WindowBackgroundColor", "TextColor", "SecondaryBackgroundColor", "MediumGray", "LightGray" };
             string[] brushKeys = { "PrimaryRedBrush", "BackgroundBrush", "WindowBackgroundBrush", "TextBrush", "SecondaryBackgroundBrush", "MediumGrayBrush", "LightGrayBrush" };
 
@@ -105,7 +104,6 @@ namespace WPF_FitnessClub
                 }
             }
 
-            // Создаем Темно-оранжевый/Зеленый для эффекта наведения (на 30 тонов темнее основного)
             System.Windows.Media.Color primary = (System.Windows.Media.Color)resources["PrimaryRed"];
             resources["DarkRedBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(
                 (byte)Math.Max(0, primary.R - 30),
